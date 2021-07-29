@@ -1,0 +1,6 @@
+openapi: 3.0.2
+info:
+  title: swipe shukatu
+  description: |-
+    <b>API仕様書</b><br>
+  version: 1.0.0

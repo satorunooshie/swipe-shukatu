@@ -1,0 +1,75 @@
+version: "3"
+
+volumes:
+  mysql:
+  mysql-data:
+    driver: local
+
+networks:
+  mysql:
+    driver: bridge
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    tty: true
+    volumes:
+      - ./:/go/src/github.com/satorunooshie/swipe-shukatu
+    ports:
+      - "8888:8888"
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      TZ: Asia/Tokyo
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    env_file:
+      "./.env"
+    environment:
+      PMA_HOST: mysql
+    restart: always
+    links:
+      - mysql
+    ports:
+      - 4000:80
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      SWAGGER_JSON: /api/api-document.yaml
+    volumes:
+      - ./api-document.yml:/api/api-document.yml:ro
+    ports:
+      - 3300:8080
+
+  proxy:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./docker/proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/proxy/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
