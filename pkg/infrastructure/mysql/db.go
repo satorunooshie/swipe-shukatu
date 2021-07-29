@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	// mysqldriver is a MySQL driver for Go.
 	_ "github.com/go-sql-driver/mysql"
 )
 

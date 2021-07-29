@@ -27,5 +27,4 @@ func Route(h *http.ServeMux, db *sql.DB) {
 		}
 		_ = json.NewEncoder(w).Encode(setting)
 	})
-
 }

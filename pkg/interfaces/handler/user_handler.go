@@ -53,11 +53,13 @@ func (userH *userHandler) HandleDelete() http.HandlerFunc {
 	}
 }
 
+//nolint
 // UserRequest
 type UserRequest struct {
 	// Need to implement field
 }
 
+//nolint
 // UserResponse
 type UserResponse struct {
 	// Need to implement field
