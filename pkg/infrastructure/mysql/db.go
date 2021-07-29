@@ -2,6 +2,8 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -11,8 +13,10 @@ type DB struct {
 }
 
 // Conn connection to MySQL database.
-func Conn(host, user, pass, db string) (*DB, error) {
-	db, err := sql.Open("mysql", user+":"+pass+"@tcp("+host+")/"+db)
+func Conn() (*DB, error) {
+	db, err := sql.Open("mysql", fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local",
+		"user", "Password!", "mysql", "3306", "database"))
 	if err != nil {
 		return nil, err
 	}
