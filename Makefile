@@ -4,19 +4,19 @@ ROOT_PASS = Password!
 
 .PHONY: up
 up:
-	docker-compose up --build -d
+	docker compose up --build -d
 
 .PHONY: down
 down:
-	docker-compose down
+	docker compose down -v
 
 .PHONY: ps
 ps:
-	docker-compose ps
+	docker compose ps
 
 .PHONY: test
 test:
-	docker-compose exec api richgo test ./... -v -count=1 -cover
+	docker compose exec api richgo test ./... -v -count=1 -cover
 
 .PHONY: gen
 gen:
@@ -24,10 +24,22 @@ gen:
 
 .PHONY: lint
 lint:
-	docker-compose -f docker-compose.dev.yml exec api golangci-lint run -v
+	docker-compose exec api golangci-lint run -v
 
 .PHONY: test-lint
 test-lint: test lint
+
+.PHONY: log
+log:
+	docker compose logs -f
+
+.PHONY: api-log
+api-log:
+	docker compose logs -f api
+
+.PHONY: db-log
+db-log:
+	docker compose logs -f db
 
 # .PHONY: schema-diff
 # schema-diff:

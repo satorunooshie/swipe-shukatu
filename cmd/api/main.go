@@ -18,18 +18,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// count := 0
-	// for {
-	// 	if err := db.Ping(); err != nil {
-	// 		count++
-	// 		log.Println(err)
-	// 		if count > 10 {
-	// 			log.Fatal(err)
-	// 		}
-	// 		continue
-	// 	}
-	// 	break
-	// }
+	count := 0
+	for {
+		if err := db.Ping(); err != nil {
+			count++
+			log.Println(err)
+			if count > 10 {
+				log.Fatal(err)
+			}
+			// sleep for a bit
+			time.Sleep(5 * time.Second)
+			continue
+		}
+		log.Println("db is connected !")
+		break
+	}
 
 	h := http.NewServeMux()
 

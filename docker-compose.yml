@@ -1,12 +1,10 @@
 version: "3"
 
 volumes:
-  mysql:
   mysql-data:
-    driver: local
 
 networks:
-  mysql:
+  swipe-shukatu:
     driver: bridge
 
 services:
@@ -21,38 +19,25 @@ services:
       - "8888:8888"
     depends_on:
       - mysql
+    networks: 
+      - swipe-shukatu
 
   mysql:
-    container_name: mysql
+    image: mariadb
     restart: always
-    build:
-      context: .
-      dockerfile: ./docker/mysql/Dockerfile
     ports:
       - 3306:3306
     volumes:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
-      - ./mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      - mysql-data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: Password!
+      MYSQL_DATABASE: database
       TZ: Asia/Tokyo
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
-      - mysql
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    env_file:
-      "./.env"
-    environment:
-      PMA_HOST: mysql
-    restart: always
-    links:
-      - mysql
-    ports:
-      - 4000:80
+      - swipe-shukatu
 
   swagger-ui:
     image: swaggerapi/swagger-ui:latest
