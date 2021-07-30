@@ -18,7 +18,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 	count := 0
+
+	// confirm connecting to the database
 	for {
 		if err := db.Ping(); err != nil {
 			count++
@@ -34,22 +41,22 @@ func main() {
 		break
 	}
 
+	// set up the router and server
 	h := http.NewServeMux()
-
 	router.Route(h, db.DB)
-
 	srv := &http.Server{
 		Addr:    ":8888",
 		Handler: h,
 	}
 
-	// gracefully shutdown
+	// serve the server with other goroutine
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
 			log.Fatalf("Server closed with error: %s", err)
 		}
 	}()
 
+	// gracefully shutdown
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGTERM, os.Interrupt)
 	log.Printf("SIGNAL %d received, shutting down", <-sig)
