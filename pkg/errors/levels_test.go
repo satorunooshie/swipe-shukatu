@@ -34,7 +34,9 @@ func Test_appError_IsCritical(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := tt.err.IsCritical(); got != tt.want {
 				t.Errorf("IsCritical() = %v, want %v", got, tt.want)
 			}
@@ -75,7 +77,9 @@ func Test_appError_IsInfo(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := tt.err.IsInfo(); got != tt.want {
 				t.Errorf("IsInfo() = %v, want %v", got, tt.want)
 			}
@@ -111,7 +115,9 @@ func Test_appError_IsPanic(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := tt.err.IsPanic(); got != tt.want {
 				t.Errorf("IsPanic() = %v, want %v", got, tt.want)
 			}
@@ -152,7 +158,9 @@ func Test_appError_IsWarn(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := tt.err.IsWarn(); got != tt.want {
 				t.Errorf("IsWarn() = %v, want %v", got, tt.want)
 			}

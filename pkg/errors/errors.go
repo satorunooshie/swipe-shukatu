@@ -107,6 +107,7 @@ func Wrapf(format string, err error, args ...interface{}) AppError {
 	return e
 }
 
+//nolint
 func AsAppError(err error) *appError {
 	if err == nil {
 		return nil

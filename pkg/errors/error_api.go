@@ -94,6 +94,7 @@ func newBadRequest(code, s string) AppError {
 	return e
 }
 
+//nolint
 func newUnauthorized(code, s string) AppError {
 	e := newError(code, s)
 	e.status = http.StatusUnauthorized
@@ -101,6 +102,7 @@ func newUnauthorized(code, s string) AppError {
 	return e
 }
 
+//nolint
 func newForbidden(code, s string) AppError {
 	e := newError(code, s)
 	e.status = http.StatusForbidden
@@ -108,6 +110,7 @@ func newForbidden(code, s string) AppError {
 	return e
 }
 
+//nolint
 func newConflict(code, s string) AppError {
 	e := newError(code, s)
 	e.status = http.StatusConflict
