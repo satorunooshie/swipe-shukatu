@@ -19,14 +19,14 @@ type userUseCase struct {
 	userRepository userR.UserRepository
 }
 
-// NewUserUsecase
+// NewUserUsecase ...
 func NewUserUsecase(userR userR.UserRepository) UserUseCase {
 	return &userUseCase{
 		userRepository: userR,
 	}
 }
 
-// Select
+// Select ...
 func (userU *userUseCase) Select(ctx context.Context) ([]*userM.User, error) {
 	users, err := userU.userRepository.Select(ctx)
 	if err != nil {
@@ -35,7 +35,7 @@ func (userU *userUseCase) Select(ctx context.Context) ([]*userM.User, error) {
 	return users, nil
 }
 
-// Insert
+// Insert ...
 func (userU *userUseCase) Insert(ctx context.Context, entity *userM.User) error {
 	err := userU.userRepository.Insert(ctx, entity)
 	if err != nil {
@@ -44,7 +44,7 @@ func (userU *userUseCase) Insert(ctx context.Context, entity *userM.User) error 
 	return nil
 }
 
-// Update
+// Update ...
 func (userU *userUseCase) Update(ctx context.Context, entity *userM.User) error {
 	err := userU.userRepository.Update(ctx, entity)
 	if err != nil {
@@ -53,7 +53,7 @@ func (userU *userUseCase) Update(ctx context.Context, entity *userM.User) error 
 	return nil
 }
 
-// Delete
+// Delete ...
 func (userU *userUseCase) Delete(ctx context.Context, entity *userM.User) error {
 	err := userU.userRepository.Delete(ctx, entity)
 	if err != nil {

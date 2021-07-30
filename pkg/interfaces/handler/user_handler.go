@@ -18,35 +18,35 @@ type userHandler struct {
 	userUseCase userU.UserUseCase
 }
 
-// NewUserHandler
+// NewUserHandler returns a new UserHandler
 func NewUserHandler(userU userU.UserUseCase) UserHandler {
 	return &userHandler{
 		userUseCase: userU,
 	}
 }
 
-// HandleSelect
+// HandleSelect ...
 func (userH *userHandler) HandleSelect() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		panic("do something")
 	}
 }
 
-// HandleInsert
+// HandleInsert ...
 func (userH *userHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		panic("do something")
 	}
 }
 
-// HandleUpdate
+// HandleUpdate ...
 func (userH *userHandler) HandleUpdate() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		panic("do something")
 	}
 }
 
-// HandleDelete
+// HandleDelete ...
 func (userH *userHandler) HandleDelete() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		panic("do something")
