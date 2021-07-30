@@ -16,7 +16,8 @@ ps:
 
 .PHONY: test
 test:
-	docker compose exec api richgo test ./... -v -count=1 -cover
+	docker compose exec api richgo test ./... -v -coverprofile cover.out -count=1
+	docker compose exec api go tool cover -html=cover.out -o cover.html
 
 .PHONY: gen
 gen:
