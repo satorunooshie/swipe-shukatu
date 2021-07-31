@@ -3,4 +3,80 @@ info:
   title: swipe shukatu
   description: |-
     <b>API仕様書</b><br>
+    いずれも認証はヘッダーに詰めて行うためURLにidなどは不要
+    <p>
+    必要なページメモ
+    ログインページ(Twitter / Google)
+    パスワードリセットページ
+    スワイプ画面(xx件ずつ読み込んで、スタックに積んで表示とかかな)
+    メッセージ画面(画面上部にはマッチした企業一覧を表示する, 画面下部にはメッセージしている企業一覧を表示する, 画面右上には検索ボタンがあり、モーダルでsuperLike Onlyや、IT企業Onlyなど指定できるようにしたい)
+    ユーザー設定画面(志望業界を設定できたり、23卒などを入力できたり、企業を誘致したときにプロフ設定できたり？)
+    </p>
   version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: setting
+    description: 設定関連
+  - name: user
+    description: ユーザ関連
+  - name: auth
+    description: 認証関連
+  - name: Ltd
+    description: 企業関連
+  - name: message
+    description: メッセージ関連
+  - name: match
+    description: マッチ関連
+paths:
+  /user/setting:
+    get:
+      tags:
+        - setting
+      summary: push通知や個人情報の設定
+    put:
+      tags:
+        -setting
+      summary: 上の更新
+  /ltds:
+    get:
+      tags:
+        - Ltd
+      summary: 会社を取得するAPI(クエリをつけてカテゴリー別に見れるようにする)
+  /message/{LtdID}:
+    get:
+      tags:
+        - message
+      summary: メッセージを取得するAPI
+    post:
+      tags:
+        - message
+      summary: メッセージを送信するAPI
+  /message/{LtdID}/{messageID}:
+    delete:
+      tags:
+        - message
+      summary: メッセージの送信取り消しをするAPI
+  /message/list:
+    get:
+      tags:
+        - message
+      summary: メッセージリストの一覧(クエリで絞り込めるようにしてもいいかも ex: superlike or not, IT and real estate)
+  /match/list:
+    get:
+      tags:
+        - message
+      summary: Tinderでいう上にあるマッチしたけどメッセージしてない人が一覧で出るやつ
+  /like/{LtdID}:
+    post:
+      tags:
+        - ltd
+  /superLike/{LtdID}:
+    post:
+      tags:
+        - ltd
+      summary: 必要かどうか吟味する
+  /unlike/{LtdID}:
+    post:
+      tags:
+        - ltd
