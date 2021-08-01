@@ -11,72 +11,306 @@ info:
     スワイプ画面(xx件ずつ読み込んで、スタックに積んで表示とかかな)
     メッセージ画面(画面上部にはマッチした企業一覧を表示する, 画面下部にはメッセージしている企業一覧を表示する, 画面右上には検索ボタンがあり、モーダルでsuperLike Onlyや、IT企業Onlyなど指定できるようにしたい)
     ユーザー設定画面(志望業界を設定できたり、23卒などを入力できたり、企業を誘致したときにプロフ設定できたり？)
+
+    企業のプロフをシェアできるリンク欲しい
+    firebaseログインまわりセキュリティがまだわからないので後で
+    tag reportは後追い
     </p>
   version: 1.0.0
 servers:
   - url: http://localhost:8080
 tags:
-  - name: setting
-    description: 設定関連
-  - name: user
-    description: ユーザ関連
   - name: auth
     description: 認証関連
+  - name: user
+    description: ユーザ関連
   - name: Ltd
     description: 企業関連
   - name: message
     description: メッセージ関連
   - name: match
     description: マッチ関連
+  - name: report
+    description: 情報が間違って掲載されていた時の報告(後追いでも良さそう)
 paths:
-  /user/setting:
-    get:
-      tags:
-        - setting
-      summary: push通知や個人情報の設定
-    put:
-      tags:
-        -setting
-      summary: 上の更新
   /ltds:
     get:
       tags:
         - Ltd
       summary: 会社を取得するAPI(クエリをつけてカテゴリー別に見れるようにする)
+      parameters:
+        - name: location
+          in: query
+          description: 検索条件の会社所在地
+          required: true
+          schema:
+            type: number
+        - name: job_type
+          in: query
+          description: 検索条件の職種
+          required: true
+          schema:
+            type: number
+        - name: education_history
+          in: query
+          description: 検索条件の最終学歴
+          required: true
+          schema:
+            type: number
+        - name: benefits
+          in: query
+          description: 福利厚生
+          required: true
+          schema:
+            type: number
+        - name: min_salary
+          in: query
+          description: 平均年収の最低値(ここは選択肢用意するなら、1~5みたいな感じでも良さそう)
+          required: true
+          schema:
+            type: number
+        - name: max_salary
+          in: query
+          description: 平均年収の最高値
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LtdGetResponse'
   /message/{LtdID}:
     get:
       tags:
         - message
       summary: メッセージを取得するAPI
+      description: 過去のメッセージの読み込みってどうやってやってるんだろうね？`?page=1`みたいなクエリをつけてるんだろうか？
+      parameters:
+        - name: LtdID
+          in: path
+          description: 会社ID
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageGetResponse'
     post:
       tags:
         - message
       summary: メッセージを送信するAPI
+      description: メッセージ送信
+      parameters:
+        - name: LtdID
+          in: path
+          description: 会社ID
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagePostRequest'
+        required: true
+      responses:
+        201:
+          description: created
   /message/{LtdID}/{messageID}:
     delete:
       tags:
         - message
       summary: メッセージの送信取り消しをするAPI
+      parameters:
+        - name: LtdID
+          in: path
+          description: 会社ID
+          required: true
+          schema:
+            type: number
+        - name: messageID
+          in: path
+          description: メッセージ識別子
+          required: true
+          schema:
+            type: number
+      responses:
+        204:
+          description: no content
   /message/list:
     get:
       tags:
-        - message
-      summary: メッセージリストの一覧(クエリで絞り込めるようにしてもいいかも ex: superlike or not, IT and real estate)
+        - match
+      summary: メッセージリストの一覧(クエリで絞り込めるようにしてもいいかも ex) superlike or not, IT and real estate)
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListGetResponse'
   /match/list:
     get:
       tags:
-        - message
+        - match
       summary: Tinderでいう上にあるマッチしたけどメッセージしてない人が一覧で出るやつ
-  /like/{LtdID}:
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchListGetResponse'
+  /like:
     post:
       tags:
-        - ltd
-  /superLike/{LtdID}:
+        - Ltd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LikeRequest'
+      responses:
+        201:
+          description: created
+  /superLike:
     post:
       tags:
-        - ltd
+        - Ltd
       summary: 必要かどうか吟味する
-  /unlike/{LtdID}:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuperLikeRequest'
+      responses:
+        201:
+          description: created
+  /unlike:
     post:
       tags:
-        - ltd
+        - Ltd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlikeRequest'
+      responses:
+        201:
+          description: created
+components:
+  schemas:
+    LtdGetResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ltd'
+    Ltd:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+        name:
+          type: string
+        job_type:
+          type: number
+        min_salary:
+          type: number
+        max_salary:
+          type: number
+        profile:
+          type: string
+        photo:
+          type: string
+    MessageGetResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+        content:
+          type: string
+        photo:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    MessagePostRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        photo:
+          type: string
+    MessageListGetResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/MessageList'
+    MessageList:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+        name:
+          type: string
+        job_type:
+          type: number
+        last_message:
+          type: string
+          description: リストに表示する最後のメッセージ
+        created_at:
+          type: string
+          format: date-time
+    MatchListGetResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/MatchList'
+    MatchList:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+        name:
+          type: string
+        job_type:
+          type: number
+        min_salary:
+          type: number
+        max_salary:
+          type: number
+        profile:
+          type: string
+        photo:
+          type: string
+    LikeRequest:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+    SuperLikeRequest:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+    UnlikeRequest:
+      type: object
+      properties:
+        ltd_id:
+          type: number
+    ErrorResponse:
+      type: object
+      properties:
+        error_message:
+          type: string
+        code:
+          type: number
+          description: http status code
