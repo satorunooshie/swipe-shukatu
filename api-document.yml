@@ -5,39 +5,34 @@ info:
     <b>API仕様書</b><br>
     いずれも認証はヘッダーに詰めて行うためURLにidなどは不要
     <p>
-    必要なページメモ
-    ログインページ(Twitter / Google)
-    パスワードリセットページ
-    スワイプ画面(xx件ずつ読み込んで、スタックに積んで表示とかかな)
-    メッセージ画面(画面上部にはマッチした企業一覧を表示する, 画面下部にはメッセージしている企業一覧を表示する, 画面右上には検索ボタンがあり、モーダルでsuperLike Onlyや、IT企業Onlyなど指定できるようにしたい)
-    ユーザー設定画面(志望業界を設定できたり、23卒などを入力できたり、企業を誘致したときにプロフ設定できたり？)
-
     企業のプロフをシェアできるリンク欲しい
-    firebaseログインまわりセキュリティがまだわからないので後で
-    tag reportは後追い
+    reportは後追い
+    中途もスコープから削る
+    メッセージリストの絞り込み機能はとりあえず後
     </p>
+    <strong>masterデータを持つもの(ex 福利厚生)などは所在地を除いて全てタグで表示する</strong>
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8888
 tags:
   - name: auth
     description: 認証関連
   - name: user
     description: ユーザ関連
   - name: Ltd
-    description: 企業関連
+    description: 企業求人関連
   - name: message
     description: メッセージ関連
   - name: match
     description: マッチ関連
   - name: report
-    description: 情報が間違って掲載されていた時の報告(後追いでも良さそう)
+    description: 情報が間違って掲載されていた時の報告(追実装)
 paths:
-  /ltds:
+  /recruits:
     get:
       tags:
         - Ltd
-      summary: 会社を取得するAPI(クエリをつけてカテゴリー別に見れるようにする)
+      summary: 求人を取得するAPI(クエリをつけてカテゴリー別に見れるようにする)
       parameters:
         - name: location
           in: query
@@ -75,23 +70,29 @@ paths:
           required: true
           schema:
             type: number
+        - name: starting_salary
+          in: query
+          description: 初任給の最低値
+          required: true
+          schema:
+            type: number
       responses:
         200:
           description: ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LtdGetResponse'
-  /message/{LtdID}:
+                $ref: '#/components/schemas/RecruitGetResponse'
+  /message/{recruitID}:
     get:
       tags:
         - message
       summary: メッセージを取得するAPI
-      description: 過去のメッセージの読み込みってどうやってやってるんだろうね？`?page=1`みたいなクエリをつけてるんだろうか？
+      description: 過去のメッセージの読み込みはフロントで制御する
       parameters:
-        - name: LtdID
+        - name: recruitID
           in: path
-          description: 会社ID
+          description: 求人ID
           required: true
           schema:
             type: number
@@ -108,9 +109,9 @@ paths:
       summary: メッセージを送信するAPI
       description: メッセージ送信
       parameters:
-        - name: LtdID
+        - name: recruitID
           in: path
-          description: 会社ID
+          description: 求人ID
           required: true
           schema:
             type: number
@@ -123,15 +124,15 @@ paths:
       responses:
         201:
           description: created
-  /message/{LtdID}/{messageID}:
+  /message/{recruitID}/{messageID}:
     delete:
       tags:
         - message
       summary: メッセージの送信取り消しをするAPI
       parameters:
-        - name: LtdID
+        - name: recruitID
           in: path
-          description: 会社ID
+          description: 求人ID
           required: true
           schema:
             type: number
@@ -184,7 +185,7 @@ paths:
     post:
       tags:
         - Ltd
-      summary: 必要かどうか吟味する
+      summary: 現在UIに出る文字は最高だが、変えたい
       requestBody:
         content:
           application/json:
@@ -207,26 +208,34 @@ paths:
           description: created
 components:
   schemas:
-    LtdGetResponse:
+    RecruitGetResponse:
       type: array
       items:
-        $ref: '#/components/schemas/Ltd'
-    Ltd:
+        $ref: '#/components/schemas/Recruit'
+    Recruit:
       type: object
       properties:
         ltd_id:
           type: number
+        recruit_id:
+          type: number
         name:
           type: string
-        job_type:
-          type: number
-        min_salary:
-          type: number
-        max_salary:
-          type: number
         profile:
           type: string
-        photo:
+        employee_number:
+          type: number
+        average_age:
+          type: number
+        job_type:
+          type: string
+        educational_background:
+          type: string
+        average_salary:
+          type: number
+        starting_salary:
+          type: number
+        image:
           type: string
     MessageGetResponse:
       type: array
@@ -237,9 +246,15 @@ components:
       properties:
         ltd_id:
           type: number
+        recruit_id:
+          type: number
+        name:
+          type: string
+        job_type:
+          type: string
         content:
           type: string
-        photo:
+        image:
           type: string
         created_at:
           type: string
@@ -247,9 +262,11 @@ components:
     MessagePostRequest:
       type: object
       properties:
+        message_type:
+          type: number
         content:
           type: string
-        photo:
+        image:
           type: string
     MessageListGetResponse:
       type: array
@@ -260,10 +277,12 @@ components:
       properties:
         ltd_id:
           type: number
+        recruit_id:
+          type: number
         name:
           type: string
         job_type:
-          type: number
+          type: string
         last_message:
           type: string
           description: リストに表示する最後のメッセージ
@@ -279,32 +298,28 @@ components:
       properties:
         ltd_id:
           type: number
+        recruit_id:
+          type: number
         name:
           type: string
         job_type:
-          type: number
-        min_salary:
-          type: number
-        max_salary:
-          type: number
-        profile:
           type: string
-        photo:
+        image:
           type: string
     LikeRequest:
       type: object
       properties:
-        ltd_id:
+        recruit_id:
           type: number
     SuperLikeRequest:
       type: object
       properties:
-        ltd_id:
+        recruit_id:
           type: number
     UnlikeRequest:
       type: object
       properties:
-        ltd_id:
+        recruit_id:
           type: number
     ErrorResponse:
       type: object
