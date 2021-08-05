@@ -12,18 +12,30 @@ import (
 
 func Route(h *http.ServeMux, db *sql.DB) {
 	// DI
-	userRepoimpl := repoimpl.NewUserRepoImpl(db)
-	userUseCase := usecase.NewUserUsecase(userRepoimpl)
-	userHandler := handler.NewUserHandler(userUseCase)
+
+	/* user */
+	// userRepoimpl := repoimpl.NewUserRepoImpl(db)
+	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
+	// userHandler := handler.NewUserHandler(userUseCase)
+
+	/* job */
+	jobRepoimpl := repoimpl.NewJobRepoImpl(db)
+
+	/* recruit */
+	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
+
+	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
+	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, messageRepoimpl, recruitRepoimpl)
+	messageHandler := handler.NewMessageHandler(messageUseCase)
 
 	// register the handler
-	h.Handle("/api/user", userHandler.HandleSelect())
+	h.Handle("/message/", messageHandler.HandleSelect())
 
-	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	h.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		setting := struct {
-			Frequency int `json:"frequency"`
+			Ping string `json:"ping"`
 		}{
-			Frequency: 0,
+			Ping: "pong",
 		}
 		_ = json.NewEncoder(w).Encode(setting)
 	})
