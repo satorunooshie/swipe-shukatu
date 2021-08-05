@@ -19,7 +19,7 @@ services:
       - "8888:8888"
     depends_on:
       - mysql
-    networks: 
+    networks:
       - swipe-shukatu
 
   mysql:
@@ -30,11 +30,11 @@ services:
     volumes:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
-    environment: 
+    environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user
       MYSQL_PASSWORD: Password!
-      MYSQL_DATABASE: database
+      MYSQL_DATABASE: swipe_shukatu
       TZ: Asia/Tokyo
     networks:
       - swipe-shukatu

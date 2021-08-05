@@ -17,7 +17,7 @@ type DB struct {
 func Conn() (*DB, error) {
 	db, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true",
-		"user", "Password!", "mysql", "3306", "database"))
+		"user", "Password!", "mysql", "3306", "swipe_shukatu"))
 	if err != nil {
 		return nil, err
 	}
