@@ -13,7 +13,7 @@ info:
     <strong>masterデータを持つもの(ex 福利厚生)などは所在地を除いて全てタグで表示する</strong>
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8888
 tags:
   - name: auth
     description: 認証関連
