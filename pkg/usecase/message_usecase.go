@@ -45,6 +45,7 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 	var (
 		messages []*model.Message
 		rec      *model.Recruit
+		err      error
 	)
 
 	js, err := messageU.jobRepository.Select(ctx)
@@ -88,7 +89,7 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 		}
 	})
 
-	if err := eg.Wait(); err != nil {
+	if err = eg.Wait(); err != nil {
 		return nil, err
 	}
 
