@@ -13,30 +13,31 @@ import (
 func Route(h *http.ServeMux, db *sql.DB) {
 	// DI
 
-	/* user */
+	/* repoimpl */
 	// userRepoimpl := repoimpl.NewUserRepoImpl(db)
-	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
-	// userHandler := handler.NewUserHandler(userUseCase)
-
-	/* job */
 	jobRepoimpl := repoimpl.NewJobRepoImpl(db)
-
-	/* recruit */
+	ltdRepoimpl := repoimpl.NewLtdRepoImpl(db)
+	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
 	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
 
-	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
-	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, messageRepoimpl, recruitRepoimpl)
+	/* usecase */
+	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
+	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, ltdRepoimpl, messageRepoimpl, recruitRepoimpl)
+
+	/* handler */
+	// userHandler := handler.NewUserHandler(userUseCase)
 	messageHandler := handler.NewMessageHandler(messageUseCase)
 
 	// register the handler
 	h.Handle("/message/", messageHandler.HandleSelect())
 
+	// this endpoint is for health check
 	h.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		setting := struct {
+		health := struct {
 			Ping string `json:"ping"`
 		}{
 			Ping: "pong",
 		}
-		_ = json.NewEncoder(w).Encode(setting)
+		_ = json.NewEncoder(w).Encode(health)
 	})
 }

@@ -20,6 +20,7 @@ type MessageUseCase interface {
 
 type messageUseCase struct {
 	jobRepository     repository.JobRepository
+	ltdRepository     repository.LtdRepository
 	messageRepository repository.MessageRepository
 	recruitRepository repository.RecruitRepository
 }
@@ -27,11 +28,13 @@ type messageUseCase struct {
 // NewMessageUsecase
 func NewMessageUsecase(
 	jobR repository.JobRepository,
+	ltdR repository.LtdRepository,
 	messageR repository.MessageRepository,
 	recR repository.RecruitRepository,
 ) MessageUseCase {
 	return &messageUseCase{
 		jobRepository:     jobR,
+		ltdRepository:     ltdR,
 		messageRepository: messageR,
 		recruitRepository: recR,
 	}
@@ -89,13 +92,18 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 		return nil, err
 	}
 
+	ltdName, err := messageU.ltdRepository.SelectLtdNameByID(ctx, rec.LtdID)
+	if err != nil {
+		return nil, err
+	}
+
 	ms := make([]*MessageResponse, 0, len(messages))
 	for i, m := range messages {
 		var mr MessageResponse
 		job := jm[rec.JobTypeID]
 		mr.LtdID = rec.LtdID
 		mr.RecruitID = rID
-		// Name????
+		mr.Name = ltdName
 		mr.JobType = job
 		mr.Content = m.Content
 		mr.Image = m.ImagePath
