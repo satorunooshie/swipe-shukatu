@@ -54,11 +54,11 @@ func (ltdH *ltdHandler) HandleDelete() http.HandlerFunc {
 }
 
 // LtdRequest
-type LtdRequest struct {
+type LtdRequest struct { // nolint
 	// Need to implement field
 }
 
 // LtdResponse
-type LtdResponse struct {
+type LtdResponse struct { // nolint
 	// Need to implement field
 }
