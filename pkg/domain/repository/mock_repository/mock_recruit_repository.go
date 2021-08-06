@@ -78,19 +78,19 @@ func (mr *MockRecruitRepositoryMockRecorder) Select(ctx interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockRecruitRepository)(nil).Select), ctx)
 }
 
-// SelectDetail mocks base method.
-func (m *MockRecruitRepository) SelectDetail(ctx context.Context, rID int32) (*model.Recruit, error) {
+// SelectRecruitForMessage mocks base method.
+func (m *MockRecruitRepository) SelectRecruitForMessage(ctx context.Context, rID int32) (*model.Recruit, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectDetail", ctx, rID)
+	ret := m.ctrl.Call(m, "SelectRecruitForMessage", ctx, rID)
 	ret0, _ := ret[0].(*model.Recruit)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectDetail indicates an expected call of SelectDetail.
-func (mr *MockRecruitRepositoryMockRecorder) SelectDetail(ctx, rID interface{}) *gomock.Call {
+// SelectRecruitForMessage indicates an expected call of SelectRecruitForMessage.
+func (mr *MockRecruitRepositoryMockRecorder) SelectRecruitForMessage(ctx, rID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectDetail", reflect.TypeOf((*MockRecruitRepository)(nil).SelectDetail), ctx, rID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectRecruitForMessage", reflect.TypeOf((*MockRecruitRepository)(nil).SelectRecruitForMessage), ctx, rID)
 }
 
 // Update mocks base method.

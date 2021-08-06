@@ -64,18 +64,18 @@ func (mr *MockMessageRepositoryMockRecorder) Insert(ctx, entity interface{}) *go
 }
 
 // Select mocks base method.
-func (m *MockMessageRepository) Select(ctx context.Context) ([]*model.Message, error) {
+func (m *MockMessageRepository) Select(ctx context.Context, rID int32) ([]*model.Message, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
+	ret := m.ctrl.Call(m, "Select", ctx, rID)
 	ret0, _ := ret[0].([]*model.Message)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockMessageRepositoryMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockMessageRepositoryMockRecorder) Select(ctx, rID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockMessageRepository)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockMessageRepository)(nil).Select), ctx, rID)
 }
 
 // Update mocks base method.

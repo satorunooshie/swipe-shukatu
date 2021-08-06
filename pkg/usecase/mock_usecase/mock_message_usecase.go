@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
+	usecase "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
 // MockMessageUseCase is a mock of MessageUseCase interface.
@@ -64,18 +65,18 @@ func (mr *MockMessageUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomoc
 }
 
 // Select mocks base method.
-func (m *MockMessageUseCase) Select(ctx context.Context) ([]*model.Message, error) {
+func (m *MockMessageUseCase) Select(ctx context.Context, rID int32) ([]*usecase.MessageResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
-	ret0, _ := ret[0].([]*model.Message)
+	ret := m.ctrl.Call(m, "Select", ctx, rID)
+	ret0, _ := ret[0].([]*usecase.MessageResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockMessageUseCaseMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockMessageUseCaseMockRecorder) Select(ctx, rID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockMessageUseCase)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockMessageUseCase)(nil).Select), ctx, rID)
 }
 
 // Update mocks base method.
