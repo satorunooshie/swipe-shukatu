@@ -9,7 +9,7 @@ import (
 
 type RecruitRepository interface {
 	Select(ctx context.Context) ([]*recruitM.Recruit, error)
-	SelectDetail(ctx context.Context, rID int32) (*recruitM.Recruit, error)
+	SelectRecruitForMessage(ctx context.Context, rID int32) (*recruitM.Recruit, error)
 	Insert(ctx context.Context, entity *recruitM.Recruit) error
 	Update(ctx context.Context, entity *recruitM.Recruit) error
 	Delete(ctx context.Context, entity *recruitM.Recruit) error

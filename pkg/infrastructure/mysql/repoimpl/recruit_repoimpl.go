@@ -26,17 +26,15 @@ func (recruitI *recruitRepoImpl) Select(ctx context.Context) ([]*recruitM.Recrui
 	if err != nil {
 		return nil, err
 	}
-	return convertToRecruit(rows)
+	return convertToRecruits(rows)
 }
 
 // SelectDetail fetch the recruit.
-func (recruitI *recruitRepoImpl) SelectDetail(ctx context.Context, rID int32) (*recruitM.Recruit, error) {
+func (recruitI *recruitRepoImpl) SelectRecruitForMessage(ctx context.Context, rID int32) (*recruitM.Recruit, error) {
+	q := "SELECT id, ltd_id, job_type_id FROM recruit WHERE id = ? AND delete_at IS NULL"
 	var r recruitM.Recruit
-	if err := recruitI.db.QueryRowContext(ctx, "SELECT id, ltd_id, job_type_id FROM recruit WHERE id = ?", rID).Scan(
-		r.ID,
-		r.LtdID,
-		r.JobTypeID,
-	); err != nil {
+	err := recruitI.db.QueryRowContext(ctx, q, rID).Scan(r.ID, r.LtdID, r.JobTypeID)
+	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("[INFO] recruit: ", err)
 			return nil, nil
@@ -82,8 +80,8 @@ func (recruitI *recruitRepoImpl) Delete(ctx context.Context, entity *recruitM.Re
 	return nil
 }
 
-// convertToRecruit
-func convertToRecruit(rows *sql.Rows) ([]*recruitM.Recruit, error) {
+// convertToRecruits
+func convertToRecruits(rows *sql.Rows) ([]*recruitM.Recruit, error) {
 	var recruits []*recruitM.Recruit
 	for rows.Next() {
 		var recruit *recruitM.Recruit

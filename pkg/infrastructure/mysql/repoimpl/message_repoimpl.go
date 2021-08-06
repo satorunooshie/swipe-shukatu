@@ -30,7 +30,7 @@ func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) ([]*mess
 		}
 		return nil, err
 	}
-	return convertToMessage(rows)
+	return convertToMessages(rows)
 }
 
 // Insert
@@ -69,15 +69,15 @@ func (messageI *messageRepoImpl) Delete(ctx context.Context, entity *messageM.Me
 	return nil
 }
 
-// convertToMessage
-func convertToMessage(rows *sql.Rows) ([]*messageM.Message, error) {
+// convertToMessages
+func convertToMessages(rows *sql.Rows) ([]*messageM.Message, error) {
 	var messages []*messageM.Message
 	for rows.Next() {
 		var message messageM.Message
 		err := rows.Scan(
 			&message.Content,
-			&message.ImgPath,
-			&message.Created,
+			&message.ImagePath,
+			&message.CreatedAt,
 		)
 		if err != nil {
 			return nil, err

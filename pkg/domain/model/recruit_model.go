@@ -7,9 +7,9 @@ type Recruit struct {
 	LtdID                   int32
 	JobTypeID               int32
 	EducationalBackgroundID int32
-	AvgSalary               int32
+	AverageSalary           int32
 	StartingSalaray         int32
-	Created                 time.Time
-	Updated                 time.Time
+	CreatedAt               time.Time
+	UpdatedAt               time.Time
 	IsInvalidAt             time.Time
 }

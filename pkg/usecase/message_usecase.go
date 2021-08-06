@@ -56,7 +56,7 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 	}
 
 	eg, ctx := errgroup.WithContext(ctx)
-	// おそらくここでuseridの絞り込みが必要
+	// TODO::認証middlewareが入った段階でここでuser idでの絞り込みも追加する
 	eg.Go(func() error {
 		select {
 		case <-ctx.Done():
@@ -77,7 +77,7 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 			log.Println("[WARN] fetch recruit's goroutine is canceld")
 			return ctx.Err()
 		default:
-			rec, err = messageU.recruitRepository.SelectDetail(ctx, rID) // id, ltd_id, job_type_id
+			rec, err = messageU.recruitRepository.SelectRecruitForMessage(ctx, rID) // id, ltd_id, job_type_id
 			if err != nil {
 				return err
 			}
@@ -86,7 +86,6 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 	})
 
 	if err := eg.Wait(); err != nil {
-		log.Println("aaaaaaaaa", err)
 		return nil, err
 	}
 
@@ -99,8 +98,8 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 		// Name????
 		mr.JobType = job
 		mr.Content = m.Content
-		mr.Image = m.ImgPath
-		mr.CreatedAt = m.Created
+		mr.Image = m.ImagePath
+		mr.CreatedAt = m.CreatedAt
 		ms[i] = &mr
 	}
 	return ms, nil

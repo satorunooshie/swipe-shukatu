@@ -30,7 +30,7 @@ func (jobI *jobRepoImpl) Select(ctx context.Context) ([]*jobM.Job, error) {
 		}
 		return nil, err
 	}
-	return convertToJob(rows)
+	return convertToJobs(rows)
 }
 
 // Insert
@@ -69,8 +69,8 @@ func (jobI *jobRepoImpl) Delete(ctx context.Context, entity *jobM.Job) error {
 	return nil
 }
 
-// convertToJob
-func convertToJob(rows *sql.Rows) ([]*jobM.Job, error) {
+// convertToJobs
+func convertToJobs(rows *sql.Rows) ([]*jobM.Job, error) {
 	var jobs []*jobM.Job
 	for rows.Next() {
 		var job jobM.Job
