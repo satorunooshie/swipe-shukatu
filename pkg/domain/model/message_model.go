@@ -2,21 +2,21 @@ package model
 
 import "time"
 
-type MTyp int
+type MType int
 
 const (
-	Txt MTyp = iota + 1
+	Txt MType = iota + 1
 	Remind
-	ImgTyp
+	ImageType
 )
 
 type Message struct {
 	ID        int32
 	UserID    int32
 	RecruitID int32
-	Type      MTyp
+	Type      MType
 	Content   string
-	ImgPath   string
-	Created   time.Time
-	Deleted   time.Time
+	ImagePath string
+	CreatedAt time.Time
+	DeletedAt time.Time
 }
