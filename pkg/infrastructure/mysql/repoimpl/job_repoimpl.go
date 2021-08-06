@@ -74,10 +74,7 @@ func convertToJobs(rows *sql.Rows) ([]*jobM.Job, error) {
 	var jobs []*jobM.Job
 	for rows.Next() {
 		var job jobM.Job
-		err := rows.Scan(
-			&job.ID,
-			&job.Name,
-		)
+		err := rows.Scan(&job.ID, &job.Name)
 		if err != nil {
 			return nil, err
 		}
