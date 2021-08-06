@@ -7,7 +7,7 @@ type MType int
 const (
 	Txt MType = iota + 1
 	Remind
-	ImageType
+	Image
 )
 
 type Message struct {

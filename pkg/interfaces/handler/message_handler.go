@@ -54,7 +54,7 @@ func (messageH *messageHandler) HandleSelect() http.HandlerFunc {
 			var mr MessageResponse
 			mr.LtdID = m.LtdID
 			mr.RecruitID = m.RecruitID
-			// respm.Name = ms.Name
+			mr.Name = m.Name
 			mr.JobType = m.JobType
 			mr.Content = m.Content
 			mr.Image = m.Image

@@ -30,7 +30,7 @@ func (ltdI *ltdRepoImpl) Select(ctx context.Context) ([]*ltdM.Ltd, error) {
 
 // SelectLtdNameByID return the name of Ltd by ID
 func (ltdI *ltdRepoImpl) SelectLtdNameByID(ctx context.Context, ltdID int32) (string, error) {
-	row := ltdI.db.QueryRowContext(ctx, "SELECT name FROM ltd WHERE id = ?", ltdID)
+	row := ltdI.db.QueryRowContext(ctx, "SELECT name FROM m_ltd WHERE id = ?", ltdID)
 	var name string
 	err := row.Scan(&name)
 	if err != nil {
