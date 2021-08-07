@@ -20,13 +20,10 @@ dockerを立ち上げてない場合は[上のリンク](https://editor.swagger.
 # イメージ図
 全て架空の企業です
 
-![img.png](img.png)
+![img_0.png](img_0.png)
 ![img_1.png](img_1.png)
 ![img_2.png](img_2.png)
 ![img_3.png](img_3.png)
 ![img_4.png](img_4.png)
 ![img_5.png](img_5.png)
 ![img_6.png](img_6.png)
-![img_7.png](img_7.png)
-![img_8.png](img_8.png)
-![img_9.png](img_9.png)
