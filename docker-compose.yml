@@ -58,3 +58,10 @@ services:
       - ./docker/proxy/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - api
+  front:
+    build:
+      context: front
+    volumes:
+      - ./front:/usr/src/app
+    ports:
+      - '3000:3000'
