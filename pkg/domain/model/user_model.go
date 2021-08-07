@@ -1,13 +1,15 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
-	UUID                 int32
-	registered_method_id int32
-	gender               int32
-	graduate_year        int32
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-	deleted_at           time.Time
+	UUID             int32
+	RegisterMethodID int32
+	Gender           int32
+	GraduateYear     int32
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+	DeletedAt        time.Time
 }
