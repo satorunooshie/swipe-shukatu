@@ -48,6 +48,14 @@ services:
     ports:
       - 3300:8080
 
+  swagger-api:
+    image: stoplight/prism:3
+    ports:
+      - "10080:4010"
+    command: mock -h 0.0.0.0 /api/api-document.yml
+    volumes:
+      - ./api-document.yml:/api/api-document.yml
+
   proxy:
     image: nginx:alpine
     restart: always
