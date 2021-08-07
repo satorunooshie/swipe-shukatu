@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`user` (
   `uuid` varchar(255) NOT NULL COMMENT 'firebase uuid',
   `registered_method_id` tinyint(3) NULL COMMENT '登録方法',
   `gender` tinyint(3) NULL COMMENT '性別(1->M, 2->F, 3->X)',
-  `graduate_year` DATETIME NULL COMMENT '卒業年次',
+  `graduate_year` tinyint(3) NULL COMMENT '卒業年次',
   `created_at` DATETIME NULL COMMENT '登録日時',
   `updated_at` DATETIME NULL COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
