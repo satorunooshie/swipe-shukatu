@@ -1,11 +1,14 @@
 import React from "react";
 import "./App.css";
 import { ChakraProvider, Text } from "@chakra-ui/react";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   return (
     <ChakraProvider>
-      <Text>Edit</Text>
+      <Router>
+        <Text>Edit</Text>
+      </Router>
     </ChakraProvider>
   );
 }
