@@ -1,8 +1,12 @@
 import { VFC } from "react";
-import { Text } from "@chakra-ui/react";
+import { Wrap, Text } from "@chakra-ui/react";
 
 const RecommendPage: VFC = () => {
-  return <Text>Recommend</Text>;
+  return (
+    <Wrap h="1000px" bg="gray" w="full">
+      <Text>Recommend</Text>
+    </Wrap>
+  );
 };
 
 export default RecommendPage;
