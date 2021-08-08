@@ -99,17 +99,8 @@ func Test_jobRepoImpl_Select(t *testing.T) {
 }
 
 func Test_jobRepoImpl_Insert(t *testing.T) {
-	type fields struct {
-		db *sql.DB
-	}
-	type args struct {
-		ctx    context.Context
-		entity *jobM.Job
-	}
 	tests := []struct {
 		name    string
-		fields  fields
-		args    args
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -121,17 +112,8 @@ func Test_jobRepoImpl_Insert(t *testing.T) {
 }
 
 func Test_jobRepoImpl_Update(t *testing.T) {
-	type fields struct {
-		db *sql.DB
-	}
-	type args struct {
-		ctx    context.Context
-		entity *jobM.Job
-	}
 	tests := []struct {
 		name    string
-		fields  fields
-		args    args
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -143,17 +125,8 @@ func Test_jobRepoImpl_Update(t *testing.T) {
 }
 
 func Test_jobRepoImpl_Delete(t *testing.T) {
-	type fields struct {
-		db *sql.DB
-	}
-	type args struct {
-		ctx    context.Context
-		entity *jobM.Job
-	}
 	tests := []struct {
 		name    string
-		fields  fields
-		args    args
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -165,12 +138,8 @@ func Test_jobRepoImpl_Delete(t *testing.T) {
 }
 
 func Test_convertToJobs(t *testing.T) {
-	type args struct {
-		rows *sql.Rows
-	}
 	tests := []struct {
 		name    string
-		args    args
 		want    []*jobM.Job
 		wantErr bool
 	}{

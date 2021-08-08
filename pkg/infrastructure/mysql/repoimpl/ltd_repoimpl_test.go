@@ -15,13 +15,9 @@ import (
 )
 
 func Test_ltdRepoImpl_Select(t *testing.T) {
-	type args struct {
-		ctx context.Context
-	}
 	tests := []struct {
 		name    string
 		query   func(s sqlmock.Sqlmock)
-		args    args
 		want    []*ltdM.Ltd
 		wantErr bool
 	}{

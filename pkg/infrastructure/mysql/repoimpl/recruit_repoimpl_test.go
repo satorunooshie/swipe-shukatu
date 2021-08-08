@@ -132,7 +132,7 @@ func Test_recruitRepoImpl_SelectRecruitForMessage(t *testing.T) {
 				t.Errorf("userRepository.FetchUser() returned diff (want -> got):\n%s", diff)
 			}
 			if err := mock.ExpectationsWereMet(); err != nil {
-				t.Errorf("there were unfulfilled expections: %s", err)
+				t.Errorf("there were unfulfilled expectations: %s", err)
 			}
 		})
 	}
