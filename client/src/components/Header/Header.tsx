@@ -1,12 +1,9 @@
 import { VFC } from "react";
 import {
   Flex,
-  Divider,
-  Wrap,
   Spacer,
   Text,
   Button,
-  IconButton,
 } from "@chakra-ui/react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
