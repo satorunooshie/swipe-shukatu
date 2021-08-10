@@ -5,14 +5,14 @@ import { useShowToast } from "./useShowToast"
 
 export const useLogout = () => {
   const { setCurrentUser } = useContext(CurrentUserContext);
-  const showToast = useShowToast("ログアウトしました")
+  const showToast = useShowToast()
   return () => {
     firebase
       .auth()
       .signOut()
       .then(() => {
         setCurrentUser(null);
-        showToast()
+        showToast("ログアウトしました")
       });
   };
 };

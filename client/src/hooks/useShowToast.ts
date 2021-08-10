@@ -2,9 +2,9 @@ import { useToast } from "@chakra-ui/react";
 
 type Status = "info" | "warning" | "success" | "error";
 
-export const useShowToast = (title: string, status: Status = "success") => {
+export const useShowToast = () => {
   const toast = useToast();
-  return () => {
+  return (title: string, status: Status = "success") => {
     toast({
       title: title,
       status: status,
