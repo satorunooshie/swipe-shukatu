@@ -1,16 +1,14 @@
-import { VFC } from "react";
-import {
-  Flex,
-  Spacer,
-  Text,
-  Button,
-} from "@chakra-ui/react";
+import { VFC, useContext } from "react";
+import { Flex, Spacer, Text, Button } from "@chakra-ui/react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import { LoginModalContext } from "../../context/LoginModalContext";
 
 const Header: VFC = () => {
   let location = useLocation();
+  const { onOpen } = useContext(LoginModalContext);
+
   if (location.pathname !== "/") return <></>;
   return (
     <Flex
@@ -57,6 +55,7 @@ const Header: VFC = () => {
         _hover={{
           bg: `${MAIN_COLOR}.300`,
         }}
+        onClick={() => onOpen()}
       >
         Log In
       </Button>

@@ -1,13 +1,15 @@
-import { VFC } from "react";
+import { VFC, useContext } from "react";
 import { Flex, Icon, VStack, Text, Button, Center } from "@chakra-ui/react";
 import { AiFillFire } from "react-icons/ai";
 import { HiChatAlt2 } from "react-icons/hi";
 import { BsLightningFill } from "react-icons/bs";
 import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import { LoginModalContext } from "../../context/LoginModalContext";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
+  const { onOpen } = useContext(LoginModalContext);
 
   return (
     <VStack
@@ -129,6 +131,7 @@ const Sidebar: VFC = () => {
           _hover={{
             bg: `${MAIN_COLOR}.300`,
           }}
+          onClick={() => onOpen()}
         >
           Log In
         </Button>
