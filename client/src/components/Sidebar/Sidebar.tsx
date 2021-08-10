@@ -6,10 +6,12 @@ import { BsLightningFill } from "react-icons/bs";
 import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { LoginModalContext } from "../../context/LoginModalContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
   const { onOpen } = useContext(LoginModalContext);
+  const { currentUser } = useContext(CurrentUserContext);
 
   return (
     <VStack
@@ -121,20 +123,34 @@ const Sidebar: VFC = () => {
         </Flex>
       </NavLink>
       <Center>
-        <Button
-          fontSize={"lg"}
-          size="lg"
-          fontWeight={600}
-          color={"white"}
-          bg={`${MAIN_COLOR}.400`}
-          w="100%"
-          _hover={{
-            bg: `${MAIN_COLOR}.300`,
-          }}
-          onClick={() => onOpen()}
-        >
-          Log In
-        </Button>
+        {currentUser === null || typeof currentUser === undefined ? (
+          <Button
+            fontSize={"lg"}
+            size="lg"
+            fontWeight={600}
+            color={"white"}
+            bg={`${MAIN_COLOR}.400`}
+            w="100%"
+            _hover={{
+              bg: `${MAIN_COLOR}.300`,
+            }}
+            onClick={() => onOpen()}
+          >
+            Log In
+          </Button>
+        ) : (
+          <Button
+            fontSize={"lg"}
+            size="lg"
+            fontWeight={600}
+            colorScheme={MAIN_COLOR}
+            variant="ghost"
+            w="100%"
+            onClick={() => alert("ログアウト")}
+          >
+            Log Out
+          </Button>
+        )}
       </Center>
     </VStack>
   );

@@ -9,32 +9,35 @@ import HomePage from "../src/pages/HomePage/HomePage";
 import MessagePage from "../src/pages/MessagePage/MessagePage";
 import RecommendPage from "../src/pages/RecommendPage/RecommendPage";
 import { LoginModalProvider } from "../src/context/LoginModalContext";
+import { CurrentUserProvider } from "./context/CurrentUserContext";
 
 function App() {
   return (
     <ChakraProvider>
-      <LoginModalProvider>
-        <Router>
-          <LoginModal />
-          <VStack px={[0, 0, 0, "10%"]}>
-            <BottomTabs />
-            <Flex w="full" justify="center">
-              <Sidebar />
-              <Switch>
-                <Route path="/recommend">
-                  <RecommendPage />
-                </Route>
-                <Route path="/message">
-                  <MessagePage />
-                </Route>
-                <Route path="/">
-                  <HomePage />
-                </Route>
-              </Switch>
-            </Flex>
-          </VStack>
-        </Router>
-      </LoginModalProvider>
+      <CurrentUserProvider>
+        <LoginModalProvider>
+          <Router>
+            <LoginModal />
+            <VStack px={[0, 0, 0, "10%"]}>
+              <BottomTabs />
+              <Flex w="full" justify="center">
+                <Sidebar />
+                <Switch>
+                  <Route path="/recommend">
+                    <RecommendPage />
+                  </Route>
+                  <Route path="/message">
+                    <MessagePage />
+                  </Route>
+                  <Route path="/">
+                    <HomePage />
+                  </Route>
+                </Switch>
+              </Flex>
+            </VStack>
+          </Router>
+        </LoginModalProvider>
+      </CurrentUserProvider>
     </ChakraProvider>
   );
 }
