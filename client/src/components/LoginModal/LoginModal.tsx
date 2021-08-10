@@ -1,4 +1,4 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -10,24 +10,37 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { LoginModalContext } from "../../context/LoginModalContext";
+import { FcGoogle } from "react-icons/fc";
+import { LoginWithGoogle } from "./LoginWithGoogle";
 
 const LoginModal: VFC = () => {
-  const { isOpen, onOpen, onClose } = useContext(LoginModalContext);
+  const { isOpen, onClose } = useContext(LoginModalContext);
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} closeOnEsc id="LOGIN">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader fontSize="2xl">Log In</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>現在、Googleアカウントでのみログイン可能です。</ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+            <Button
+              isLoading={loading}
+              loadingText="Redirecting"
+              size="lg"
+              colorScheme="gray"
+              leftIcon={<FcGoogle />}
+              onClick={() => {
+                setLoading(true);
+                LoginWithGoogle();
+              }}
+              mr="4"
+            >
+              Login with Google
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
