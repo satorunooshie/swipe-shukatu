@@ -30,6 +30,7 @@ const CurrentUserProvider: FC = ({ children }) => {
         setCurrentUser({ uid: user.uid });
       } else {
         console.log("ログインしてない");
+        setCurrentUser(null);
       }
     });
   }, []);
