@@ -26,7 +26,7 @@ const CurrentUserProvider: FC = ({ children }) => {
       if (user) {
         console.log(`${user.uid}がログイン中`);
 
-        // TODO：　API叩く処理をかく
+        // TODO： API叩く処理
         setCurrentUser({ uid: user.uid });
       } else {
         console.log("ログインしてない");

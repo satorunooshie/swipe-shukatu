@@ -7,11 +7,13 @@ import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { LoginModalContext } from "../../context/LoginModalContext";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useLogout } from "../../hooks/useLogout";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
   const { onOpen } = useContext(LoginModalContext);
   const { currentUser } = useContext(CurrentUserContext);
+  const Logout = useLogout();
 
   return (
     <VStack
@@ -31,7 +33,6 @@ const Sidebar: VFC = () => {
     >
       <NavLink to="/">
         <Text
-          h1
           fontSize="2xl"
           fontFamily={"heading"}
           color={"gray.800"}
@@ -123,8 +124,9 @@ const Sidebar: VFC = () => {
         </Flex>
       </NavLink>
       <Center>
-        {currentUser === null || typeof currentUser === undefined ? (
+        {currentUser === null || currentUser === undefined ? (
           <Button
+            isLoading={currentUser === undefined}
             fontSize={"lg"}
             size="lg"
             fontWeight={600}
@@ -146,7 +148,7 @@ const Sidebar: VFC = () => {
             colorScheme={MAIN_COLOR}
             variant="ghost"
             w="100%"
-            onClick={() => alert("ログアウト")}
+            onClick={() => Logout()}
           >
             Log Out
           </Button>

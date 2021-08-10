@@ -5,11 +5,13 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { LoginModalContext } from "../../context/LoginModalContext";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useLogout } from "../../hooks/useLogout";
 
 const Header: VFC = () => {
   let location = useLocation();
   const { onOpen } = useContext(LoginModalContext);
   const { currentUser } = useContext(CurrentUserContext);
+  const Logout = useLogout();
 
   if (location.pathname !== "/") return <></>;
   return (
@@ -47,8 +49,9 @@ const Header: VFC = () => {
           <Text ml="4">検索条件</Text>
         </Flex>
       </Button>
-      {currentUser === null || typeof currentUser === undefined ? (
+      {currentUser === null || currentUser === undefined ? (
         <Button
+          isLoading={currentUser === undefined}
           display={["inline-block", "inline-block", "none"]}
           fontSize={"sm"}
           fontWeight={600}
@@ -70,7 +73,7 @@ const Header: VFC = () => {
           colorScheme={MAIN_COLOR}
           variant="ghost"
           ml="4"
-          onClick={() => alert("ログアウト")}
+          onClick={() => Logout()}
         >
           Log Out
         </Button>
