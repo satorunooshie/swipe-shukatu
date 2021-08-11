@@ -14,8 +14,9 @@ import (
 //nolint
 func Auth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// opt := option.WithCredentialsFile(os.Getenv("firebase-sdk"))
-		opt := option.WithCredentialsFile("./firebase-sdk.json")
+		// opt := option.WithCredentialsFile(os.Getenv("firebaseKey"))
+		// NOTE: 絶対パス指定は、実行パスが違って500(credential file not found)で落ちるから。 ref: println(os.Getwd())
+		opt := option.WithCredentialsFile("/go/src/github.com/satorunooshie/swipe-shukatu/firebase-sdk.json")
 		ctx := r.Context()
 		if ctx != nil {
 			ctx = context.Background()
