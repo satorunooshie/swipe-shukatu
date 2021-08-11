@@ -1,4 +1,5 @@
 .env
+firebase-sdk.json
 .idea/
 *-data/
 tmp/
