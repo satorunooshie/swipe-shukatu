@@ -5,26 +5,26 @@ import (
 	"net/http"
 )
 
-func Get(api http.HandlerFunc) http.HandlerFunc {
-	return httpMethod(api, http.MethodGet)
+func Get(next http.HandlerFunc) http.HandlerFunc {
+	return httpMethod(next, http.MethodGet)
 }
 
 //nolint
-func Post(api http.HandlerFunc) http.HandlerFunc {
-	return httpMethod(api, http.MethodPost)
+func Post(next http.HandlerFunc) http.HandlerFunc {
+	return httpMethod(next, http.MethodPost)
 }
 
 //nolint
-func Put(api http.HandlerFunc) http.HandlerFunc {
-	return httpMethod(api, http.MethodPut)
+func Put(next http.HandlerFunc) http.HandlerFunc {
+	return httpMethod(next, http.MethodPut)
 }
 
 //nolint
-func Delete(api http.HandlerFunc) http.HandlerFunc {
-	return httpMethod(api, http.MethodDelete)
+func Delete(next http.HandlerFunc) http.HandlerFunc {
+	return httpMethod(next, http.MethodDelete)
 }
 
-func httpMethod(api http.HandlerFunc, method string) http.HandlerFunc {
+func httpMethod(next http.HandlerFunc, method string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const client = "http://localhost:3000"
 		w.Header().Add("Access-Control-Allow-Origin", client)
@@ -41,6 +41,6 @@ func httpMethod(api http.HandlerFunc, method string) http.HandlerFunc {
 			return
 		}
 		w.Header().Add("Content-Type", "application/json; charset=utf-8")
-		api(w, r)
+		next(w, r)
 	}
 }
