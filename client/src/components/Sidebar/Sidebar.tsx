@@ -1,13 +1,19 @@
-import { VFC } from "react";
+import { VFC, useContext } from "react";
 import { Flex, Icon, VStack, Text, Button, Center } from "@chakra-ui/react";
 import { AiFillFire } from "react-icons/ai";
 import { HiChatAlt2 } from "react-icons/hi";
 import { BsLightningFill } from "react-icons/bs";
 import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import { LoginModalContext } from "../../context/LoginModalContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useLogout } from "../../hooks/useLogout";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
+  const { onOpen } = useContext(LoginModalContext);
+  const { currentUser } = useContext(CurrentUserContext);
+  const Logout = useLogout();
 
   return (
     <VStack
@@ -27,7 +33,6 @@ const Sidebar: VFC = () => {
     >
       <NavLink to="/">
         <Text
-          h1
           fontSize="2xl"
           fontFamily={"heading"}
           color={"gray.800"}
@@ -119,19 +124,35 @@ const Sidebar: VFC = () => {
         </Flex>
       </NavLink>
       <Center>
-        <Button
-          fontSize={"lg"}
-          size="lg"
-          fontWeight={600}
-          color={"white"}
-          bg={`${MAIN_COLOR}.400`}
-          w="100%"
-          _hover={{
-            bg: `${MAIN_COLOR}.300`,
-          }}
-        >
-          Log In
-        </Button>
+        {currentUser === null || currentUser === undefined ? (
+          <Button
+            isLoading={currentUser === undefined}
+            fontSize={"lg"}
+            size="lg"
+            fontWeight={600}
+            color={"white"}
+            bg={`${MAIN_COLOR}.400`}
+            w="100%"
+            _hover={{
+              bg: `${MAIN_COLOR}.300`,
+            }}
+            onClick={() => onOpen()}
+          >
+            Log In
+          </Button>
+        ) : (
+          <Button
+            fontSize={"lg"}
+            size="lg"
+            fontWeight={600}
+            colorScheme={MAIN_COLOR}
+            variant="ghost"
+            w="100%"
+            onClick={() => Logout()}
+          >
+            Log Out
+          </Button>
+        )}
       </Center>
     </VStack>
   );

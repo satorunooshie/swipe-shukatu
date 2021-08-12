@@ -1,16 +1,18 @@
-import { VFC } from "react";
-import {
-  Flex,
-  Spacer,
-  Text,
-  Button,
-} from "@chakra-ui/react";
+import { VFC, useContext } from "react";
+import { Flex, Spacer, Text, Button } from "@chakra-ui/react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import { LoginModalContext } from "../../context/LoginModalContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useLogout } from "../../hooks/useLogout";
 
 const Header: VFC = () => {
   let location = useLocation();
+  const { onOpen } = useContext(LoginModalContext);
+  const { currentUser } = useContext(CurrentUserContext);
+  const Logout = useLogout();
+
   if (location.pathname !== "/") return <></>;
   return (
     <Flex
@@ -47,19 +49,35 @@ const Header: VFC = () => {
           <Text ml="4">検索条件</Text>
         </Flex>
       </Button>
-      <Button
-        display={["block", "block", "none"]}
-        fontSize={"sm"}
-        fontWeight={600}
-        color={"white"}
-        ml="4"
-        bg={`${MAIN_COLOR}.400`}
-        _hover={{
-          bg: `${MAIN_COLOR}.300`,
-        }}
-      >
-        Log In
-      </Button>
+      {currentUser === null || currentUser === undefined ? (
+        <Button
+          isLoading={currentUser === undefined}
+          display={["inline-block", "inline-block", "none"]}
+          fontSize={"sm"}
+          fontWeight={600}
+          color={"white"}
+          ml="4"
+          bg={`${MAIN_COLOR}.400`}
+          _hover={{
+            bg: `${MAIN_COLOR}.300`,
+          }}
+          onClick={() => onOpen()}
+        >
+          Log In
+        </Button>
+      ) : (
+        <Button
+          display={["inline-block", "inline-block", "none"]}
+          fontSize={"sm"}
+          fontWeight={600}
+          colorScheme={MAIN_COLOR}
+          variant="ghost"
+          ml="4"
+          onClick={() => Logout()}
+        >
+          Log Out
+        </Button>
+      )}
     </Flex>
   );
 };
