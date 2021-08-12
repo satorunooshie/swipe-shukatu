@@ -14,7 +14,6 @@ import (
 )
 
 func Test_recruitRepoImpl_Select(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	type fields struct {
 		db *sql.DB
@@ -49,7 +48,6 @@ func Test_recruitRepoImpl_Select(t *testing.T) {
 }
 
 func Test_recruitRepoImpl_SelectRecruitForMessage(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	type args struct {
 		ctx context.Context

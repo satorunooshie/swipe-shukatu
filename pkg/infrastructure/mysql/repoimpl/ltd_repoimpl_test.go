@@ -33,7 +33,6 @@ func Test_ltdRepoImpl_Select(t *testing.T) {
 }
 
 func Test_ltdRepoImpl_SelectLtdNameByID(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	type args struct {
 		ctx   context.Context

@@ -15,7 +15,6 @@ import (
 )
 
 func Test_messageUseCase_Select(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	var (
 		rID int32 = 1

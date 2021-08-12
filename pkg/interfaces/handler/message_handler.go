@@ -101,11 +101,12 @@ type MessageRequest struct { // nolint
 	// Need to implement field
 }
 
+// MessageResponse ...
 type MessageResponses struct {
 	Messages []*MessageResponse `json:"messages"`
 }
 
-// MessageResponse
+// MessageResponse ...
 type MessageResponse struct {
 	LtdID     int32     `json:"ltd_id"`
 	RecruitID int32     `json:"recruit_id"`

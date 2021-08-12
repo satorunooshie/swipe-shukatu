@@ -16,7 +16,6 @@ import (
 )
 
 func Test_messageRepoImpl_Select(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	type args struct {
 		ctx context.Context

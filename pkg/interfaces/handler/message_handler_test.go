@@ -2,121 +2,119 @@
 package handler
 
 import (
+	"encoding/json"
+	"errors"
 	"net/http"
-	"reflect"
+	"net/http/httptest"
+	"strconv"
 	"testing"
+	"time"
 
-	messageU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
+	"github.com/golang/mock/gomock"
+	"github.com/google/go-cmp/cmp"
+	"github.com/satorunooshie/swipe-shukatu/pkg/usecase"
+	"github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase"
 )
 
-func TestNewMessageHandler(t *testing.T) {
-	type args struct {
-		messageU messageU.MessageUseCase
-	}
-	tests := []struct {
-		name string
-		args args
-		want MessageHandler
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewMessageHandler(tt.args.messageU); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewMessageHandler() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_messageHandler_HandleSelect(t *testing.T) {
+	t.Parallel()
+	var rID int32 = 1
 	type fields struct {
-		messageUseCase messageU.MessageUseCase
+		messageUseCase func(m *mock_usecase.MockMessageUseCase)
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		want   http.HandlerFunc
+		name     string
+		fields   fields
+		want     *MessageResponses
+		wantErr  bool
+		wantCode int
 	}{
-		// TODO: Add test cases.
+		{
+			name: "valid case: 200 status",
+			fields: fields{
+				messageUseCase: func(m *mock_usecase.MockMessageUseCase) {
+					m.EXPECT().Select(gomock.Any(), rID).Return([]*usecase.MessageResponse{
+						{
+							LtdID:     1,
+							RecruitID: 1,
+							Name:      "name",
+							JobType:   "job",
+							Content:   "content",
+							Image:     "image",
+							CreatedAt: time.Date(2014, time.December, 31, 12, 13, 24, 0, time.UTC),
+						},
+					}, nil)
+				},
+			},
+			want: &MessageResponses{
+				Messages: []*MessageResponse{
+					{
+						LtdID:     1,
+						RecruitID: 1,
+						Name:      "name",
+						JobType:   "job",
+						Content:   "content",
+						Image:     "image",
+						CreatedAt: time.Date(2014, time.December, 31, 12, 13, 24, 0, time.UTC),
+					},
+				},
+			},
+			wantCode: http.StatusOK,
+		},
+		{
+			name: "invalid case: 500 status",
+			fields: fields{
+				messageUseCase: func(m *mock_usecase.MockMessageUseCase) {
+					m.EXPECT().Select(gomock.Any(), rID).Return(nil, errors.New("error"))
+				},
+			},
+			want:     &MessageResponses{},
+			wantErr:  true,
+			wantCode: http.StatusInternalServerError,
+		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			messageH := &messageHandler{
-				messageUseCase: tt.fields.messageUseCase,
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			m := mock_usecase.NewMockMessageUseCase(ctrl)
+			tt.fields.messageUseCase(m)
+			handler := NewMessageHandler(m)
+
+			server := httptest.NewServer(handler.HandleSelect())
+			defer server.Close()
+
+			res, err := http.Get(server.URL + "/message/" + strconv.Itoa(int(rID)))
+			if err != nil {
+				t.Errorf("http.Get(%q) returned error %v", server.URL+"/"+strconv.Itoa(int(rID)), err)
+				return
 			}
-			if got := messageH.HandleSelect(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("messageHandler.HandleSelect() = %v, want %v", got, tt.want)
+			if res.StatusCode != tt.wantCode {
+				t.Errorf("http.Get(%q) returned status %v", server.URL+"/"+strconv.Itoa(int(rID)), res.Status)
+				return
+			}
+			got := &MessageResponses{}
+			err = json.NewDecoder(res.Body).Decode(got)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MessageHandler.HandleSelect() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if diff := cmp.Diff(got, tt.want); diff != "" {
+				t.Errorf("handler.HandleSelect() returned diff (want -> got):\n%s", diff)
+				return
 			}
 		})
 	}
 }
 
 func Test_messageHandler_HandleInsert(t *testing.T) {
-	type fields struct {
-		messageUseCase messageU.MessageUseCase
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   http.HandlerFunc
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			messageH := &messageHandler{
-				messageUseCase: tt.fields.messageUseCase,
-			}
-			if got := messageH.HandleInsert(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("messageHandler.HandleInsert() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
 
 func Test_messageHandler_HandleUpdate(t *testing.T) {
-	type fields struct {
-		messageUseCase messageU.MessageUseCase
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   http.HandlerFunc
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			messageH := &messageHandler{
-				messageUseCase: tt.fields.messageUseCase,
-			}
-			if got := messageH.HandleUpdate(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("messageHandler.HandleUpdate() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
 
 func Test_messageHandler_HandleDelete(t *testing.T) {
-	type fields struct {
-		messageUseCase messageU.MessageUseCase
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   http.HandlerFunc
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			messageH := &messageHandler{
-				messageUseCase: tt.fields.messageUseCase,
-			}
-			if got := messageH.HandleDelete(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("messageHandler.HandleDelete() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }

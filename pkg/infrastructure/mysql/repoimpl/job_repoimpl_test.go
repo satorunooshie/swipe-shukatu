@@ -14,7 +14,6 @@ import (
 )
 
 func Test_jobRepoImpl_Select(t *testing.T) {
-	t.Helper()
 	t.Parallel()
 	type args struct {
 		ctx context.Context
