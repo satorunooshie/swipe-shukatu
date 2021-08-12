@@ -23,13 +23,13 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 		}
 		app, err := firebase.NewApp(ctx, nil, opt)
 		if err != nil {
-			log.Printf("[ERROR] auth::Auth: %v\n", err)
+			log.Printf("[ERROR] auth::Auth::firebase.NewApp: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		auth, err := app.Auth(ctx)
 		if err != nil {
-			log.Printf("[ERROR] auth::Auth: %v\n", err)
+			log.Printf("[ERROR] auth::Auth::app.Auth: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
