@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"google.golang.org/api/option"
@@ -20,21 +21,31 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 		if idToken == "" {
 			log.Printf("[INFO] auth::Auth: %v\n", errors.New("header is not set"))
 			w.WriteHeader(http.StatusBadRequest)
+			// TODO: Delete debug code instead return json error message
+			_, _ = w.Write([]byte("empty token\n"))
 			return
 		}
-		// opt := option.WithCredentialsFile(os.Getenv("firebaseKey"))
-		// NOTE: 絶対パス指定は、実行パスが違って500(credential file not found)で落ちるから。 ref: println(os.Getwd())
-		opt := option.WithCredentialsFile("/go/src/github.com/satorunooshie/swipe-shukatu/firebase-sdk.json")
+
+		path, err := getFilePath()
+		if err != nil {
+			log.Printf("[ERROR] auth::Auth::getFilePath: %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		opt := option.WithCredentialsFile(path)
+
 		ctx := r.Context()
 		if ctx == nil {
 			ctx = context.Background()
 		}
+
 		app, err := firebase.NewApp(ctx, nil, opt)
 		if err != nil {
 			log.Printf("[ERROR] auth::Auth::firebase.NewApp: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+
 		auth, err := app.Auth(ctx)
 		if err != nil {
 			log.Printf("[ERROR] auth::Auth::app.Auth: %v\n", err)
@@ -53,4 +64,18 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 		log.Printf("[INFO] Verified ID token: %v\n", token)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
+}
+
+// NOTE: 実行パスが違うのでトリミング
+func getFilePath() (string, error) {
+	const (
+		dirname  = "swipe-shukatu"
+		filename = "firebase-sdk.json"
+	)
+	cp, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	idx := strings.LastIndex(cp, dirname)
+	return cp[:(idx+len(dirname))] + "/" + filename, nil
 }

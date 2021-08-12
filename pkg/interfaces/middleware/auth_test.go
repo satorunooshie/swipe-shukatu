@@ -13,6 +13,7 @@ func TestAuth(t *testing.T) {
 		path    string
 		method  string
 		handler func() http.HandlerFunc
+		token   string
 		want    int
 	}{
 		{
@@ -29,7 +30,17 @@ func TestAuth(t *testing.T) {
 			handler: func() http.HandlerFunc {
 				return Auth(func(rw http.ResponseWriter, req *http.Request) {})
 			},
-			want: http.StatusUnauthorized,
+			token: "Bearer test",
+			want:  http.StatusUnauthorized,
+		},
+		{
+			path:   "/auth",
+			method: http.MethodGet,
+			handler: func() http.HandlerFunc {
+				return Auth(func(rw http.ResponseWriter, req *http.Request) {})
+			},
+			token: "", // 明示的になし
+			want:  http.StatusBadRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -46,7 +57,7 @@ func TestAuth(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%v", err)
 			}
-			req.Header.Set("Authorization", "Bearer Test")
+			req.Header.Set("Authorization", tt.token)
 			client := &http.Client{}
 			res, _ := client.Do(req)
 			if res.StatusCode != tt.want {

@@ -63,7 +63,7 @@
 				
 				<option value="file3">github.com/satorunooshie/swipe-shukatu/pkg/errors/statuses.go (0.0%)</option>
 				
-				<option value="file4">github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware/auth.go (64.0%)</option>
+				<option value="file4">github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware/auth.go (67.4%)</option>
 				
 				<option value="file5">github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware/cors.go (0.0%)</option>
 				
@@ -445,8 +445,10 @@ func (e *appError) InternalServerError() AppError <span class="cov0" title="0">{
 
 import (
         "context"
+        "errors"
         "log"
         "net/http"
+        "os"
         "strings"
 
         "google.golang.org/api/option"
@@ -457,30 +459,46 @@ import (
 //nolint
 func Auth(next http.HandlerFunc) http.HandlerFunc <span class="cov8" title="1">{
         return func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="1">{
-                // opt := option.WithCredentialsFile(os.Getenv("firebaseKey"))
-                // NOTE: 絶対パス指定は、実行パスが違って500(credential file not found)で落ちるから。 ref: println(os.Getwd())
-                opt := option.WithCredentialsFile("/go/src/github.com/satorunooshie/swipe-shukatu/firebase-sdk.json")
+                authHeader := r.Header.Get("Authorization")
+                println(authHeader)
+                idToken := strings.Replace(authHeader, "Bearer ", "", 1)
+                println(len(idToken))
+                if idToken == "" </span><span class="cov8" title="1">{
+                        log.Printf("[INFO] auth::Auth: %v\n", errors.New("header is not set"))
+                        w.WriteHeader(http.StatusBadRequest)
+                        // TODO: Delete debug code instead return json error message
+                        _, _ = w.Write([]byte("empty token\n"))
+                        return
+                }</span>
+
+                <span class="cov8" title="1">path, err := getFilePath()
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] auth::Auth::getFilePath: %v\n", err)
+                        w.WriteHeader(http.StatusInternalServerError)
+                        return
+                }</span>
+                <span class="cov8" title="1">opt := option.WithCredentialsFile(path)
+
                 ctx := r.Context()
-                if ctx != nil </span><span class="cov8" title="1">{
+                if ctx == nil </span><span class="cov0" title="0">{
                         ctx = context.Background()
                 }</span>
+
                 <span class="cov8" title="1">app, err := firebase.NewApp(ctx, nil, opt)
                 if err != nil </span><span class="cov0" title="0">{
-                        log.Printf("[ERROR] auth::Auth: %v\n", err)
+                        log.Printf("[ERROR] auth::Auth::firebase.NewApp: %v\n", err)
                         w.WriteHeader(http.StatusInternalServerError)
                         return
                 }</span>
+
                 <span class="cov8" title="1">auth, err := app.Auth(ctx)
                 if err != nil </span><span class="cov0" title="0">{
-                        log.Printf("[ERROR] auth::Auth: %v\n", err)
+                        log.Printf("[ERROR] auth::Auth::app.Auth: %v\n", err)
                         w.WriteHeader(http.StatusInternalServerError)
                         return
                 }</span>
 
-                <span class="cov8" title="1">authHeader := r.Header.Get("Authorization")
-                idToken := strings.Replace(authHeader, "Bearer ", "", 1)
-
-                token, err := auth.VerifyIDToken(ctx, idToken)
+                <span class="cov8" title="1">token, err := auth.VerifyIDToken(ctx, idToken)
                 if err != nil </span><span class="cov8" title="1">{
                         w.WriteHeader(http.StatusUnauthorized)
                         // TODO: Delete debug code instead return json error message
@@ -492,6 +510,20 @@ func Auth(next http.HandlerFunc) http.HandlerFunc <span class="cov8" title="1">{
                 next.ServeHTTP(w, r.WithContext(ctx))</span>
         }
 }
+
+// NOTE: 実行パスが違うのでトリミング
+func getFilePath() (string, error)<span class="cov8" title="1">{
+        const (
+                dirname = "swipe-shukatu"
+                filename = "firebase-sdk.json"
+        )
+        cp, err := os.Getwd()
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+        <span class="cov8" title="1">idx := strings.LastIndex(cp, dirname)
+        return cp[:(idx+len(dirname))] + "/" + filename, nil</span>
+}
 </pre>
 		
 		<pre class="file" id="file5" style="display: none">package middleware
@@ -501,28 +533,29 @@ import (
         "net/http"
 )
 
-func Get(api http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
-        return httpMethod(api, http.MethodGet)
+func Get(next http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
+        return httpMethod(next, http.MethodGet)
 }</span>
 
 //nolint
-func Post(api http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
-        return httpMethod(api, http.MethodPost)
+func Post(next http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
+        return httpMethod(next, http.MethodPost)
 }</span>
 
 //nolint
-func Put(api http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
-        return httpMethod(api, http.MethodPut)
+func Put(next http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
+        return httpMethod(next, http.MethodPut)
 }</span>
 
 //nolint
-func Delete(api http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
-        return httpMethod(api, http.MethodDelete)
+func Delete(next http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
+        return httpMethod(next, http.MethodDelete)
 }</span>
 
-func httpMethod(api http.HandlerFunc, method string) http.HandlerFunc <span class="cov0" title="0">{
+func httpMethod(next http.HandlerFunc, method string) http.HandlerFunc <span class="cov0" title="0">{
         return func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
-                w.Header().Add("Access-Control-Allow-Origin", "http://localhost:3000")
+                const client = "http://localhost:3000"
+                w.Header().Add("Access-Control-Allow-Origin", client)
                 w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept, Origin, Authorization")
                 w.Header().Set("Access-Control-Allow-Credentials", "true")
                 if r.Method == http.MethodOptions </span><span class="cov0" title="0">{
@@ -536,7 +569,7 @@ func httpMethod(api http.HandlerFunc, method string) http.HandlerFunc <span clas
                         <span class="cov0" title="0">return</span>
                 }
                 <span class="cov0" title="0">w.Header().Add("Content-Type", "application/json; charset=utf-8")
-                api(w, r)</span>
+                next(w, r)</span>
         }
 }
 </pre>
