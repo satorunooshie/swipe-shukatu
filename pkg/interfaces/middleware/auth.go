@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"strings"
@@ -14,6 +15,13 @@ import (
 //nolint
 func Auth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
+		if idToken == "" {
+			log.Printf("[INFO] auth::Auth: %v\n", errors.New("header is not set"))
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		// opt := option.WithCredentialsFile(os.Getenv("firebaseKey"))
 		// NOTE: 絶対パス指定は、実行パスが違って500(credential file not found)で落ちるから。 ref: println(os.Getwd())
 		opt := option.WithCredentialsFile("/go/src/github.com/satorunooshie/swipe-shukatu/firebase-sdk.json")
@@ -33,9 +41,6 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-
-		authHeader := r.Header.Get("Authorization")
-		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
 
 		token, err := auth.VerifyIDToken(ctx, idToken)
 		if err != nil {
