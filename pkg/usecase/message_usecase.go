@@ -98,7 +98,7 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 		return nil, err
 	}
 
-	ms := make([]*MessageResponse, 0, len(messages))
+	ms := make([]*MessageResponse, len(messages))
 	for i, m := range messages {
 		var mr MessageResponse
 		job := jm[rec.JobTypeID]
