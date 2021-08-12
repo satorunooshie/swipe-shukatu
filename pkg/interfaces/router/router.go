@@ -7,6 +7,7 @@ import (
 
 	"github.com/satorunooshie/swipe-shukatu/pkg/infrastructure/mysql/repoimpl"
 	"github.com/satorunooshie/swipe-shukatu/pkg/interfaces/handler"
+	"github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
 	"github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -29,15 +30,16 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	messageHandler := handler.NewMessageHandler(messageUseCase)
 
 	// register the handler
-	h.Handle("/message/", messageHandler.HandleSelect())
+	// h.Handle("/message/", middleware.Auth(middleware.Get(messageHandler.HandleSelect())))
+	h.Handle("/message/", middleware.Get(messageHandler.HandleSelect()))
 
 	// this endpoint is for health check
-	h.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	h.HandleFunc("/health", middleware.Get(func(w http.ResponseWriter, r *http.Request) {
 		health := struct {
 			Ping string `json:"ping"`
 		}{
 			Ping: "pong",
 		}
 		_ = json.NewEncoder(w).Encode(health)
-	})
+	}))
 }
