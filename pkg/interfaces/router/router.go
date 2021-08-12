@@ -30,8 +30,8 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	messageHandler := handler.NewMessageHandler(messageUseCase)
 
 	// register the handler
-	h.Handle("/message/", middleware.Auth(middleware.Get(messageHandler.HandleSelect())))
-	//h.Handle("/message/", middleware.Get(messageHandler.HandleSelect()))
+	// h.Handle("/message/", middleware.Auth(middleware.Get(messageHandler.HandleSelect())))
+	h.Handle("/message/", middleware.Get(messageHandler.HandleSelect()))
 
 	// this endpoint is for health check
 	h.HandleFunc("/health", middleware.Get(func(w http.ResponseWriter, r *http.Request) {
