@@ -31,12 +31,12 @@ func (recruitI *recruitRepoImpl) Select(ctx context.Context) ([]*recruitM.Recrui
 
 // SelectDetail fetch the recruit.
 func (recruitI *recruitRepoImpl) SelectRecruitForMessage(ctx context.Context, rID int32) (*recruitM.Recruit, error) {
-	q := "SELECT id, ltd_id, job_type_id FROM recruit WHERE id = ? AND delete_at IS NULL"
+	q := "SELECT id, ltd_id, job_type_id FROM recruit WHERE id = ? AND deleted_at IS NULL"
 	var r recruitM.Recruit
 	err := recruitI.db.QueryRowContext(ctx, q, rID).Scan(
-		r.ID,
-		r.LtdID,
-		r.JobTypeID,
+		&r.ID,
+		&r.LtdID,
+		&r.JobTypeID,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
