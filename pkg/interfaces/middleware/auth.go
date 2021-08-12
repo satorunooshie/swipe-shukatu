@@ -18,7 +18,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 		// NOTE: 絶対パス指定は、実行パスが違って500(credential file not found)で落ちるから。 ref: println(os.Getwd())
 		opt := option.WithCredentialsFile("/go/src/github.com/satorunooshie/swipe-shukatu/firebase-sdk.json")
 		ctx := r.Context()
-		if ctx != nil {
+		if ctx == nil {
 			ctx = context.Background()
 		}
 		app, err := firebase.NewApp(ctx, nil, opt)
