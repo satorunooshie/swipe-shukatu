@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-cmp/cmp"
+
 	"github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 	"github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase"
 )
