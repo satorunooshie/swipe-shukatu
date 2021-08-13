@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`user` (
   `registered_method_id` tinyint(3) NULL COMMENT '登録方法',
   `gender` tinyint(3) NULL COMMENT '性別(1->M, 2->F, 3->X)',
   `graduate_year` tinyint(3) NULL COMMENT '卒業年次',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
   PRIMARY KEY (`uuid`)
 ) ENGINE = InnoDB COMMENT = 'ユーザ';
@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`recruit` (
   `educational_background_id` smallint(5) unsigned NULL COMMENT '必要な最終学歴ID',
   `average_salary` int(11) unsigned NULL COMMENT '平均年収',
   `starting_salary` int(11) unsigned NULL COMMENT '初任給', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `is_invalid_at` DATETIME NULL COMMENT '無効日時', 
   PRIMARY KEY (`id`), 
   INDEX `idx_ltd_id` (`ltd_id` ASC)
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_image` (
   `ltd_id` bigint(20) unsigned NOT NULL COMMENT '企業ID',
   `image_path` varchar(255) NOT NULL COMMENT 'プロフィール画像保存先',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`), 
   INDEX `idx_id` (`ltd_id` ASC)
@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_benefit` (
   `ltd_id` bigint(20) unsigned NOT NULL COMMENT '企業ID',
   `benefit_id` smallint(11) unsigned NOT NULL COMMENT '福利厚生ID',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
   PRIMARY KEY (`id`),
   INDEX `idx_ltd_id` (`ltd_id` ASC)
@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_location` (
   `ltd_id` bigint(20) unsigned NOT NULL COMMENT '企業ID',
   `location_id` smallint(11) unsigned NOT NULL COMMENT '所在地ID',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '企業の所在地';
@@ -93,8 +93,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_location` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`like` (
   `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   PRIMARY KEY (`user_id`, `recruit_id`)
 ) ENGINE = InnoDB COMMENT = 'いいね';
 
@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`like` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`nope` (
   `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   PRIMARY KEY (`user_id`, `recruit_id`)
 ) ENGINE = InnoDB COMMENT = 'いまいち';
 
@@ -115,8 +115,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`nope` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`superlike` (
   `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   PRIMARY KEY (`user_id`, `recruit_id`)
 ) ENGINE = InnoDB COMMENT = '最高';
 
@@ -128,9 +128,9 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`message` (
   `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `type` tinyint(3) unsigned NOT NULL COMMENT 'メッセージタイプ(1->text, 2->remind, 3->image)',
-  `content` text(500) NULL COMMENT 'メッセージ内容',
+  `content` text NULL COMMENT 'メッセージ内容',
   `image_path` varchar(255) NOT NULL COMMENT '画像保存先',
-  `created_at` DATETIME NULL COMMENT '登録日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`),
   INDEX `idx_recruit_id_user_id` (`recruit_id`, `user_id`)
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`message` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`remind_message` (
   `message_id` bigint(20) NOT NULL COMMENT 'メッセージID',
-  `created_at` DATETIME NULL COMMENT '登録日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `execute_at` DATETIME NULL COMMENT '実行日時',
   PRIMARY KEY (`message_id`)
 ) ENGINE = InnoDB COMMENT = 'リマインドメッセージ';
@@ -156,11 +156,11 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`remind_message` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_ltd` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '企業名',
-  `profile` text(500) NULL COMMENT '企業紹介',
+  `profile` text NULL COMMENT '企業紹介',
   `employee_number` int(11) unsigned NULL COMMENT '従業員数',
   `average_age` tinyint(3) unsigned NULL COMMENT '平均年齢',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '企業';
@@ -172,11 +172,11 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_ltd_official_message` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'メッセージタイプ(1->Text, 2->Image)',
-  `content` text(500) NOT NULL COMMENT 'メッセージ内容',
+  `content` text NOT NULL COMMENT 'メッセージ内容',
   `image_path` varchar(255) NOT NULL COMMENT '画像保存先',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `is_invalid_at` DATETIME NULL COMMENT '無効日時',
   PRIMARY KEY (`id`),
   INDEX `idx_recruit_id` (`recruit_id` ASC)
@@ -189,8 +189,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_registered_method` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '登録方法',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = 'ログイン方法';
@@ -202,8 +202,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_job_type` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '職種',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '職種';
@@ -215,8 +215,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_educational_background` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '学歴',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '学歴';
@@ -228,8 +228,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_benefit` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '福利厚生',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '福利厚生';
@@ -241,8 +241,8 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_location` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '所在地',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
-  `created_at` DATETIME NULL COMMENT '登録日時',
-  `updated_at` DATETIME NULL COMMENT '更新日時',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '所在地';
