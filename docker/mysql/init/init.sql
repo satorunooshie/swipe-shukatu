@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_image` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_benefit` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `ltd_id` bigint(20) unsigned NOT NULL COMMENT '企業ID',
-  `benefit_id` smallint(11) unsigned NOT NULL COMMENT '福利厚生ID',
+  `benefit_id` smallint(5) unsigned NOT NULL COMMENT '福利厚生ID',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順', 
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_benefit` (
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_location` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `ltd_id` bigint(20) unsigned NOT NULL COMMENT '企業ID',
-  `location_id` smallint(11) unsigned NOT NULL COMMENT '所在地ID',
+  `location_id` smallint(5) unsigned NOT NULL COMMENT '所在地ID',
   `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順', 
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
@@ -159,6 +159,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_ltd` (
   `profile` text NULL COMMENT '企業紹介',
   `employee_number` int(11) unsigned NULL COMMENT '従業員数',
   `average_age` tinyint(3) unsigned NULL COMMENT '平均年齢',
+  `industry_id` smallint(5) NOT NULL COMMENT '業種ID',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
@@ -246,6 +247,19 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_location` (
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB COMMENT = '所在地';
+
+-- -----------------------------------------------------
+-- m_industry
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_industry` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL COMMENT '業種',
+  `sort_id` smallint(5) unsigned NOT NULL COMMENT '表示順',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+  `deleted_at` DATETIME NULL COMMENT '削除日時',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB COMMENT = '業種';
 
 SET
   SQL_MODE = @OLD_SQL_MODE;
