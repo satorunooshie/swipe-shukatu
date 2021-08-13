@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/satorunooshie/swipe-shukatu/pkg/dcontext"
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
-	"github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
 	likeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -37,7 +37,7 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 		ctx := request.Context()
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
-		UID := middleware.GetUIDFromContext(ctx)
+		UID := dcontext.GetUIDFromContext(ctx)
 		lk, err := likeH.likeUseCase.Select(ctx, UID)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -77,7 +77,7 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		ctx := request.Context()
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
-		UID := middleware.GetUIDFromContext(ctx)
+		UID := dcontext.GetUIDFromContext(ctx)
 		err := likeH.likeUseCase.Insert(ctx, like, UID)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
