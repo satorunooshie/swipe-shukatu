@@ -1,20 +1,19 @@
 // @ts-nocheck
 import "../../App.css";
 import { VFC, useMemo, createRef } from "react";
-import {
-  Button,
-  Wrap,
-  Box,
-  Container,
-  Center,
-  Flex,
-  IconButton,
-} from "@chakra-ui/react";
+import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import TinderCard from "react-tinder-card";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
-const ltds = [
+
+// 仮
+type Ltd = {
+  readonly id: number;
+  readonly name: string;
+};
+
+const ltds: Ltd[] = [
   {
     id: 1,
     name: "会社A",
@@ -78,7 +77,7 @@ const ltds = [
 ];
 
 const HomePage: VFC = () => {
-  const alreadyRemoved = [];
+  const alreadyRemoved: number[] = [];
   const childRefs = useMemo(
     () =>
       Array(ltds.length)
@@ -86,7 +85,7 @@ const HomePage: VFC = () => {
         .map((i) => createRef()),
     []
   );
-  const swiped = (dir, ltd) => {
+  const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
     if (dir === "right") {
       console.log("like", ltd.name);
     } else if (dir === "left") {
@@ -94,19 +93,21 @@ const HomePage: VFC = () => {
     } else if (dir === "up") {
       console.log("slike", ltd.name);
     }
-    alreadyRemoved.push(ltd.name);
+    alreadyRemoved.push(ltd.id);
   };
-  const swipe = (dir) => {
+  const swipe = (dir: "right" | "left" | "up" | "down") => {
     const cardsLeft = ltds.filter((ltd) => !alreadyRemoved.includes(ltd.id));
-    console.log("cardsLeft", cardsLeft);
     if (cardsLeft.length) {
       const toBeRemoved = cardsLeft[cardsLeft.length - 1].id; // Find the card object to be removed
       const index = ltds.map((ltd) => ltd.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
+
+      alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
+      childRefs[index].current.swipe(dir); // Swipe the card!
+
+      console.log("cardsLeft", cardsLeft);
       console.log("toBeRemoved", toBeRemoved);
       console.log("index", index);
-      alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
       console.log("childRrefs", childRefs);
-      childRefs[index].current.swipe(dir); // Swipe the card!
     }
   };
   return (
