@@ -37,9 +37,9 @@ func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Lik
 }
 
 // Insert
-func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like) error {
+func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like, UID string) error {
 	t := time.Now()
-	str := fmt.Sprintf("(%s,%d,%s,%s)", entity.UID, entity.RecruitID, t, t)
+	str := fmt.Sprintf("(%s, %d, %s, %s)", UID, entity.RecruitID, t, t)
 	stmt, err := likeI.db.PrepareContext(ctx, "INSERT INTO like VALUES ?")
 	if err != nil {
 		return err

@@ -40,21 +40,22 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 		UID := dcontext.GetUIDFromContext(ctx)
 		lk, err := likeH.likeUseCase.Select(ctx, UID)
 		if err != nil {
+			log.Printf("[ERROR] failed to Select from like: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		lks := make([]*LikeResponse, len(lk))
+		res := make([]*LikeResponse, len(lk))
 		for i, l := range lk {
 			var ls LikeResponse
 			ls.RecruitID = l.RecruitID
 			ls.CreatedAt = l.CreatedAt
-			lks[i] = &ls
+			res[i] = &ls
 		}
 		var respms LikeResponses
-		respms.Likes = lks
+		respms.Likes = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
-			log.Printf("[ERROR] failed to marshal messages: %v", err.Error())
+			log.Printf("[ERROR] failed to marshal likes: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -70,6 +71,7 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		defer request.Body.Close()
 		var like *likeM.Like
 		if err := json.NewDecoder(request.Body).Decode(&like); err != nil {
+			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -78,8 +80,14 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
+		if UID == "" {
+			log.Printf("[ERROR] failed to GetUID: ")
+			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
+			return
+		}
 		err := likeH.likeUseCase.Insert(ctx, like, UID)
 		if err != nil {
+			log.Printf("[ERROR] failed to Insert: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}

@@ -39,8 +39,7 @@ func (likeU *likeUseCase) Select(ctx context.Context, UID string) ([]*likeM.Like
 
 // Insert
 func (likeU *likeUseCase) Insert(ctx context.Context, entity *likeM.Like, UID string) error {
-	entity.UID = UID
-	err := likeU.likeRepository.Insert(ctx, entity)
+	err := likeU.likeRepository.Insert(ctx, entity, UID)
 	if err != nil {
 		return err
 	}
