@@ -4,13 +4,14 @@ package usecase
 import (
 	"context"
 
+	"github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	likeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
 )
 
 type LikeUseCase interface {
-	Select(ctx context.Context) ([]*likeM.Like, error)
-	Insert(ctx context.Context, entity *likeM.Like) error
+	Select(ctx context.Context, UID string) ([]*likeM.Like, error)
+	Insert(ctx context.Context, entity *likeM.Like, UID string) error
 	Update(ctx context.Context, entity *likeM.Like) error
 	Delete(ctx context.Context, entity *likeM.Like) error
 }
@@ -27,8 +28,9 @@ func NewLikeUsecase(likeR likeR.LikeRepository) LikeUseCase {
 }
 
 // Select
-func (likeU *likeUseCase) Select(ctx context.Context) ([]*likeM.Like, error) {
-	likes, err := likeU.likeRepository.Select(ctx)
+func (likeU *likeUseCase) Select(ctx context.Context, UID string) ([]*likeM.Like, error) {
+	var likes []*model.Like
+	likes, err := likeU.likeRepository.Select(ctx, UID)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +38,8 @@ func (likeU *likeUseCase) Select(ctx context.Context) ([]*likeM.Like, error) {
 }
 
 // Insert
-func (likeU *likeUseCase) Insert(ctx context.Context, entity *likeM.Like) error {
+func (likeU *likeUseCase) Insert(ctx context.Context, entity *likeM.Like, UID string) error {
+	entity.UID = UID
 	err := likeU.likeRepository.Insert(ctx, entity)
 	if err != nil {
 		return err

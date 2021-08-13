@@ -8,7 +8,7 @@ import (
 )
 
 type LikeRepository interface {
-	Select(ctx context.Context) ([]*likeM.Like, error)
+	Select(ctx context.Context, UID string) ([]*likeM.Like, error)
 	Insert(ctx context.Context, entity *likeM.Like) error
 	Update(ctx context.Context, entity *likeM.Like) error
 	Delete(ctx context.Context, entity *likeM.Like) error

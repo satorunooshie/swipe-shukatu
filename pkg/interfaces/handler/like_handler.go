@@ -4,13 +4,12 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
-	mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
+	"github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
 	likeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -35,38 +34,56 @@ func NewLikeHandler(likeU likeU.LikeUseCase) LikeHandler {
 // HandleSelect
 func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		panic("do something")
+		ctx := request.Context()
+		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+		defer cancel()
+		UID := middleware.GetUIDFromContext(ctx)
+		lk, err := likeH.likeUseCase.Select(ctx, UID)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		lks := make([]*LikeResponse, len(lk))
+		for i, l := range lk {
+			var ls LikeResponse
+			ls.RecruitID = l.RecruitID
+			ls.CreatedAt = l.CreatedAt
+			lks[i] = &ls
+		}
+		var respms LikeResponses
+		respms.Likes = lks
+		jsonresponse, err := json.Marshal(respms)
+		if err != nil {
+			log.Printf("[ERROR] failed to marshal messages: %v", err.Error())
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		writer.WriteHeader(http.StatusOK)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(jsonresponse)
 	}
 }
 
 // HandleInsert
 func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		defer request.Body.Close()
+		var like *likeM.Like
+		if err := json.NewDecoder(request.Body).Decode(&like); err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// TODO::読み込んだjsonデータのバリデーションがほしい
 		ctx := request.Context()
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
-		method := request.Method
-		UID := mid.GetUIDFromContext(ctx)
-		if method == "POST" {
-			defer request.Body.Close()
-			body, err := ioutil.ReadAll(request.Body)
-			if err != nil {
-				log.Fatal(err)
-			}
-			var like *likeM.Like
-			err = json.Unmarshal(body, &like)
-			if err != nil {
-				log.Fatal(err)
-			}
-			like.UID = UID
-			err = likeH.likeUseCase.Insert(ctx, like)
-			if err != nil {
-				log.Fatal(err)
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-			} else {
-				writer.WriteHeader(http.StatusCreated)
-			}
+		UID := middleware.GetUIDFromContext(ctx)
+		err := likeH.likeUseCase.Insert(ctx, like, UID)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
 		}
+		writer.WriteHeader(http.StatusCreated)
 	}
 }
 
@@ -93,7 +110,12 @@ type LikeRequest struct { // nolint
 	// Need to implement field
 }
 
-// LikeResponse
-type LikeResponse struct { // nolint
-	// Need to implement field
+type LikeResponses struct {
+	Likes []*LikeResponse `json:"likes"`
+}
+
+// LikeResponse ...
+type LikeResponse struct {
+	RecruitID int32     `json:"recruit_id"`
+	CreatedAt time.Time `json:"created_at"`
 }
