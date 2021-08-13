@@ -10,7 +10,6 @@ import (
 
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	likeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
-	mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces"
 )
 
 type likeRepoImpl struct {
@@ -26,7 +25,7 @@ func NewLikeRepoImpl(db *sql.DB) likeR.LikeRepository {
 // Select
 
 func (likeI *likeRepoImpl) Select(ctx context.Context) ([]*likeM.Like, error) {
-	UUID := mid.GetUIDFromContext(ctx)
+	UUID := ""
 	rows, err := likeI.db.QueryContext(ctx, "SELECT recruit_id FROM like WHERE user_id = ?", UUID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -40,9 +39,8 @@ func (likeI *likeRepoImpl) Select(ctx context.Context) ([]*likeM.Like, error) {
 
 // Insert
 func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like) error {
-	UUID := mid.GetUIDFromContext(ctx)
 	t := time.Now()
-	str := fmt.Sprintf("(%s,%d,%s,%s)", UUID, entity.RecruitID, t, t)
+	str := fmt.Sprintf("(%s,%d,%s,%s)", entity.UID, entity.RecruitID, t, t)
 	stmt, err := likeI.db.Prepare("INSERT INTO like VALUES ?")
 	if err != nil {
 		return err

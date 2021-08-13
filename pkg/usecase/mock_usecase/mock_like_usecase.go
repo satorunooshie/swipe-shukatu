@@ -50,7 +50,7 @@ func (mr *MockLikeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomock.C
 }
 
 // Insert mocks base method.
-func (m *MockLikeUseCase) Insert(ctx context.Context, entity []*model.Like) error {
+func (m *MockLikeUseCase) Insert(ctx context.Context, entity *model.Like) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -63,34 +63,19 @@ func (mr *MockLikeUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockLikeUseCase)(nil).Insert), ctx, entity)
 }
 
-// SelectByRecruitId mocks base method.
-func (m *MockLikeUseCase) SelectByRecruitId(ctx context.Context, rID int32) ([]*model.Like, error) {
+// Select mocks base method.
+func (m *MockLikeUseCase) Select(ctx context.Context) ([]*model.Like, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectByRecruitId", ctx, rID)
+	ret := m.ctrl.Call(m, "Select", ctx)
 	ret0, _ := ret[0].([]*model.Like)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectByRecruitId indicates an expected call of SelectByRecruitId.
-func (mr *MockLikeUseCaseMockRecorder) SelectByRecruitId(ctx, rID interface{}) *gomock.Call {
+// Select indicates an expected call of Select.
+func (mr *MockLikeUseCaseMockRecorder) Select(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectByRecruitId", reflect.TypeOf((*MockLikeUseCase)(nil).SelectByRecruitId), ctx, rID)
-}
-
-// SelectByUserId mocks base method.
-func (m *MockLikeUseCase) SelectByUserId(ctx context.Context) ([]*model.Like, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectByUserId", ctx)
-	ret0, _ := ret[0].([]*model.Like)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SelectByUserId indicates an expected call of SelectByUserId.
-func (mr *MockLikeUseCaseMockRecorder) SelectByUserId(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectByUserId", reflect.TypeOf((*MockLikeUseCase)(nil).SelectByUserId), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockLikeUseCase)(nil).Select), ctx)
 }
 
 // Update mocks base method.
