@@ -11,6 +11,8 @@ import (
 	"google.golang.org/api/option"
 
 	firebase "firebase.google.com/go"
+
+	"github.com/satorunooshie/swipe-shukatu/pkg/dcontext"
 )
 
 //nolint
@@ -60,7 +62,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 			_, _ = w.Write([]byte("error verifying ID token\n"))
 			return
 		}
-		SetUID(ctx, token.UID)
+		dcontext.SetUID(ctx, token.UID)
 		log.Printf("[INFO] Verified ID token: %v\n", token)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
