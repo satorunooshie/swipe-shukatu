@@ -1,6 +1,6 @@
 // @ts-nocheck
 import "../../App.css";
-import { VFC, useMemo, createRef } from "react";
+import { VFC, useMemo, createRef, useState, useEffect } from "react";
 import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import TinderCard from "react-tinder-card";
@@ -13,7 +13,7 @@ type Ltd = {
   readonly name: string;
 };
 
-const ltds: Ltd[] = [
+const initialLtds: Ltd[] = [
   {
     id: 1,
     name: "会社A",
@@ -54,6 +54,9 @@ const ltds: Ltd[] = [
     id: 10,
     name: "会社J",
   },
+];
+
+const ltds2: Ltd[] = [
   {
     id: 11,
     name: "会社K",
@@ -76,15 +79,66 @@ const ltds: Ltd[] = [
   },
 ];
 
+const ltds3: Ltd[] = [
+  {
+    id: 16,
+    name: "会社P",
+  },
+  {
+    id: 17,
+    name: "会社Q",
+  },
+  {
+    id: 18,
+    name: "会社R",
+  },
+  {
+    id: 19,
+    name: "会社S",
+  },
+  {
+    id: 20,
+    name: "会社T",
+  },
+];
+const Ltds: Ltd[] = [ltds2, ltds3];
+
 const HomePage: VFC = () => {
-  const alreadyRemoved: number[] = [];
-  const childRefs = useMemo(
-    () =>
-      Array(ltds.length)
+  const [ltdList, setLtdList] = useState<Ltd[]>(initialLtds);
+  const [cardsLeft, setCardsLeft] = useState<Ltd[]>(initialLtds);
+  const [alreadyRemoved, setAlreadyRemoved] = useState<number[]>([]);
+  const [childRefs, setChildRefs] = useState(
+    Array(ltdList.length)
+      .fill(0)
+      .map((i) => createRef())
+  );
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    // cardsLeftを算出
+    setCardsLeft(ltdList.filter((ltd) => !alreadyRemoved.includes(ltd.id)));
+  }, [alreadyRemoved]);
+
+  useEffect(() => {
+    console.log(cardsLeft);
+    console.log(childRefs);
+    if (cardsLeft.length > 5) return;
+
+    // TODO: ここでデータフェッチ,ここで言う newDataに割り当てる
+    const newData = Ltds[page];
+    if (page >= 2) return;
+    setPage(page + 1);
+    setLtdList([...ltdList, ...newData]);
+    setCardsLeft([...cardsLeft, ...newData]);
+    setChildRefs([
+      ...childRefs,
+      ...Array(newData.length)
         .fill(0)
         .map((i) => createRef()),
-    []
-  );
+    ]);
+    console.log(childRefs);
+  }, [cardsLeft]);
+
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
     if (dir === "right") {
       console.log("like", ltd.name);
@@ -93,30 +147,33 @@ const HomePage: VFC = () => {
     } else if (dir === "up") {
       console.log("slike", ltd.name);
     }
-    alreadyRemoved.push(ltd.id);
+    setAlreadyRemoved([...alreadyRemoved, ltd.id]);
   };
+
   const swipe = (dir: "right" | "left" | "up" | "down") => {
-    const cardsLeft = ltds.filter((ltd) => !alreadyRemoved.includes(ltd.id));
     if (cardsLeft.length) {
       const toBeRemoved = cardsLeft[cardsLeft.length - 1].id; // Find the card object to be removed
-      const index = ltds.map((ltd) => ltd.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
+      const index = ltdList.map((ltd) => ltd.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
 
-      alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
+      setAlreadyRemoved([...alreadyRemoved, toBeRemoved]);
       childRefs[index].current.swipe(dir); // Swipe the card!
 
-      console.log("cardsLeft", cardsLeft);
-      console.log("toBeRemoved", toBeRemoved);
-      console.log("index", index);
-      console.log("childRrefs", childRefs);
+      // console.log("cardsLeft", cardsLeft);
+      // console.log("toBeRemoved", toBeRemoved);
+      // console.log("index", index);
+      // console.log("childRrefs", childRefs);
     }
   };
+
+  if (cardsLeft.length === 0) return <h1>All swiped...</h1>;
+
   return (
     <Center h="full" w="full">
       <Wrap h="90vh" w="full">
         <Header />
         <Box w="full" position="relative" h="80vh">
           <Wrap m="auto" w="90vh" maxW="300px" h="300px">
-            {ltds.map((ltd, index) => (
+            {ltdList.map((ltd, index) => (
               <TinderCard
                 key={ltd.name}
                 className="swipe"
