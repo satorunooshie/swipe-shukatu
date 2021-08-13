@@ -81,6 +81,7 @@ func convertToLike(rows *sql.Rows) ([]*likeM.Like, error) {
 	for rows.Next() {
 		var like *likeM.Like
 		err := rows.Scan(
+			&like.UID,
 			&like.RecruitID,
 		)
 		if err != nil {

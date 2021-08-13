@@ -10,6 +10,7 @@ import (
 	"time"
 
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
+	mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces"
 	likeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -45,6 +46,7 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		method := request.Method
+		UID := mid.GetUIDFromContext(ctx)
 		if method == "POST" {
 			defer request.Body.Close()
 			body, err := ioutil.ReadAll(request.Body)
@@ -56,6 +58,7 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 			if err != nil {
 				log.Fatal(err)
 			}
+			like.UID = UID
 			err = likeH.likeUseCase.Insert(ctx, like)
 			if err != nil {
 				log.Fatal(err)
@@ -66,6 +69,10 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 			}
 		}
 	}
+}
+
+type Rid struct {
+	RID string
 }
 
 // HandleUpdate
@@ -83,11 +90,11 @@ func (likeH *likeHandler) HandleDelete() http.HandlerFunc {
 }
 
 // LikeRequest
-type LikeRequest struct {
+type LikeRequest struct { // nolint
 	// Need to implement field
 }
 
 // LikeResponse
-type LikeResponse struct {
+type LikeResponse struct { // nolint
 	// Need to implement field
 }
