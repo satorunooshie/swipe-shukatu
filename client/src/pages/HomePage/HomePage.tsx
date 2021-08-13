@@ -1,17 +1,12 @@
-// @ts-nocheck
 import "../../App.css";
-import { VFC, useMemo, createRef, useState, useEffect } from "react";
+import { VFC, createRef, useState, useEffect } from "react";
 import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
+import CardContent from "../../components/CardContent/CardContent";
 import TinderCard from "react-tinder-card";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
-
-// 仮
-type Ltd = {
-  readonly id: number;
-  readonly name: string;
-};
+import { Ltd } from "../../type/Ltd";
 
 const initialLtds: Ltd[] = [
   {
@@ -101,7 +96,7 @@ const ltds3: Ltd[] = [
     name: "会社T",
   },
 ];
-const Ltds: Ltd[] = [ltds2, ltds3];
+const Ltds: Ltd[][] = [ltds2, ltds3];
 
 const HomePage: VFC = () => {
   const [ltdList, setLtdList] = useState<Ltd[]>(initialLtds);
@@ -156,6 +151,7 @@ const HomePage: VFC = () => {
       const index = ltdList.map((ltd) => ltd.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
 
       setAlreadyRemoved([...alreadyRemoved, toBeRemoved]);
+      // @ts-ignore
       childRefs[index].current.swipe(dir); // Swipe the card!
 
       // console.log("cardsLeft", cardsLeft);
@@ -175,25 +171,14 @@ const HomePage: VFC = () => {
           <Wrap m="auto" w="90vh" maxW="300px" h="300px">
             {ltdList.map((ltd, index) => (
               <TinderCard
-                key={ltd.name}
+                key={ltd.id}
                 className="swipe"
+                // @ts-ignore
                 ref={childRefs[index]}
                 onSwipe={(dir) => swiped(dir, ltd)}
                 preventSwipe={["down"]}
               >
-                <Box
-                  className="card"
-                  border="1px"
-                  borderColor="gray.300"
-                  pos="relative"
-                  bg="gray.100"
-                  h="500"
-                  w="80vh"
-                  maxW="300"
-                  borderRadius="10"
-                >
-                  <h3>{ltd.name}</h3>
-                </Box>
+                <CardContent ltd={ltd} />
               </TinderCard>
             ))}
           </Wrap>
