@@ -10,7 +10,7 @@ import (
 	"time"
 
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
-	mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces"
+	mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
 	likeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -63,7 +63,6 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 			if err != nil {
 				log.Fatal(err)
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
 			} else {
 				writer.WriteHeader(http.StatusCreated)
 			}

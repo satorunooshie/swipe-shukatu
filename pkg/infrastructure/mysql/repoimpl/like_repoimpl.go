@@ -26,7 +26,7 @@ func NewLikeRepoImpl(db *sql.DB) likeR.LikeRepository {
 
 func (likeI *likeRepoImpl) Select(ctx context.Context) ([]*likeM.Like, error) {
 	UUID := ""
-	rows, err := likeI.db.QueryContext(ctx, "SELECT recruit_id FROM like WHERE user_id = ?", UUID)
+	rows, err := likeI.db.QueryContext(ctx, "SELECT * FROM like WHERE user_id = ?", UUID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("[INFO] like: ", err)
@@ -79,7 +79,7 @@ func (likeI *likeRepoImpl) Delete(ctx context.Context, entity *likeM.Like) error
 func convertToLike(rows *sql.Rows) ([]*likeM.Like, error) {
 	var likes []*likeM.Like
 	for rows.Next() {
-		var like *likeM.Like
+		var like likeM.Like
 		err := rows.Scan(
 			&like.UID,
 			&like.RecruitID,
@@ -87,7 +87,7 @@ func convertToLike(rows *sql.Rows) ([]*likeM.Like, error) {
 		if err != nil {
 			return nil, err
 		}
-		likes = append(likes, like)
+		likes = append(likes, &like)
 	}
 	return likes, nil
 }
