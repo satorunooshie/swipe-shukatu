@@ -7,96 +7,7 @@ import TinderCard from "react-tinder-card";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
 import { Ltd } from "../../type/Ltd";
-
-const initialLtds: Ltd[] = [
-  {
-    id: 1,
-    name: "会社A",
-  },
-  {
-    id: 2,
-    name: "会社B",
-  },
-  {
-    id: 3,
-    name: "会社C",
-  },
-  {
-    id: 4,
-    name: "会社D",
-  },
-  {
-    id: 5,
-    name: "会社E",
-  },
-  {
-    id: 6,
-    name: "会社F",
-  },
-  {
-    id: 7,
-    name: "会社G",
-  },
-  {
-    id: 8,
-    name: "会社H",
-  },
-  {
-    id: 9,
-    name: "会社I",
-  },
-  {
-    id: 10,
-    name: "会社J",
-  },
-];
-
-const ltds2: Ltd[] = [
-  {
-    id: 11,
-    name: "会社K",
-  },
-  {
-    id: 12,
-    name: "会社L",
-  },
-  {
-    id: 13,
-    name: "会社M",
-  },
-  {
-    id: 14,
-    name: "会社N",
-  },
-  {
-    id: 15,
-    name: "会社O",
-  },
-];
-
-const ltds3: Ltd[] = [
-  {
-    id: 16,
-    name: "会社P",
-  },
-  {
-    id: 17,
-    name: "会社Q",
-  },
-  {
-    id: 18,
-    name: "会社R",
-  },
-  {
-    id: 19,
-    name: "会社S",
-  },
-  {
-    id: 20,
-    name: "会社T",
-  },
-];
-const Ltds: Ltd[][] = [ltds2, ltds3];
+import { initialLtds, Ltds} from "./DB"
 
 const HomePage: VFC = () => {
   const [ltdList, setLtdList] = useState<Ltd[]>(initialLtds);
@@ -115,8 +26,6 @@ const HomePage: VFC = () => {
   }, [alreadyRemoved]);
 
   useEffect(() => {
-    console.log(cardsLeft);
-    console.log(childRefs);
     if (cardsLeft.length > 5) return;
 
     // TODO: ここでデータフェッチ,ここで言う newDataに割り当てる
@@ -131,7 +40,6 @@ const HomePage: VFC = () => {
         .fill(0)
         .map((i) => createRef()),
     ]);
-    console.log(childRefs);
   }, [cardsLeft]);
 
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
@@ -147,17 +55,12 @@ const HomePage: VFC = () => {
 
   const swipe = (dir: "right" | "left" | "up" | "down") => {
     if (cardsLeft.length) {
-      const toBeRemoved = cardsLeft[cardsLeft.length - 1].id; // Find the card object to be removed
-      const index = ltdList.map((ltd) => ltd.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
+      const toBeRemoved = cardsLeft[cardsLeft.length - 1].id;
+      const index = ltdList.map((ltd) => ltd.id).indexOf(toBeRemoved);
 
       setAlreadyRemoved([...alreadyRemoved, toBeRemoved]);
       // @ts-ignore
-      childRefs[index].current.swipe(dir); // Swipe the card!
-
-      // console.log("cardsLeft", cardsLeft);
-      // console.log("toBeRemoved", toBeRemoved);
-      // console.log("index", index);
-      // console.log("childRrefs", childRefs);
+      childRefs[index].current.swipe(dir);
     }
   };
 
