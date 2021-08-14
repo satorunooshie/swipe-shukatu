@@ -32,8 +32,8 @@ const HomePage: VFC = () => {
     const newData = Ltds[page];
     if (page >= 2) return;
     setPage(page + 1);
-    setLtdList([...ltdList, ...newData]);
-    setCardsLeft([...cardsLeft, ...newData]);
+    setLtdList([...newData, ...ltdList]);
+    setCardsLeft([...newData, ...ltdList]);
     setChildRefs([
       ...childRefs,
       ...Array(newData.length)
