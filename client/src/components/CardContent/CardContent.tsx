@@ -7,18 +7,11 @@ import {
   Heading,
   Tag,
   useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  Stack,
-  StackDivider,
-  Text,
-  Center,
+  Icon,
 } from "@chakra-ui/react";
 import { Ltd } from "../../type/Ltd";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import LtdDetailModal from "../LtdDetailModal/LtdDetailModal";
 
 type Props = {
   readonly ltd: Ltd;
@@ -29,50 +22,7 @@ const CardContent: VFC<Props> = ({ ltd }) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="outside">
-        <ModalContent>
-          <ModalHeader>
-            <Flex alignItems="center">
-              <Heading color="gray.600">{ltd.name}</Heading>
-              <Text color="gray.500" fontSize="3xl" ml="4">
-                IT
-              </Text>
-            </Flex>
-          </ModalHeader>
-          <ModalBody>
-            <Stack
-              divider={<StackDivider borderColor="gray.200" />}
-            >
-              <StackDivider borderColor="gray.200" />
-              <Wrap my="2">
-                <Text color="gray.500">830万円</Text>
-              </Wrap>
-              <Wrap my="5">
-                <Text color="gray.500">
-                  (会社紹介)Lorem ipsum is placeholder text commonly used in the
-                  graphic, print, and publishing industries for previewing
-                  layouts and visual mockups.
-                </Text>
-              </Wrap>
-              <Wrap my="5">
-                <Text color="gray.700">会社情報</Text>
-                <Wrap w="full">
-                  <Tag colorScheme={MAIN_COLOR}>家賃補助</Tag>
-                  <Tag colorScheme={MAIN_COLOR}>技術書購入手当</Tag>
-                  <Tag colorScheme={MAIN_COLOR}>海外カンファレンス補助</Tag>
-                  <Tag colorScheme={MAIN_COLOR}>お子さんのバースデー休暇</Tag>
-                </Wrap>
-              </Wrap>
-              <Wrap textAlign="center" w="full">
-                <Center w="full">
-                  <Text color="gray.500">{ltd.name}を報告する</Text>
-                </Center>
-              </Wrap>
-            </Stack>
-          </ModalBody>
-          <ModalFooter></ModalFooter>
-        </ModalContent>
-      </Modal>
+      <LtdDetailModal ltd={ltd} isOpen={isOpen} onClose={onClose} />
       <Box
         className="card"
         border="1px"
@@ -86,13 +36,12 @@ const CardContent: VFC<Props> = ({ ltd }) => {
       >
         <Flex flexDirection="column" w="full" h="full">
           <Spacer />
-          <Wrap w="full" h={32} p={3}>
+          <Wrap w="full" h={32} p={3} onClick={() => onOpen()}>
             <Heading
               as="h2"
               size="lg"
               color="white"
               textShadow="1px 0px 5px #000"
-              onClick={() => onOpen()}
             >
               {ltd.name}
             </Heading>

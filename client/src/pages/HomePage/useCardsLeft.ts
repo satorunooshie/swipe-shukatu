@@ -7,7 +7,8 @@ export const useCardsLeft = (alreadyRemoved: number[], ltdList: Ltd[]) => {
   useEffect(() => {
     // cardsLeftを算出
     setCardsLeft(ltdList.filter((ltd) => !alreadyRemoved.includes(ltd.id)));
+    console.log(cardsLeft)
   }, [alreadyRemoved]);
-  console.log(cardsLeft)
+
   return cardsLeft;
 };

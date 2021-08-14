@@ -13,7 +13,7 @@ const HomePage: VFC = () => {
   const [ltdList, setLtdList] = useState<Ltd[]>(initialLtds);
   const [cardsLeft, setCardsLeft] = useState<Ltd[]>(initialLtds);
   const [alreadyRemoved, setAlreadyRemoved] = useState<number[]>([]);
-  const [childRefs, setChildRefs] = useState(
+  const [refs, setRefs] = useState(
     Array(ltdList.length)
       .fill(0)
       .map((i) => createRef())
@@ -34,8 +34,8 @@ const HomePage: VFC = () => {
     setPage(page + 1);
     setLtdList([...newData, ...ltdList]);
     setCardsLeft([...newData, ...ltdList]);
-    setChildRefs([
-      ...childRefs,
+    setRefs([
+      ...refs,
       ...Array(newData.length)
         .fill(0)
         .map((i) => createRef()),
@@ -60,7 +60,7 @@ const HomePage: VFC = () => {
 
       setAlreadyRemoved([...alreadyRemoved, toBeRemoved]);
       // @ts-ignore
-      childRefs[index].current.swipe(dir);
+      refs[index].current.swipe(dir);
     }
   };
 
@@ -75,9 +75,10 @@ const HomePage: VFC = () => {
             {ltdList.map((ltd, index) => (
               <TinderCard
                 key={ltd.id}
+                // @ts-ignore
                 className="swipe"
                 // @ts-ignore
-                ref={childRefs[index]}
+                ref={refs[index]}
                 onSwipe={(dir) => swiped(dir, ltd)}
                 preventSwipe={["down"]}
               >
