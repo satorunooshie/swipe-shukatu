@@ -7,7 +7,7 @@ import {
   Heading,
   Tag,
   useDisclosure,
-  Icon,
+  Image,
 } from "@chakra-ui/react";
 import { Ltd } from "../../type/Ltd";
 import { MAIN_COLOR } from "../../constants/MainColor";
@@ -28,13 +28,14 @@ const CardContent: VFC<Props> = ({ ltd }) => {
         border="1px"
         borderColor="gray.300"
         pos="relative"
-        bg="gray.800"
+        bg="gray.300"
         h="500"
         w="80vh"
         maxW="300"
         borderRadius="10"
       >
         <Flex flexDirection="column" w="full" h="full">
+          <Image src={`https://icanhazdadjoke.com/j/${ltd.id}.png`} alt="image" fit="cover"/>
           <Spacer />
           <Wrap w="full" h={32} p={3} onClick={() => onOpen()}>
             <Heading
@@ -43,7 +44,7 @@ const CardContent: VFC<Props> = ({ ltd }) => {
               color="white"
               textShadow="1px 0px 5px #000"
             >
-              {ltd.name}
+              {ltd.joke.slice(0, 15)}...
             </Heading>
             <Wrap w="full">
               <Tag colorScheme={MAIN_COLOR}>Tag</Tag>

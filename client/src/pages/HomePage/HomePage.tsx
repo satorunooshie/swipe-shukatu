@@ -1,5 +1,8 @@
 import "../../App.css";
-import { VFC, createRef, useState, useEffect } from "react";
+import {
+  VFC,
+  useCallback,
+} from "react";
 import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
@@ -7,64 +10,59 @@ import TinderCard from "react-tinder-card";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
 import { Ltd } from "../../type/Ltd";
-import { initialLtds, Ltds} from "./DB"
+import { useSWRInfinite } from "swr";
+
+const fetcher = (url: string) =>
+  fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => res.results);
+
+const PAGE_SIZE = 20;
 
 const HomePage: VFC = () => {
-  const [ltdList, setLtdList] = useState<Ltd[]>(initialLtds);
-  const [cardsLeft, setCardsLeft] = useState<Ltd[]>(initialLtds);
-  const [alreadyRemoved, setAlreadyRemoved] = useState<number[]>([]);
-  const [refs, setRefs] = useState(
-    Array(ltdList.length)
-      .fill(0)
-      .map((i) => createRef())
+  const { data, error, mutate, size, setSize, isValidating } = useSWRInfinite(
+    (index) => `https://icanhazdadjoke.com/search?page=${index + 1}`,
+    fetcher
   );
-  const [page, setPage] = useState(0);
+  const alreadyRemoved = new Set<string>();
 
-  useEffect(() => {
-    // cardsLeftを算出
-    setCardsLeft(ltdList.filter((ltd) => !alreadyRemoved.includes(ltd.id)));
-  }, [alreadyRemoved]);
+  const updateData = useCallback(async (ltdID: string) => {
+    alreadyRemoved.add(ltdID);
 
-  useEffect(() => {
-    if (cardsLeft.length > 5) return;
-
-    // TODO: ここでデータフェッチ,ここで言う newDataに割り当てる
-    const newData = Ltds[page];
-    if (page >= 2) return;
-    setPage(page + 1);
-    setLtdList([...newData, ...ltdList]);
-    setCardsLeft([...newData, ...ltdList]);
-    setRefs([
-      ...refs,
-      ...Array(newData.length)
-        .fill(0)
-        .map((i) => createRef()),
-    ]);
-  }, [cardsLeft]);
+    // 残りが5件以下になったらデータフェッチする
+    if (PAGE_SIZE - alreadyRemoved.size > 5) return;
+    alreadyRemoved.clear();
+    setSize((size) => size + 1);
+  }, []);
 
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
     if (dir === "right") {
-      console.log("like", ltd.name);
+      console.log("like", ltd.joke);
     } else if (dir === "left") {
-      console.log("nope", ltd.name);
+      console.log("nope", ltd.joke);
     } else if (dir === "up") {
-      console.log("slike", ltd.name);
+      console.log("slike", ltd.joke);
     }
-    setAlreadyRemoved([...alreadyRemoved, ltd.id]);
+
+    updateData(ltd.id);
   };
 
-  const swipe = (dir: "right" | "left" | "up" | "down") => {
-    if (cardsLeft.length) {
-      const toBeRemoved = cardsLeft[cardsLeft.length - 1].id;
-      const index = ltdList.map((ltd) => ltd.id).indexOf(toBeRemoved);
-
-      setAlreadyRemoved([...alreadyRemoved, toBeRemoved]);
-      // @ts-ignore
-      refs[index].current.swipe(dir);
-    }
-  };
-
-  if (cardsLeft.length === 0) return <h1>All swiped...</h1>;
+  if (error) return <h1>error occured</h1>;
+  if (!data)
+    return (
+      <Center h="full" w="full">
+        <Wrap h="90vh" w="full">
+          <Header />
+          <Center textAlign="center">
+            <h1>loading...</h1>
+          </Center>
+        </Wrap>
+      </Center>
+    );
 
   return (
     <Center h="full" w="full">
@@ -72,19 +70,21 @@ const HomePage: VFC = () => {
         <Header />
         <Box w="full" position="relative" h="80vh">
           <Wrap m="auto" w="90vh" maxW="300px" h="300px">
-            {ltdList.map((ltd, index) => (
-              <TinderCard
-                key={ltd.id}
-                // @ts-ignore
-                className="swipe"
-                // @ts-ignore
-                ref={refs[index]}
-                onSwipe={(dir) => swiped(dir, ltd)}
-                preventSwipe={["down"]}
-              >
-                <CardContent ltd={ltd} />
-              </TinderCard>
-            ))}
+            {data.map((ltds) =>
+              ltds.map((ltd: Ltd, index: number) => (
+                <TinderCard
+                  key={index}
+                  // @ts-ignore
+                  className="swipe"
+                  // @ts-ignore
+                  // ref={refs[index]}
+                  onSwipe={(dir) => swiped(dir, ltd)}
+                  preventSwipe={["down"]}
+                >
+                  <CardContent ltd={ltd} />
+                </TinderCard>
+              ))
+            )}
           </Wrap>
         </Box>
         <Wrap w="full" pos="sticky" bottom="85px" justify="center">
@@ -98,7 +98,7 @@ const HomePage: VFC = () => {
               colorScheme="pink"
               aria-label="super like"
               icon={<CloseIcon w={5} h={5} />}
-              onClick={() => swipe("left")}
+              // onClick={() => swipe("left")}
             />
             <IconButton
               size="md"
@@ -109,7 +109,7 @@ const HomePage: VFC = () => {
               colorScheme="cyan"
               aria-label="super like"
               icon={<StarIcon w={5} h={5} />}
-              onClick={() => swipe("up")}
+              // onClick={() => swipe("up")}
             />
             <IconButton
               size="lg"
@@ -120,7 +120,7 @@ const HomePage: VFC = () => {
               colorScheme="teal"
               aria-label="super like"
               icon={<FaHeart />}
-              onClick={() => swipe("right")}
+              // onClick={() => swipe("right")}
             />
           </Flex>
         </Wrap>

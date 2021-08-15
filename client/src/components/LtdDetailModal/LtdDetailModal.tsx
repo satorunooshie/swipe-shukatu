@@ -30,7 +30,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
       <ModalContent>
         <ModalHeader>
           <Flex alignItems="center">
-            <Heading color="gray.600">{ltd.name}</Heading>
+            <Heading color="gray.600">{ltd.joke.slice(0, 10)}...</Heading>
             <Text color="gray.500" fontSize="3xl" ml="4">
               IT
             </Text>
@@ -46,11 +46,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
               </Text>
             </Flex>
             <Wrap my="5">
-              <Text color="gray.500">
-                (会社紹介)Lorem ipsum is placeholder text commonly used in the
-                graphic, print, and publishing industries for previewing layouts
-                and visual mockups.
-              </Text>
+              <Text color="gray.500">{ltd.joke}</Text>
             </Wrap>
             <Wrap my="5">
               <Flex alignItems="center">
@@ -70,7 +66,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
               <Center w="full" onClick={() => alert("report")}>
                 <Icon as={FcAdvertising} />
                 <Text color="gray.600" ml="2">
-                  {ltd.name}を報告する
+                  {ltd.joke.slice(0, 10)}...を報告する
                 </Text>
               </Center>
             </Wrap>
