@@ -38,7 +38,7 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
-		likes, err := likeH.likeUseCase.Select(ctx, UID) //likes []*model.Like
+		likes, err := likeH.likeUseCase.Select(ctx, UID)
 		if err != nil {
 			log.Printf("[ERROR] failed to Select from like: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
