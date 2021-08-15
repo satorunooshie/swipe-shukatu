@@ -1,11 +1,16 @@
 import "../../App.css";
+import { VFC, useCallback } from "react";
 import {
-  VFC,
-  useCallback,
-} from "react";
-import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
+  Wrap,
+  Box,
+  Center,
+  Flex,
+  IconButton,
+  Container,
+} from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
+import Loading from "../../components/Loading/Loading";
 import TinderCard from "react-tinder-card";
 import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
@@ -57,9 +62,11 @@ const HomePage: VFC = () => {
       <Center h="full" w="full">
         <Wrap h="90vh" w="full">
           <Header />
-          <Center textAlign="center">
-            <h1>loading...</h1>
-          </Center>
+          <Box w="full" h="80vh">
+            <Center m="auto" w="90vh" maxW="300px" h="400px">
+              <Loading />
+            </Center>
+          </Box>
         </Wrap>
       </Center>
     );
