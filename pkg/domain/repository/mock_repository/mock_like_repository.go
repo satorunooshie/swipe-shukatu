@@ -50,32 +50,32 @@ func (mr *MockLikeRepositoryMockRecorder) Delete(ctx, entity interface{}) *gomoc
 }
 
 // Insert mocks base method.
-func (m *MockLikeRepository) Insert(ctx context.Context, entity *model.Like) error {
+func (m *MockLikeRepository) Insert(ctx context.Context, entity *model.Like, UID string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", ctx, entity)
+	ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockLikeRepositoryMockRecorder) Insert(ctx, entity interface{}) *gomock.Call {
+func (mr *MockLikeRepositoryMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockLikeRepository)(nil).Insert), ctx, entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockLikeRepository)(nil).Insert), ctx, entity, UID)
 }
 
 // Select mocks base method.
-func (m *MockLikeRepository) Select(ctx context.Context) ([]*model.Like, error) {
+func (m *MockLikeRepository) Select(ctx context.Context, UID string) ([]*model.Like, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
+	ret := m.ctrl.Call(m, "Select", ctx, UID)
 	ret0, _ := ret[0].([]*model.Like)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockLikeRepositoryMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockLikeRepositoryMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockLikeRepository)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockLikeRepository)(nil).Select), ctx, UID)
 }
 
 // Update mocks base method.

@@ -4,7 +4,6 @@ package repoimpl
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -25,7 +24,7 @@ func NewLikeRepoImpl(db *sql.DB) likeR.LikeRepository {
 // Select
 
 func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Like, error) {
-	rows, err := likeI.db.QueryContext(ctx, "SELECT * FROM like WHERE user_id = ?", UID)
+	rows, err := likeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM like WHERE user_id = ?", UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("[INFO] like: ", err)
@@ -39,13 +38,12 @@ func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Lik
 // Insert
 func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like, UID string) error {
 	t := time.Now()
-	str := fmt.Sprintf("(%s, %d, %s, %s)", UID, entity.RecruitID, t, t)
-	stmt, err := likeI.db.PrepareContext(ctx, "INSERT INTO like VALUES ?")
+	stmt, err := likeI.db.PrepareContext(ctx, "INSERT INTO like(user_id, recruit_id, created_at, updated_at) VALUES (?,?,?,?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err := stmt.Exec(str); err != nil {
+	if _, err := stmt.Exec(UID, entity.RecruitID, t, t); err != nil {
 		return err
 	}
 	return nil

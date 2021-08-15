@@ -38,14 +38,14 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
-		lk, err := likeH.likeUseCase.Select(ctx, UID)
+		likes, err := likeH.likeUseCase.Select(ctx, UID) //likes []*model.Like
 		if err != nil {
 			log.Printf("[ERROR] failed to Select from like: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res := make([]*LikeResponse, len(lk))
-		for i, l := range lk {
+		res := make([]*LikeResponse, len(likes))
+		for i, l := range likes {
 			var ls LikeResponse
 			ls.RecruitID = l.RecruitID
 			ls.CreatedAt = l.CreatedAt
@@ -69,7 +69,7 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer request.Body.Close()
-		var like *likeM.Like
+		like := new(likeM.Like)
 		if err := json.NewDecoder(request.Body).Decode(&like); err != nil {
 			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
