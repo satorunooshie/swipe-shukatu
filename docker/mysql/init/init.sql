@@ -7,6 +7,7 @@ SET
 SET
   @OLD_SQL_MODE = @@SQL_MODE,
   SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET GLOBAL max_allowed_packet=100000000;
 
 CREATE SCHEMA IF NOT EXISTS `swipe_shukatu` DEFAULT CHARACTER SET utf8mb4;
 
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`m_ltd` (
   `profile` text NULL COMMENT '企業紹介',
   `employee_number` int(11) unsigned NULL COMMENT '従業員数',
   `average_age` tinyint(3) unsigned NULL COMMENT '平均年齢',
-  `industry_id` smallint(5) NOT NULL COMMENT '業種ID',
+  `industry_id` smallint(5) NULL COMMENT '業種ID',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   `deleted_at` DATETIME NULL COMMENT '退会日時',
