@@ -6,7 +6,6 @@ import {
   Center,
   Flex,
   IconButton,
-  Container,
 } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
