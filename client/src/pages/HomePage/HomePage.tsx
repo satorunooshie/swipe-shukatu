@@ -74,7 +74,7 @@ const HomePage: VFC = () => {
     <Center h="full" w="full">
       <Wrap h="90vh" w="full">
         <Header />
-        <Box w="full" position="relative" h="80vh">
+        <Box w="full" position="relative" h="80vh" pt={["10%", "5%", 0]}>
           <Wrap m="auto" w="90vh" maxW="300px" h="300px">
             {data.map((ltds) =>
               ltds.map((ltd: Ltd, index: number) => (
@@ -94,7 +94,7 @@ const HomePage: VFC = () => {
           </Wrap>
         </Box>
         <Wrap w="full" pos="sticky" bottom="85px" justify="center">
-          <Flex w="35%" justify="space-between" align="center">
+          <Flex w={["45%", "45%", "35%"]} justify="space-between" align="center">
             <IconButton
               size="lg"
               variant="outline"

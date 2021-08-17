@@ -14,6 +14,8 @@ import {
   Text,
   Center,
   Icon,
+  ModalCloseButton,
+  Divider,
 } from "@chakra-ui/react";
 import { Ltd } from "../../type/Ltd";
 import { FcAdvertising, FcMoneyTransfer, FcInfo } from "react-icons/fc";
@@ -27,17 +29,18 @@ type Props = {
 const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="outside">
-      <ModalContent>
+      <ModalContent top={["0.7em"]} left={[0, 0, "8rem"]} w={["90vh","90vh","420px"]} minH={["550px", "550px" ,"510px"]} borderRadius="15px" boxShadow="2xl">
         <ModalHeader>
-          <Flex alignItems="center">
-            <Heading color="gray.600">{ltd.joke.slice(0, 10)}...</Heading>
-            <Text color="gray.500" fontSize="3xl" ml="4">
-              IT
+          <Flex alignItems="center" justify="space-between">
+            <Heading color="gray.700">{ltd.joke.slice(0, 10)}...</Heading>
+            <Text color="gray.600" fontSize="3xl" mr="6">
+              IT業界
             </Text>
           </Flex>
         </ModalHeader>
+        <ModalCloseButton display={["block","none"]}/>
         <ModalBody>
-          <Stack divider={<StackDivider borderColor="gray.200" />}>
+          <Stack divider={<StackDivider borderColor="gray.200" h="full"/>}>
             <StackDivider borderColor="gray.200" />
             <Flex my="2" alignItems="center">
               <Icon as={FcMoneyTransfer} />
@@ -62,17 +65,19 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
                 <Tag>お子さんのバースデー休暇</Tag>
               </Wrap>
             </Wrap>
-            <Wrap textAlign="center" w="full">
-              <Center w="full" onClick={() => alert("report")}>
+          </Stack>
+        </ModalBody>
+        <ModalFooter>
+          <Wrap textAlign="center" w="full">
+            <Divider/>
+              <Center w="full" py="3" onClick={() => alert("report")}>
                 <Icon as={FcAdvertising} />
                 <Text color="gray.600" ml="2">
                   {ltd.joke.slice(0, 10)}...を報告する
                 </Text>
               </Center>
             </Wrap>
-          </Stack>
-        </ModalBody>
-        <ModalFooter></ModalFooter>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
