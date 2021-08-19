@@ -103,31 +103,29 @@
 				
 				<option value="file23">github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware/cors.go (0.0%)</option>
 				
-				<option value="file24">github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware/dcontext.go (0.0%)</option>
+				<option value="file24">github.com/satorunooshie/swipe-shukatu/pkg/usecase/job_usecase.go (0.0%)</option>
 				
-				<option value="file25">github.com/satorunooshie/swipe-shukatu/pkg/usecase/job_usecase.go (0.0%)</option>
+				<option value="file25">github.com/satorunooshie/swipe-shukatu/pkg/usecase/like_usecase.go (0.0%)</option>
 				
-				<option value="file26">github.com/satorunooshie/swipe-shukatu/pkg/usecase/like_usecase.go (0.0%)</option>
+				<option value="file26">github.com/satorunooshie/swipe-shukatu/pkg/usecase/ltd_usecase.go (0.0%)</option>
 				
-				<option value="file27">github.com/satorunooshie/swipe-shukatu/pkg/usecase/ltd_usecase.go (0.0%)</option>
+				<option value="file27">github.com/satorunooshie/swipe-shukatu/pkg/usecase/message_usecase.go (78.2%)</option>
 				
-				<option value="file28">github.com/satorunooshie/swipe-shukatu/pkg/usecase/message_usecase.go (78.2%)</option>
+				<option value="file28">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_job_usecase.go (0.0%)</option>
 				
-				<option value="file29">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_job_usecase.go (0.0%)</option>
+				<option value="file29">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_like_usecase.go (0.0%)</option>
 				
-				<option value="file30">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_like_usecase.go (0.0%)</option>
+				<option value="file30">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_ltd_usecase.go (0.0%)</option>
 				
-				<option value="file31">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_ltd_usecase.go (0.0%)</option>
+				<option value="file31">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_message_usecase.go (0.0%)</option>
 				
-				<option value="file32">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_message_usecase.go (0.0%)</option>
+				<option value="file32">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_recruit_usecase.go (0.0%)</option>
 				
-				<option value="file33">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_recruit_usecase.go (0.0%)</option>
+				<option value="file33">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_user_usecase.go (0.0%)</option>
 				
-				<option value="file34">github.com/satorunooshie/swipe-shukatu/pkg/usecase/mock_usecase/mock_user_usecase.go (0.0%)</option>
+				<option value="file34">github.com/satorunooshie/swipe-shukatu/pkg/usecase/recruit_usecase.go (0.0%)</option>
 				
-				<option value="file35">github.com/satorunooshie/swipe-shukatu/pkg/usecase/recruit_usecase.go (0.0%)</option>
-				
-				<option value="file36">github.com/satorunooshie/swipe-shukatu/pkg/usecase/user_usecase.go (0.0%)</option>
+				<option value="file35">github.com/satorunooshie/swipe-shukatu/pkg/usecase/user_usecase.go (0.0%)</option>
 				
 				</select>
 			</div>
@@ -593,9 +591,7 @@ package repoimpl
 import (
         "context"
         "database/sql"
-        "fmt"
         "log"
-        "time"
 
         likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
         likeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -613,9 +609,8 @@ func NewLikeRepoImpl(db *sql.DB) likeR.LikeRepository <span class="cov0" title="
 
 // Select
 
-func (likeI *likeRepoImpl) Select(ctx context.Context) ([]*likeM.Like, error) <span class="cov0" title="0">{
-        UUID := ""
-        rows, err := likeI.db.QueryContext(ctx, "SELECT * FROM like WHERE user_id = ?", UUID)
+func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Like, error) <span class="cov0" title="0">{
+        rows, err := likeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `like` WHERE user_id = ?", UID)
         if err != nil </span><span class="cov0" title="0">{
                 if err == sql.ErrNoRows </span><span class="cov0" title="0">{
                         log.Println("[INFO] like: ", err)
@@ -623,18 +618,18 @@ func (likeI *likeRepoImpl) Select(ctx context.Context) ([]*likeM.Like, error) <s
                 }</span>
                 <span class="cov0" title="0">return nil, err</span>
         }
-        <span class="cov0" title="0">return convertToLike(rows)</span>
+        <span class="cov0" title="0">return convertToLikes(rows)</span>
 }
 
 // Insert
-func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like) error <span class="cov0" title="0">{
-        t := time.Now()
-        str := fmt.Sprintf("(%s,%d,%s,%s)", entity.UID, entity.RecruitID, t, t)
-        stmt, err := likeI.db.Prepare("INSERT INTO like VALUES ?")
+func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like, UID string) error <span class="cov0" title="0">{
+        query := "INSERT INTO `like`(user_id, recruit_id) VALUES (?,?)"
+        stmt, err := likeI.db.PrepareContext(ctx, query)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">if _, err := stmt.Exec(str); err != nil </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">defer stmt.Close()
+        if _, err := stmt.Exec(UID, entity.RecruitID); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
         <span class="cov0" title="0">return nil</span>
@@ -642,11 +637,12 @@ func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like) error
 
 // Update
 func (likeI *likeRepoImpl) Update(ctx context.Context, entity *likeM.Like) error <span class="cov0" title="0">{
-        stmt, err := likeI.db.Prepare("UPDATE like SET  WHERE ")
+        stmt, err := likeI.db.PrepareContext(ctx, "UPDATE like SET WHERE ")
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">if _, err := stmt.Exec(); err != nil </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">defer stmt.Close()
+        if _, err := stmt.Exec(); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
         <span class="cov0" title="0">return nil</span>
@@ -654,24 +650,27 @@ func (likeI *likeRepoImpl) Update(ctx context.Context, entity *likeM.Like) error
 
 // Delete
 func (likeI *likeRepoImpl) Delete(ctx context.Context, entity *likeM.Like) error <span class="cov0" title="0">{
-        stmt, err := likeI.db.Prepare("DELETE FROM like WHERE ")
+        stmt, err := likeI.db.PrepareContext(ctx, "DELETE FROM like WHERE ")
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">if _, err := stmt.Exec(); err != nil </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">defer stmt.Close()
+        if _, err := stmt.Exec(); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
         <span class="cov0" title="0">return nil</span>
 }
 
 // convertToLike
-func convertToLike(rows *sql.Rows) ([]*likeM.Like, error) <span class="cov0" title="0">{
+func convertToLikes(rows *sql.Rows) ([]*likeM.Like, error) <span class="cov0" title="0">{
         var likes []*likeM.Like
         for rows.Next() </span><span class="cov0" title="0">{
                 var like likeM.Like
                 err := rows.Scan(
                         &amp;like.UID,
                         &amp;like.RecruitID,
+                        &amp;like.CreatedAt,
+                        &amp;like.UpdateddAt,
                 )
                 if err != nil </span><span class="cov0" title="0">{
                         return nil, err
@@ -1127,13 +1126,12 @@ package handler
 import (
         "context"
         "encoding/json"
-        "io/ioutil"
         "log"
         "net/http"
         "time"
 
+        "github.com/satorunooshie/swipe-shukatu/pkg/dcontext"
         likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
-        mid "github.com/satorunooshie/swipe-shukatu/pkg/interfaces/middleware"
         likeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
@@ -1158,38 +1156,64 @@ func NewLikeHandler(likeU likeU.LikeUseCase) LikeHandler <span class="cov0" titl
 // HandleSelect
 func (likeH *likeHandler) HandleSelect() http.HandlerFunc <span class="cov0" title="0">{
         return func(writer http.ResponseWriter, request *http.Request) </span><span class="cov0" title="0">{
-                panic("do something")</span>
+                ctx := request.Context()
+                ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+                defer cancel()
+                UID := dcontext.GetUIDFromContext(ctx)
+                likes, err := likeH.likeUseCase.Select(ctx, UID)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] failed to Select from like: %v", err.Error())
+                        http.Error(writer, err.Error(), http.StatusInternalServerError)
+                        return
+                }</span>
+                <span class="cov0" title="0">res := make([]*LikeResponse, len(likes))
+                for i, l := range likes </span><span class="cov0" title="0">{
+                        var ls LikeResponse
+                        ls.RecruitID = l.RecruitID
+                        ls.CreatedAt = l.CreatedAt
+                        res[i] = &amp;ls
+                }</span>
+                <span class="cov0" title="0">var respms LikeResponses
+                respms.Likes = res
+                jsonresponse, err := json.Marshal(respms)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] failed to marshal likes: %v", err.Error())
+                        http.Error(writer, err.Error(), http.StatusInternalServerError)
+                        return
+                }</span>
+                <span class="cov0" title="0">writer.WriteHeader(http.StatusOK)
+                writer.Header().Set("Content-Type", "application/json")
+                writer.Write(jsonresponse)</span>
         }
 }
 
 // HandleInsert
 func (likeH *likeHandler) HandleInsert() http.HandlerFunc <span class="cov0" title="0">{
         return func(writer http.ResponseWriter, request *http.Request) </span><span class="cov0" title="0">{
-                ctx := request.Context()
+                defer request.Body.Close()
+                like := new(likeM.Like)
+                if err := json.NewDecoder(request.Body).Decode(&amp;like); err != nil </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
+                        http.Error(writer, err.Error(), http.StatusInternalServerError)
+                        return
+                }</span>
+                // TODO::読み込んだjsonデータのバリデーションがほしい
+                <span class="cov0" title="0">ctx := request.Context()
                 ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
                 defer cancel()
-                method := request.Method
-                UID := mid.GetUIDFromContext(ctx)
-                if method == "POST" </span><span class="cov0" title="0">{
-                        defer request.Body.Close()
-                        body, err := ioutil.ReadAll(request.Body)
-                        if err != nil </span><span class="cov0" title="0">{
-                                log.Fatal(err)
-                        }</span>
-                        <span class="cov0" title="0">var like *likeM.Like
-                        err = json.Unmarshal(body, &amp;like)
-                        if err != nil </span><span class="cov0" title="0">{
-                                log.Fatal(err)
-                        }</span>
-                        <span class="cov0" title="0">like.UID = UID
-                        err = likeH.likeUseCase.Insert(ctx, like)
-                        if err != nil </span><span class="cov0" title="0">{
-                                log.Fatal(err)
-                                http.Error(writer, err.Error(), http.StatusInternalServerError)
-                        }</span> else<span class="cov0" title="0"> {
-                                writer.WriteHeader(http.StatusCreated)
-                        }</span>
-                }
+                UID := dcontext.GetUIDFromContext(ctx)
+                if UID == "" </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] failed to GetUID: ")
+                        http.Error(writer, "Could not get UID", http.StatusInternalServerError)
+                        return
+                }</span>
+                <span class="cov0" title="0">err := likeH.likeUseCase.Insert(ctx, like, UID)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Printf("[ERROR] failed to Insert: %v", err.Error())
+                        http.Error(writer, err.Error(), http.StatusInternalServerError)
+                        return
+                }</span>
+                <span class="cov0" title="0">writer.WriteHeader(http.StatusCreated)</span>
         }
 }
 
@@ -1216,9 +1240,14 @@ type LikeRequest struct { // nolint
         // Need to implement field
 }
 
-// LikeResponse
-type LikeResponse struct { // nolint
-        // Need to implement field
+type LikeResponses struct {
+        Likes []*LikeResponse `json:"likes"`
+}
+
+// LikeResponse ...
+type LikeResponse struct {
+        RecruitID int32     `json:"recruit_id"`
+        CreatedAt time.Time `json:"created_at"`
 }
 </pre>
 		
@@ -2113,6 +2142,8 @@ import (
         "google.golang.org/api/option"
 
         firebase "firebase.google.com/go"
+
+        "github.com/satorunooshie/swipe-shukatu/pkg/dcontext"
 )
 
 //nolint
@@ -2162,7 +2193,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc <span class="cov0" title="0">{
                         _, _ = w.Write([]byte("error verifying ID token\n"))
                         return
                 }</span>
-                <span class="cov0" title="0">SetUID(ctx, token.UID)
+                <span class="cov0" title="0">dcontext.SetUID(ctx, token.UID)
                 log.Printf("[INFO] Verified ID token: %v\n", token)
                 next.ServeHTTP(w, r.WithContext(ctx))</span>
         }
@@ -2231,32 +2262,7 @@ func httpMethod(next http.HandlerFunc, method string) http.HandlerFunc <span cla
 }
 </pre>
 		
-		<pre class="file" id="file24" style="display: none">package middleware
-
-import (
-        "context"
-)
-
-type key string
-
-const (
-        uid key = "uid"
-)
-
-func SetUID(ctx context.Context, userID string) context.Context <span class="cov0" title="0">{
-        return context.WithValue(ctx, uid, userID)
-}</span>
-
-//nolint
-func GetUIDFromContext(ctx context.Context) (uid string) <span class="cov0" title="0">{
-        if ctx.Value(uid) != nil </span><span class="cov0" title="0">{
-                uid = ctx.Value(uid).(string)
-        }</span>
-        <span class="cov0" title="0">return uid</span>
-}
-</pre>
-		
-		<pre class="file" id="file25" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file24" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
@@ -2321,19 +2327,20 @@ func (jobU *jobUseCase) Delete(ctx context.Context, entity *jobM.Job) error <spa
 }
 </pre>
 		
-		<pre class="file" id="file26" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file25" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
         "context"
 
+        "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
         likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
         likeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
 )
 
 type LikeUseCase interface {
-        Select(ctx context.Context) ([]*likeM.Like, error)
-        Insert(ctx context.Context, entity *likeM.Like) error
+        Select(ctx context.Context, UID string) ([]*likeM.Like, error)
+        Insert(ctx context.Context, entity *likeM.Like, UID string) error
         Update(ctx context.Context, entity *likeM.Like) error
         Delete(ctx context.Context, entity *likeM.Like) error
 }
@@ -2350,8 +2357,9 @@ func NewLikeUsecase(likeR likeR.LikeRepository) LikeUseCase <span class="cov0" t
 }</span>
 
 // Select
-func (likeU *likeUseCase) Select(ctx context.Context) ([]*likeM.Like, error) <span class="cov0" title="0">{
-        likes, err := likeU.likeRepository.Select(ctx)
+func (likeU *likeUseCase) Select(ctx context.Context, UID string) ([]*likeM.Like, error) <span class="cov0" title="0">{
+        var likes []*model.Like
+        likes, err := likeU.likeRepository.Select(ctx, UID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -2359,8 +2367,8 @@ func (likeU *likeUseCase) Select(ctx context.Context) ([]*likeM.Like, error) <sp
 }
 
 // Insert
-func (likeU *likeUseCase) Insert(ctx context.Context, entity *likeM.Like) error <span class="cov0" title="0">{
-        err := likeU.likeRepository.Insert(ctx, entity)
+func (likeU *likeUseCase) Insert(ctx context.Context, entity *likeM.Like, UID string) error <span class="cov0" title="0">{
+        err := likeU.likeRepository.Insert(ctx, entity, UID)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
@@ -2386,7 +2394,7 @@ func (likeU *likeUseCase) Delete(ctx context.Context, entity *likeM.Like) error 
 }
 </pre>
 		
-		<pre class="file" id="file27" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file26" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
@@ -2451,7 +2459,7 @@ func (ltdU *ltdUseCase) Delete(ctx context.Context, entity *ltdM.Ltd) error <spa
 }
 </pre>
 		
-		<pre class="file" id="file28" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file27" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
@@ -2605,7 +2613,7 @@ type MessageResponse struct {
 }
 </pre>
 		
-		<pre class="file" id="file29" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file28" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: job_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -2700,7 +2708,7 @@ func (mr *MockJobUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.Ca
 }</span>
 </pre>
 		
-		<pre class="file" id="file30" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file29" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: like_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -2752,32 +2760,32 @@ func (mr *MockLikeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomock.C
 }</span>
 
 // Insert mocks base method.
-func (m *MockLikeUseCase) Insert(ctx context.Context, entity *model.Like) error <span class="cov0" title="0">{
+func (m *MockLikeUseCase) Insert(ctx context.Context, entity *model.Like, UID string) error <span class="cov0" title="0">{
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "Insert", ctx, entity)
+        ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
         ret0, _ := ret[0].(error)
         return ret0
 }</span>
 
 // Insert indicates an expected call of Insert.
-func (mr *MockLikeUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomock.Call <span class="cov0" title="0">{
+func (mr *MockLikeUseCaseMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call <span class="cov0" title="0">{
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockLikeUseCase)(nil).Insert), ctx, entity)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockLikeUseCase)(nil).Insert), ctx, entity, UID)
 }</span>
 
 // Select mocks base method.
-func (m *MockLikeUseCase) Select(ctx context.Context) ([]*model.Like, error) <span class="cov0" title="0">{
+func (m *MockLikeUseCase) Select(ctx context.Context, UID string) ([]*model.Like, error) <span class="cov0" title="0">{
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "Select", ctx)
+        ret := m.ctrl.Call(m, "Select", ctx, UID)
         ret0, _ := ret[0].([]*model.Like)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }</span>
 
 // Select indicates an expected call of Select.
-func (mr *MockLikeUseCaseMockRecorder) Select(ctx interface{}) *gomock.Call <span class="cov0" title="0">{
+func (mr *MockLikeUseCaseMockRecorder) Select(ctx, UID interface{}) *gomock.Call <span class="cov0" title="0">{
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockLikeUseCase)(nil).Select), ctx)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockLikeUseCase)(nil).Select), ctx, UID)
 }</span>
 
 // Update mocks base method.
@@ -2795,7 +2803,7 @@ func (mr *MockLikeUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.C
 }</span>
 </pre>
 		
-		<pre class="file" id="file31" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file30" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: ltd_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -2890,7 +2898,7 @@ func (mr *MockLtdUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.Ca
 }</span>
 </pre>
 		
-		<pre class="file" id="file32" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file31" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: message_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -2986,7 +2994,7 @@ func (mr *MockMessageUseCaseMockRecorder) Update(ctx, entity interface{}) *gomoc
 }</span>
 </pre>
 		
-		<pre class="file" id="file33" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file32" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: recruit_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -3081,7 +3089,7 @@ func (mr *MockRecruitUseCaseMockRecorder) Update(ctx, entity interface{}) *gomoc
 }</span>
 </pre>
 		
-		<pre class="file" id="file34" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file33" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: user_usecase.go
 
 // Package mock_usecase is a generated GoMock package.
@@ -3176,7 +3184,7 @@ func (mr *MockUserUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.C
 }</span>
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file34" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
@@ -3241,7 +3249,7 @@ func (recruitU *recruitUseCase) Delete(ctx context.Context, entity *recruitM.Rec
 }
 </pre>
 		
-		<pre class="file" id="file36" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
+		<pre class="file" id="file35" style="display: none">//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE
 package usecase
 
 import (
