@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"log"
-	"time"
 
 	likeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	likeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -24,7 +23,7 @@ func NewLikeRepoImpl(db *sql.DB) likeR.LikeRepository {
 // Select
 
 func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Like, error) {
-	rows, err := likeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM like WHERE user_id = ?", UID)
+	rows, err := likeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `like` WHERE user_id = ?", UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("[INFO] like: ", err)
@@ -37,13 +36,13 @@ func (likeI *likeRepoImpl) Select(ctx context.Context, UID string) ([]*likeM.Lik
 
 // Insert
 func (likeI *likeRepoImpl) Insert(ctx context.Context, entity *likeM.Like, UID string) error {
-	t := time.Now()
-	stmt, err := likeI.db.PrepareContext(ctx, "INSERT INTO like(user_id, recruit_id, created_at, updated_at) VALUES (?,?,?,?)")
+	query := "INSERT INTO `like`(user_id, recruit_id) VALUES (?,?)"
+	stmt, err := likeI.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err := stmt.Exec(UID, entity.RecruitID, t, t); err != nil {
+	if _, err := stmt.Exec(UID, entity.RecruitID); err != nil {
 		return err
 	}
 	return nil
