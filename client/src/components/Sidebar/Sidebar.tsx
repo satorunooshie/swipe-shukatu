@@ -11,6 +11,7 @@ import { useLogout } from "../../hooks/useLogout";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
+  console.log(location)
   const { onOpen } = useContext(LoginModalContext);
   const { currentUser } = useContext(CurrentUserContext);
   const Logout = useLogout();
@@ -70,8 +71,7 @@ const Sidebar: VFC = () => {
           p="3"
           mb="5"
           bg={
-            location.pathname === "/recommend" ||
-            location.pathname === "/recommend/"
+            location.pathname.includes("recommend")
               ? `${MAIN_COLOR}.100`
               : "transparent"
           }
@@ -82,8 +82,7 @@ const Sidebar: VFC = () => {
             w={7}
             h={7}
             color={
-              location.pathname === "/recommend" ||
-              location.pathname === "/recommend/"
+              location.pathname.includes("recommend")
                 ? `${MAIN_COLOR}.400`
                 : "gray.500"
             }
@@ -100,8 +99,7 @@ const Sidebar: VFC = () => {
           p="3"
           mb="5"
           bg={
-            location.pathname === "/message" ||
-            location.pathname === "/message/"
+            location.pathname.includes("message")
               ? `${MAIN_COLOR}.100`
               : "transparent"
           }
@@ -112,8 +110,7 @@ const Sidebar: VFC = () => {
             w={7}
             h={7}
             color={
-              location.pathname === "/message" ||
-              location.pathname === "/message/"
+              location.pathname.includes("message")
                 ? `${MAIN_COLOR}.400`
                 : "gray.500"
             }

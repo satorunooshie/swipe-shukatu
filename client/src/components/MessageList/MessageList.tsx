@@ -1,6 +1,7 @@
 import { VFC } from "react";
-import { Flex, Stack, Text, Avatar, Wrap } from "@chakra-ui/react";
+import { Flex, Stack, Text, Avatar } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
+import { NavLink } from "react-router-dom";
 
 const MessageList: VFC = () => {
   return (
@@ -16,6 +17,7 @@ const MessageList: VFC = () => {
       </Text>
       <Stack spacing="24px">
         {["A社", "B社", "C社", "D社", "E社", "F社", "G社"].map((ltd, i) => (
+          <NavLink to={`/message/${i}`}>
           <Flex align="center" justify="space-between">
             <Avatar size="lg" />
             <Stack ml="4" flex="1">
@@ -33,6 +35,7 @@ const MessageList: VFC = () => {
               <Text>8月19日</Text>
             </Flex>
           </Flex>
+        </NavLink>
         ))}
       </Stack>
     </Stack>

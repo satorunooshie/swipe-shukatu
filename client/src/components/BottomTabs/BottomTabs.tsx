@@ -17,7 +17,14 @@ const BottomTabs: VFC = () => {
   let location = useLocation();
 
   return (
-    <Wrap pos="fixed" bottom="0" w="full" display={{ md: "none" }} bg="white" zIndex="1">
+    <Wrap
+      pos="fixed"
+      bottom="0"
+      w="full"
+      display={{ md: "none" }}
+      bg="white"
+      zIndex="1"
+    >
       <Divider />
       <Flex px={0} pb={1} justify="space-around" w="full">
         <Center>
@@ -45,10 +52,7 @@ const BottomTabs: VFC = () => {
         <Center>
           <NavLink to="/recommend">
             <IconButton
-              isActive={
-                location.pathname === "/recommend" ||
-                location.pathname === "/recommend/"
-              }
+              isActive={location.pathname.includes("recommend")}
               colorScheme="blackAlpha"
               aria-label="recommend"
               variant="ghost"
@@ -70,10 +74,7 @@ const BottomTabs: VFC = () => {
         <Center>
           <NavLink to="/message">
             <IconButton
-              isActive={
-                location.pathname === "/message" ||
-                location.pathname === "/message/"
-              }
+              isActive={location.pathname.includes("message")}
               colorScheme="blackAlpha"
               aria-label="message"
               variant="ghost"
