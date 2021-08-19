@@ -81,7 +81,7 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
 		if UID == "" {
-			log.Printf("[ERROR] failed to GetUID: ")
+			log.Printf("[INFO] failed to GetUID: ")
 			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
 			return
 		}
@@ -93,10 +93,6 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 		}
 		writer.WriteHeader(http.StatusCreated)
 	}
-}
-
-type Rid struct {
-	RID string
 }
 
 // HandleUpdate
