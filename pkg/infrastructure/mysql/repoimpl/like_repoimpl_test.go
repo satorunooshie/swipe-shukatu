@@ -66,7 +66,7 @@ func Test_likeRepoImpl_Select(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "[異常系]　sqlエラー",
+			name: "[異常系]sqlエラー",
 			query: func(s sqlmock.Sqlmock) {
 				s.ExpectQuery("SELECT user_id, recruit_id, created_at, updated_at FROM like WHERE user_id = ?").
 					WithArgs("testUid").
