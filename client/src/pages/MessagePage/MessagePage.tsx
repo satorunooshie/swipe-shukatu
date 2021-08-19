@@ -1,11 +1,14 @@
 import { VFC } from "react";
-import { Text, Wrap } from "@chakra-ui/react";
+import { Text, Stack, Container } from "@chakra-ui/react";
+import NewMatchList from "../../components/NewMatchList/NewMatchList";
+import MessageList from "../../components/MessageList/MessageList";
 
 const MessagePage: VFC = () => {
   return (
-    <Wrap h="1000px" bg="gray" w="full">
-      <Text>Message</Text>
-    </Wrap>
+    <Container w="full">
+      <NewMatchList />
+      <MessageList />
+    </Container>
   );
 };
 

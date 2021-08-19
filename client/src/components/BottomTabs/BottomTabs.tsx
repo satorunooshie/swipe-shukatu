@@ -17,7 +17,7 @@ const BottomTabs: VFC = () => {
   let location = useLocation();
 
   return (
-    <Wrap pos="fixed" bottom="0" w="full" display={{ md: "none" }} bg="white">
+    <Wrap pos="fixed" bottom="0" w="full" display={{ md: "none" }} bg="white" zIndex="1">
       <Divider />
       <Flex px={0} pb={1} justify="space-around" w="full">
         <Center>
