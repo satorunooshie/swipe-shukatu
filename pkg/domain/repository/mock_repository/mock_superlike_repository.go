@@ -36,7 +36,7 @@ func (m *MockSuperlikeRepository) EXPECT() *MockSuperlikeRepositoryMockRecorder 
 }
 
 // Delete mocks base method.
-func (m *MockSuperlikeRepository) Delete(ctx context.Context, entity *model.SuperLike) error {
+func (m *MockSuperlikeRepository) Delete(ctx context.Context, entity *model.Superlike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -50,7 +50,7 @@ func (mr *MockSuperlikeRepositoryMockRecorder) Delete(ctx, entity interface{}) *
 }
 
 // Insert mocks base method.
-func (m *MockSuperlikeRepository) Insert(ctx context.Context, entity *model.SuperLike) error {
+func (m *MockSuperlikeRepository) Insert(ctx context.Context, entity *model.Superlike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -64,10 +64,10 @@ func (mr *MockSuperlikeRepositoryMockRecorder) Insert(ctx, entity interface{}) *
 }
 
 // Select mocks base method.
-func (m *MockSuperlikeRepository) Select(ctx context.Context) ([]*model.SuperLike, error) {
+func (m *MockSuperlikeRepository) Select(ctx context.Context) ([]*model.Superlike, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Select", ctx)
-	ret0, _ := ret[0].([]*model.SuperLike)
+	ret0, _ := ret[0].([]*model.Superlike)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,7 +79,7 @@ func (mr *MockSuperlikeRepositoryMockRecorder) Select(ctx interface{}) *gomock.C
 }
 
 // Update mocks base method.
-func (m *MockSuperlikeRepository) Update(ctx context.Context, entity *model.SuperLike) error {
+func (m *MockSuperlikeRepository) Update(ctx context.Context, entity *model.Superlike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, entity)
 	ret0, _ := ret[0].(error)
