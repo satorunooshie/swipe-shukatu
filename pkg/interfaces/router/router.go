@@ -20,18 +20,22 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	ltdRepoimpl := repoimpl.NewLtdRepoImpl(db)
 	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
 	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
+	superlikeRepoimpl := repoimpl.NewSuperLikeRepoImpl(db)
 
 	/* usecase */
 	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
 	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, ltdRepoimpl, messageRepoimpl, recruitRepoimpl)
+	superlikeUsecase := usecase.NewSuperLikeUsecase(superlikeRepoimpl)
 
 	/* handler */
 	// userHandler := handler.NewUserHandler(userUseCase)
 	messageHandler := handler.NewMessageHandler(messageUseCase)
+	superlikeHandler := handler.NewSuperLikeHandler(superlikeUsecase)
 
 	// register the handler
 	// h.Handle("/message/", middleware.Auth(middleware.Get(messageHandler.HandleSelect())))
 	h.Handle("/message/", middleware.Get(messageHandler.HandleSelect()))
+	h.Handle("/superlike", middleware.Post(superlikeHandler.HandleInsert()))
 
 	// this endpoint is for health check
 	h.HandleFunc("/health", middleware.Get(func(w http.ResponseWriter, r *http.Request) {
