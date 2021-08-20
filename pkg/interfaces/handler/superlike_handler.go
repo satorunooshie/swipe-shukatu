@@ -13,7 +13,7 @@ import (
 	superlikeU "github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
-type SuperLikeHandler interface {
+type SuperlikeHandler interface {
 	HandleSelect() http.HandlerFunc
 	HandleInsert() http.HandlerFunc
 	HandleUpdate() http.HandlerFunc
@@ -21,11 +21,11 @@ type SuperLikeHandler interface {
 }
 
 type superlikeHandler struct {
-	superlikeUseCase superlikeU.SuperLikeUseCase
+	superlikeUseCase superlikeU.SuperlikeUseCase
 }
 
-// NewSuperLikeHandler
-func NewSuperLikeHandler(superlikeU superlikeU.SuperLikeUseCase) SuperLikeHandler {
+// NewSuperlikeHandler
+func NewSuperlikeHandler(superlikeU superlikeU.SuperlikeUseCase) SuperlikeHandler {
 	return &superlikeHandler{
 		superlikeUseCase: superlikeU,
 	}
@@ -44,15 +44,15 @@ func (superlikeH *superlikeHandler) HandleSelect() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res := make([]*SuperLikeResponse, len(superlikes))
+		res := make([]*SuperlikeResponse, len(superlikes))
 		for i, l := range superlikes {
-			var ls SuperLikeResponse
+			var ls SuperlikeResponse
 			ls.RecruitID = l.RecruitID
 			ls.CreatedAt = l.CreatedAt
 			res[i] = &ls
 		}
-		var respms SuperLikeResponses
-		respms.SuperLikes = res
+		var respms SuperlikeResponses
+		respms.Superlikes = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
 			log.Printf("[ERROR] failed to marshal superlikes: %v", err.Error())
@@ -73,8 +73,8 @@ type superlikeInsertRequest struct {
 func (superlikeH *superlikeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer request.Body.Close()
-		SuperLikeRequest := new(superlikeInsertRequest)
-		if err := json.NewDecoder(request.Body).Decode(&SuperLikeRequest); err != nil {
+		SuperlikeRequest := new(superlikeInsertRequest)
+		if err := json.NewDecoder(request.Body).Decode(&SuperlikeRequest); err != nil {
 			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -89,8 +89,8 @@ func (superlikeH *superlikeHandler) HandleInsert() http.HandlerFunc {
 			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
 			return
 		}
-		superlike := new(superlikeM.SuperLike)
-		superlike.RecruitID = SuperLikeRequest.RecruitID
+		superlike := new(superlikeM.Superlike)
+		superlike.RecruitID = SuperlikeRequest.RecruitID
 		err := superlikeH.superlikeUseCase.Insert(ctx, superlike, UID)
 		if err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())
@@ -115,17 +115,17 @@ func (superlikeH *superlikeHandler) HandleDelete() http.HandlerFunc {
 	}
 }
 
-// SuperLikeRequest
-type SuperLikeRequest struct { // nolint
+// SuperlikeRequest
+type SuperlikeRequest struct { // nolint
 	// Need to implement field
 }
 
-type SuperLikeResponses struct {
-	SuperLikes []*SuperLikeResponse `json:"superlikes"`
+type SuperlikeResponses struct {
+	Superlikes []*SuperlikeResponse `json:"superlikes"`
 }
 
-// SuperLikeResponse ...
-type SuperLikeResponse struct {
+// SuperlikeResponse ...
+type SuperlikeResponse struct {
 	RecruitID int32     `json:"recruit_id"`
 	CreatedAt time.Time `json:"created_at"`
 }

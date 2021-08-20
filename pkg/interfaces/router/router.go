@@ -20,17 +20,17 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	ltdRepoimpl := repoimpl.NewLtdRepoImpl(db)
 	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
 	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
-	superlikeRepoimpl := repoimpl.NewSuperLikeRepoImpl(db)
+	superlikeRepoimpl := repoimpl.NewSuperlikeRepoImpl(db)
 
 	/* usecase */
 	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
 	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, ltdRepoimpl, messageRepoimpl, recruitRepoimpl)
-	superlikeUsecase := usecase.NewSuperLikeUsecase(superlikeRepoimpl)
+	superlikeUsecase := usecase.NewSuperlikeUsecase(superlikeRepoimpl)
 
 	/* handler */
 	// userHandler := handler.NewUserHandler(userUseCase)
 	messageHandler := handler.NewMessageHandler(messageUseCase)
-	superlikeHandler := handler.NewSuperLikeHandler(superlikeUsecase)
+	superlikeHandler := handler.NewSuperlikeHandler(superlikeUsecase)
 
 	// register the handler
 	// h.Handle("/message/", middleware.Auth(middleware.Get(messageHandler.HandleSelect())))

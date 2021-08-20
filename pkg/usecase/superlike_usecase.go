@@ -9,27 +9,27 @@ import (
 	superlikeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
 )
 
-type SuperLikeUseCase interface {
-	Select(ctx context.Context, UID string) ([]*superlikeM.SuperLike, error)
-	Insert(ctx context.Context, entity *superlikeM.SuperLike, UID string) error
-	Update(ctx context.Context, entity *superlikeM.SuperLike) error
-	Delete(ctx context.Context, entity *superlikeM.SuperLike) error
+type SuperlikeUseCase interface {
+	Select(ctx context.Context, UID string) ([]*superlikeM.Superlike, error)
+	Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error
+	Update(ctx context.Context, entity *superlikeM.Superlike) error
+	Delete(ctx context.Context, entity *superlikeM.Superlike) error
 }
 
 type superlikeUseCase struct {
-	superlikeRepository superlikeR.SuperLikeRepository
+	superlikeRepository superlikeR.SuperlikeRepository
 }
 
-// NewSuperLikeUsecase
-func NewSuperLikeUsecase(superlikeR superlikeR.SuperLikeRepository) SuperLikeUseCase {
+// NewSuperlikeUsecase
+func NewSuperlikeUsecase(superlikeR superlikeR.SuperlikeRepository) SuperlikeUseCase {
 	return &superlikeUseCase{
 		superlikeRepository: superlikeR,
 	}
 }
 
 // Select
-func (superlikeU *superlikeUseCase) Select(ctx context.Context, UID string) ([]*superlikeM.SuperLike, error) {
-	var superlikes []*model.SuperLike
+func (superlikeU *superlikeUseCase) Select(ctx context.Context, UID string) ([]*superlikeM.Superlike, error) {
+	var superlikes []*model.Superlike
 	superlikes, err := superlikeU.superlikeRepository.Select(ctx, UID)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (superlikeU *superlikeUseCase) Select(ctx context.Context, UID string) ([]*
 }
 
 // Insert
-func (superlikeU *superlikeUseCase) Insert(ctx context.Context, entity *superlikeM.SuperLike, UID string) error {
+func (superlikeU *superlikeUseCase) Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error {
 	err := superlikeU.superlikeRepository.Insert(ctx, entity, UID)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func (superlikeU *superlikeUseCase) Insert(ctx context.Context, entity *superlik
 }
 
 // Update
-func (superlikeU *superlikeUseCase) Update(ctx context.Context, entity *superlikeM.SuperLike) error {
+func (superlikeU *superlikeUseCase) Update(ctx context.Context, entity *superlikeM.Superlike) error {
 	err := superlikeU.superlikeRepository.Update(ctx, entity)
 	if err != nil {
 		return err
@@ -56,7 +56,7 @@ func (superlikeU *superlikeUseCase) Update(ctx context.Context, entity *superlik
 }
 
 // Delete
-func (superlikeU *superlikeUseCase) Delete(ctx context.Context, entity *superlikeM.SuperLike) error {
+func (superlikeU *superlikeUseCase) Delete(ctx context.Context, entity *superlikeM.Superlike) error {
 	err := superlikeU.superlikeRepository.Delete(ctx, entity)
 	if err != nil {
 		return err

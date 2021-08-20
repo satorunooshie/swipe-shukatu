@@ -4,6 +4,7 @@ package repoimpl
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	superlikeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	superlikeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -20,21 +21,28 @@ func NewSuperlikeRepoImpl(db *sql.DB) superlikeR.SuperlikeRepository {
 }
 
 // Select
-func (superlikeI *superlikeRepoImpl) Select(ctx context.Context) ([]*superlikeM.Superlike, error) {
-	rows, err := superlikeI.db.Query("SELECT * FROM superlike")
+
+func (superlikeI *superlikeRepoImpl) Select(ctx context.Context, UID string) ([]*superlikeM.Superlike, error) {
+	rows, err := superlikeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `superlike` WHERE user_id = ?", UID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("[INFO] superlike: ", err)
+			return nil, nil
+		}
 		return nil, err
 	}
-	return convertToSuperlike(rows)
+	return convertToSuperlikes(rows)
 }
 
 // Insert
-func (superlikeI *superlikeRepoImpl) Insert(ctx context.Context, entity *superlikeM.Superlike) error {
-	stmt, err := superlikeI.db.Prepare("INSERT INTO superlike () VALUES ()")
+func (superlikeI *superlikeRepoImpl) Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error {
+	query := "INSERT INTO `superlike`(user_id, recruit_id) VALUES (?,?)"
+	stmt, err := superlikeI.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(); err != nil {
+	defer stmt.Close()
+	if _, err := stmt.Exec(UID, entity.RecruitID); err != nil {
 		return err
 	}
 	return nil
@@ -42,10 +50,11 @@ func (superlikeI *superlikeRepoImpl) Insert(ctx context.Context, entity *superli
 
 // Update
 func (superlikeI *superlikeRepoImpl) Update(ctx context.Context, entity *superlikeM.Superlike) error {
-	stmt, err := superlikeI.db.Prepare("UPDATE superlike SET WHERE ")
+	stmt, err := superlikeI.db.PrepareContext(ctx, "UPDATE superlike SET WHERE ")
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	if _, err := stmt.Exec(); err != nil {
 		return err
 	}
@@ -54,10 +63,11 @@ func (superlikeI *superlikeRepoImpl) Update(ctx context.Context, entity *superli
 
 // Delete
 func (superlikeI *superlikeRepoImpl) Delete(ctx context.Context, entity *superlikeM.Superlike) error {
-	stmt, err := superlikeI.db.Prepare("DELETE FROM superlike WHERE ")
+	stmt, err := superlikeI.db.PrepareContext(ctx, "DELETE FROM superlike WHERE ")
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	if _, err := stmt.Exec(); err != nil {
 		return err
 	}
@@ -65,17 +75,20 @@ func (superlikeI *superlikeRepoImpl) Delete(ctx context.Context, entity *superli
 }
 
 // convertToSuperlike
-func convertToSuperlike(rows *sql.Rows) ([]*superlikeM.Superlike, error) {
+func convertToSuperlikes(rows *sql.Rows) ([]*superlikeM.Superlike, error) {
 	var superlikes []*superlikeM.Superlike
 	for rows.Next() {
-		var superlike *superlikeM.Superlike
+		var superlike superlikeM.Superlike
 		err := rows.Scan(
-		// Need to scan field
+			&superlike.UID,
+			&superlike.RecruitID,
+			&superlike.CreatedAt,
+			&superlike.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		superlikes = append(superlikes, superlike)
+		superlikes = append(superlikes, &superlike)
 	}
 	return superlikes, nil
 }
