@@ -65,12 +65,16 @@ func (likeH *likeHandler) HandleSelect() http.HandlerFunc {
 	}
 }
 
+type likeInsertRequest struct {
+	RecruitID int32 `json:"recruit_id"`
+}
+
 // HandleInsert
 func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer request.Body.Close()
-		like := new(likeM.Like)
-		if err := json.NewDecoder(request.Body).Decode(&like); err != nil {
+		LikeRequest := new(likeInsertRequest)
+		if err := json.NewDecoder(request.Body).Decode(&LikeRequest); err != nil {
 			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -85,6 +89,8 @@ func (likeH *likeHandler) HandleInsert() http.HandlerFunc {
 			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
 			return
 		}
+		like := new(likeM.Like)
+		like.RecruitID = LikeRequest.RecruitID
 		err := likeH.likeUseCase.Insert(ctx, like, UID)
 		if err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())

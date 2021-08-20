@@ -83,7 +83,7 @@ func convertToLikes(rows *sql.Rows) ([]*likeM.Like, error) {
 			&like.UID,
 			&like.RecruitID,
 			&like.CreatedAt,
-			&like.UpdateddAt,
+			&like.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
