@@ -12,31 +12,31 @@ import (
 	model "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 )
 
-// MockSuperlikeUseCase is a mock of SuperlikeUseCase interface.
-type MockSuperlikeUseCase struct {
+// MockSuperLikeUseCase is a mock of SuperLikeUseCase interface.
+type MockSuperLikeUseCase struct {
 	ctrl     *gomock.Controller
-	recorder *MockSuperlikeUseCaseMockRecorder
+	recorder *MockSuperLikeUseCaseMockRecorder
 }
 
-// MockSuperlikeUseCaseMockRecorder is the mock recorder for MockSuperlikeUseCase.
-type MockSuperlikeUseCaseMockRecorder struct {
-	mock *MockSuperlikeUseCase
+// MockSuperLikeUseCaseMockRecorder is the mock recorder for MockSuperLikeUseCase.
+type MockSuperLikeUseCaseMockRecorder struct {
+	mock *MockSuperLikeUseCase
 }
 
-// NewMockSuperlikeUseCase creates a new mock instance.
-func NewMockSuperlikeUseCase(ctrl *gomock.Controller) *MockSuperlikeUseCase {
-	mock := &MockSuperlikeUseCase{ctrl: ctrl}
-	mock.recorder = &MockSuperlikeUseCaseMockRecorder{mock}
+// NewMockSuperLikeUseCase creates a new mock instance.
+func NewMockSuperLikeUseCase(ctrl *gomock.Controller) *MockSuperLikeUseCase {
+	mock := &MockSuperLikeUseCase{ctrl: ctrl}
+	mock.recorder = &MockSuperLikeUseCaseMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSuperlikeUseCase) EXPECT() *MockSuperlikeUseCaseMockRecorder {
+func (m *MockSuperLikeUseCase) EXPECT() *MockSuperLikeUseCaseMockRecorder {
 	return m.recorder
 }
 
 // Delete mocks base method.
-func (m *MockSuperlikeUseCase) Delete(ctx context.Context, entity *model.Superlike) error {
+func (m *MockSuperLikeUseCase) Delete(ctx context.Context, entity *model.SuperLike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -44,13 +44,13 @@ func (m *MockSuperlikeUseCase) Delete(ctx context.Context, entity *model.Superli
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockSuperlikeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomock.Call {
+func (mr *MockSuperLikeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSuperlikeUseCase)(nil).Delete), ctx, entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSuperLikeUseCase)(nil).Delete), ctx, entity)
 }
 
 // Insert mocks base method.
-func (m *MockSuperlikeUseCase) Insert(ctx context.Context, entity *model.Superlike, UID string) error {
+func (m *MockSuperLikeUseCase) Insert(ctx context.Context, entity *model.SuperLike, UID string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
 	ret0, _ := ret[0].(error)
@@ -58,28 +58,28 @@ func (m *MockSuperlikeUseCase) Insert(ctx context.Context, entity *model.Superli
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockSuperlikeUseCaseMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call {
+func (mr *MockSuperLikeUseCaseMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockSuperlikeUseCase)(nil).Insert), ctx, entity, UID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockSuperLikeUseCase)(nil).Insert), ctx, entity, UID)
 }
 
 // Select mocks base method.
-func (m *MockSuperlikeUseCase) Select(ctx context.Context, UID string) ([]*model.Superlike, error) {
+func (m *MockSuperLikeUseCase) Select(ctx context.Context, UID string) ([]*model.SuperLike, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Select", ctx, UID)
-	ret0, _ := ret[0].([]*model.Superlike)
+	ret0, _ := ret[0].([]*model.SuperLike)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockSuperlikeUseCaseMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
+func (mr *MockSuperLikeUseCaseMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockSuperlikeUseCase)(nil).Select), ctx, UID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockSuperLikeUseCase)(nil).Select), ctx, UID)
 }
 
 // Update mocks base method.
-func (m *MockSuperlikeUseCase) Update(ctx context.Context, entity *model.Superlike) error {
+func (m *MockSuperLikeUseCase) Update(ctx context.Context, entity *model.SuperLike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -87,7 +87,7 @@ func (m *MockSuperlikeUseCase) Update(ctx context.Context, entity *model.Superli
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockSuperlikeUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.Call {
+func (mr *MockSuperLikeUseCaseMockRecorder) Update(ctx, entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockSuperlikeUseCase)(nil).Update), ctx, entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockSuperLikeUseCase)(nil).Update), ctx, entity)
 }
