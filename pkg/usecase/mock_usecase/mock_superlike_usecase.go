@@ -36,7 +36,7 @@ func (m *MockSuperLikeUseCase) EXPECT() *MockSuperLikeUseCaseMockRecorder {
 }
 
 // Delete mocks base method.
-func (m *MockSuperLikeUseCase) Delete(ctx context.Context, entity *model.SuperLike) error {
+func (m *MockSuperLikeUseCase) Delete(ctx context.Context, entity *model.Superlike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, entity)
 	ret0, _ := ret[0].(error)
@@ -50,7 +50,7 @@ func (mr *MockSuperLikeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gom
 }
 
 // Insert mocks base method.
-func (m *MockSuperLikeUseCase) Insert(ctx context.Context, entity *model.SuperLike, UID string) error {
+func (m *MockSuperLikeUseCase) Insert(ctx context.Context, entity *model.Superlike, UID string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
 	ret0, _ := ret[0].(error)
@@ -64,10 +64,10 @@ func (mr *MockSuperLikeUseCaseMockRecorder) Insert(ctx, entity, UID interface{})
 }
 
 // Select mocks base method.
-func (m *MockSuperLikeUseCase) Select(ctx context.Context, UID string) ([]*model.SuperLike, error) {
+func (m *MockSuperLikeUseCase) Select(ctx context.Context, UID string) ([]*model.Superlike, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Select", ctx, UID)
-	ret0, _ := ret[0].([]*model.SuperLike)
+	ret0, _ := ret[0].([]*model.Superlike)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,7 +79,7 @@ func (mr *MockSuperLikeUseCaseMockRecorder) Select(ctx, UID interface{}) *gomock
 }
 
 // Update mocks base method.
-func (m *MockSuperLikeUseCase) Update(ctx context.Context, entity *model.SuperLike) error {
+func (m *MockSuperLikeUseCase) Update(ctx context.Context, entity *model.Superlike) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, entity)
 	ret0, _ := ret[0].(error)
