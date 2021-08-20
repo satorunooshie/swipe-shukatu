@@ -65,12 +65,16 @@ func (nopeH *nopeHandler) HandleSelect() http.HandlerFunc {
 	}
 }
 
+type nopeInsertRequest struct {
+	RecruitID int32 `json:"recruit_id"`
+}
+
 // HandleInsert
 func (nopeH *nopeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer request.Body.Close()
-		nope := new(nopeM.Nope)
-		if err := json.NewDecoder(request.Body).Decode(&nope); err != nil {
+		nopeRequest := new(nopeInsertRequest)
+		if err := json.NewDecoder(request.Body).Decode(&nopeRequest); err != nil {
 			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -85,6 +89,8 @@ func (nopeH *nopeHandler) HandleInsert() http.HandlerFunc {
 			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
 			return
 		}
+		nope := new(nopeM.Nope)
+		nope.RecruitID = nopeRequest.RecruitID
 		err := nopeH.nopeUseCase.Insert(ctx, nope, UID)
 		if err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())

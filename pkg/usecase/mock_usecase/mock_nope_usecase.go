@@ -50,32 +50,32 @@ func (mr *MockNopeUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomock.C
 }
 
 // Insert mocks base method.
-func (m *MockNopeUseCase) Insert(ctx context.Context, entity *model.Nope) error {
+func (m *MockNopeUseCase) Insert(ctx context.Context, entity *model.Nope, UID string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", ctx, entity)
+	ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockNopeUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomock.Call {
+func (mr *MockNopeUseCaseMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockNopeUseCase)(nil).Insert), ctx, entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockNopeUseCase)(nil).Insert), ctx, entity, UID)
 }
 
 // Select mocks base method.
-func (m *MockNopeUseCase) Select(ctx context.Context) ([]*model.Nope, error) {
+func (m *MockNopeUseCase) Select(ctx context.Context, UID string) ([]*model.Nope, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
+	ret := m.ctrl.Call(m, "Select", ctx, UID)
 	ret0, _ := ret[0].([]*model.Nope)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockNopeUseCaseMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockNopeUseCaseMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockNopeUseCase)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockNopeUseCase)(nil).Select), ctx, UID)
 }
 
 // Update mocks base method.

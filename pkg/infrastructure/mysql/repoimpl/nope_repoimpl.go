@@ -4,6 +4,7 @@ package repoimpl
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	nopeM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	nopeR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -20,21 +21,28 @@ func NewNopeRepoImpl(db *sql.DB) nopeR.NopeRepository {
 }
 
 // Select
-func (nopeI *nopeRepoImpl) Select(ctx context.Context) ([]*nopeM.Nope, error) {
-	rows, err := nopeI.db.Query("SELECT * FROM nope")
+
+func (nopeI *nopeRepoImpl) Select(ctx context.Context, UID string) ([]*nopeM.Nope, error) {
+	rows, err := nopeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `nope` WHERE user_id = ?", UID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("[INFO] nope: ", err)
+			return nil, nil
+		}
 		return nil, err
 	}
-	return convertToNope(rows)
+	return convertToNopes(rows)
 }
 
 // Insert
-func (nopeI *nopeRepoImpl) Insert(ctx context.Context, entity *nopeM.Nope) error {
-	stmt, err := nopeI.db.Prepare("INSERT INTO nope () VALUES ()")
+func (nopeI *nopeRepoImpl) Insert(ctx context.Context, entity *nopeM.Nope, UID string) error {
+	query := "INSERT INTO `nope`(user_id, recruit_id) VALUES (?,?)"
+	stmt, err := nopeI.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(); err != nil {
+	defer stmt.Close()
+	if _, err := stmt.Exec(UID, entity.RecruitID); err != nil {
 		return err
 	}
 	return nil
@@ -42,10 +50,11 @@ func (nopeI *nopeRepoImpl) Insert(ctx context.Context, entity *nopeM.Nope) error
 
 // Update
 func (nopeI *nopeRepoImpl) Update(ctx context.Context, entity *nopeM.Nope) error {
-	stmt, err := nopeI.db.Prepare("UPDATE nope SET WHERE ")
+	stmt, err := nopeI.db.PrepareContext(ctx, "UPDATE nope SET WHERE ")
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	if _, err := stmt.Exec(); err != nil {
 		return err
 	}
@@ -54,10 +63,11 @@ func (nopeI *nopeRepoImpl) Update(ctx context.Context, entity *nopeM.Nope) error
 
 // Delete
 func (nopeI *nopeRepoImpl) Delete(ctx context.Context, entity *nopeM.Nope) error {
-	stmt, err := nopeI.db.Prepare("DELETE FROM nope WHERE ")
+	stmt, err := nopeI.db.PrepareContext(ctx, "DELETE FROM nope WHERE ")
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	if _, err := stmt.Exec(); err != nil {
 		return err
 	}
@@ -65,17 +75,20 @@ func (nopeI *nopeRepoImpl) Delete(ctx context.Context, entity *nopeM.Nope) error
 }
 
 // convertToNope
-func convertToNope(rows *sql.Rows) ([]*nopeM.Nope, error) {
+func convertToNopes(rows *sql.Rows) ([]*nopeM.Nope, error) {
 	var nopes []*nopeM.Nope
 	for rows.Next() {
-		var nope *nopeM.Nope
+		var nope nopeM.Nope
 		err := rows.Scan(
-		// Need to scan field
+			&nope.UID,
+			&nope.RecruitID,
+			&nope.CreatedAt,
+			&nope.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		nopes = append(nopes, nope)
+		nopes = append(nopes, &nope)
 	}
 	return nopes, nil
 }
