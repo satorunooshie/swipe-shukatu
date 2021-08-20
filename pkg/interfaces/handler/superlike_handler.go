@@ -65,12 +65,16 @@ func (superlikeH *superlikeHandler) HandleSelect() http.HandlerFunc {
 	}
 }
 
+type superlikeInsertRequest struct {
+	RecruitID int32 `json:"recruit_id"`
+}
+
 // HandleInsert
 func (superlikeH *superlikeHandler) HandleInsert() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		defer request.Body.Close()
-		superlike := new(superlikeM.Superlike)
-		if err := json.NewDecoder(request.Body).Decode(&superlike); err != nil {
+		SuperLikeRequest := new(superlikeInsertRequest)
+		if err := json.NewDecoder(request.Body).Decode(&SuperLikeRequest); err != nil {
 			log.Printf("[ERROR] failed to JsonDecord: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -85,6 +89,8 @@ func (superlikeH *superlikeHandler) HandleInsert() http.HandlerFunc {
 			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
 			return
 		}
+		superlike := new(superlikeM.Superlike)
+		superlike.RecruitID = SuperLikeRequest.RecruitID
 		err := superlikeH.superlikeUseCase.Insert(ctx, superlike, UID)
 		if err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())

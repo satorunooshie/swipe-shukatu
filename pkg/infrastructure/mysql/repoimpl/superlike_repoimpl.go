@@ -80,7 +80,7 @@ func convertToSuperlike(rows *sql.Rows) ([]*superlikeM.Superlike, error) {
 			&superlike.UID,
 			&superlike.RecruitID,
 			&superlike.CreatedAt,
-			&superlike.UpdateddAt,
+			&superlike.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
