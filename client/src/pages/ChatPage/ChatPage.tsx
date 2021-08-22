@@ -9,11 +9,13 @@ import {
   IconButton,
   Input,
   Button,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { ArrowBackIcon, AttachmentIcon } from "@chakra-ui/icons";
 import { FaTelegramPlane } from "react-icons/fa";
-import { useHistory,useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 const fetcher = (url: string) =>
@@ -21,8 +23,7 @@ const fetcher = (url: string) =>
     headers: {
       Accept: "application/json",
     },
-  })
-    .then((res) => res.json())
+  }).then((res) => res.json());
 
 const ChatPage: VFC = () => {
   const history = useHistory();
@@ -34,7 +35,20 @@ const ChatPage: VFC = () => {
   );
 
   if (error) return <h1>An error has occurred.</h1>;
-  if (!message) return <h1>Loading...</h1>;
+  if (!message)
+    return (
+      <Container w="full" minH="full">
+        <Center w="full" h="full">
+          <Spinner
+            thickness="4px"
+            speed="0.5s"
+            emptyColor="gray.200"
+            color="blue.300"
+            size="xl"
+          />
+        </Center>
+      </Container>
+    );
   return (
     <Container w="full" minH="full">
       <Flex
@@ -104,6 +118,7 @@ const ChatPage: VFC = () => {
           variant="filled"
           placeholder="テキストを入力してください"
           aria-label="input message"
+          ml="2"
         />
         <Button
           colorScheme={MAIN_COLOR}

@@ -4,6 +4,7 @@ import { MAIN_COLOR } from "../../constants/MainColor";
 import { NavLink } from "react-router-dom";
 import useSWR from "swr";
 import { Ltd } from "../../type/Ltd";
+import LoadingMessageList from "./LoadingMessageList";
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -21,7 +22,7 @@ const MessageList: VFC = () => {
   );
 
   if (error) return <h1>An error has occurred.</h1>;
-  if (!ltds) return <h1>Loading...</h1>;
+  if (!ltds) return <LoadingMessageList />;
 
   return (
     <Stack pb="5">
@@ -31,29 +32,32 @@ const MessageList: VFC = () => {
         color={`${MAIN_COLOR}.500`}
         fontWeight="bold"
       >
-         メッセージ
+        メッセージ
       </Text>
       <Stack spacing="24px">
         {ltds.map((ltd: Ltd, i: number) => (
           <NavLink to={`/message/${ltd.id}`}>
-          <Flex align="center" justify="space-between">
-            <Avatar size="md" src={`https://icanhazdadjoke.com/j/${ltd.id}.png`}/>
-            <Stack ml="4" flex="1">
-              <Text
-                fontSize="xl"
-                fontFamily={"heading"}
-                color={"gray.600"}
-                fontWeight="bold"
-              >
-                {ltd.joke.slice(0,10)}社
-              </Text>
-              <Text color={"gray.500"}>{ltd.joke}</Text>
-            </Stack>
-            <Flex align="center" color={"gray.500"} ml="2">
-              <Text>8月19日</Text>
+            <Flex align="center" justify="space-between">
+              <Avatar
+                size="md"
+                src={`https://icanhazdadjoke.com/j/${ltd.id}.png`}
+              />
+              <Stack ml="4" flex="1">
+                <Text
+                  fontSize="xl"
+                  fontFamily={"heading"}
+                  color={"gray.600"}
+                  fontWeight="bold"
+                >
+                  {ltd.joke.slice(0, 10)}社
+                </Text>
+                <Text color={"gray.500"}>{ltd.joke}</Text>
+              </Stack>
+              <Flex align="center" color={"gray.500"} ml="2">
+                <Text>8月19日</Text>
+              </Flex>
             </Flex>
-          </Flex>
-        </NavLink>
+          </NavLink>
         ))}
       </Stack>
     </Stack>

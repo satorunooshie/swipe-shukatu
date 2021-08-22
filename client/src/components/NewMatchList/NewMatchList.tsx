@@ -4,6 +4,7 @@ import { MAIN_COLOR } from "../../constants/MainColor";
 import { NavLink } from "react-router-dom";
 import useSWR from "swr";
 import { Ltd } from "../../type/Ltd";
+import LoadingNewMatchList from "./LoadingNewMatchList";
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -21,7 +22,7 @@ const NewMatchList: VFC = () => {
   );
 
   if (error) return <h1>An error has occurred.</h1>;
-  if (!ltds) return <h1>Loading...</h1>;
+  if (!ltds) return <LoadingNewMatchList />;
 
   return (
     <Stack mb="4">
