@@ -9,7 +9,7 @@ import (
 
 type NopeRepository interface {
 	Select(ctx context.Context, UID string) ([]*nopeM.Nope, error)
-	Insert(ctx context.Context, entity *nopeM.Nope, UID string) error
+	Insert(ctx context.Context, entity *nopeM.Nope) error
 	Update(ctx context.Context, entity *nopeM.Nope) error
 	Delete(ctx context.Context, entity *nopeM.Nope) error
 }

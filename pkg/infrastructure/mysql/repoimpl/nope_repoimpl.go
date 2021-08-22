@@ -35,14 +35,14 @@ func (nopeI *nopeRepoImpl) Select(ctx context.Context, UID string) ([]*nopeM.Nop
 }
 
 // Insert
-func (nopeI *nopeRepoImpl) Insert(ctx context.Context, entity *nopeM.Nope, UID string) error {
+func (nopeI *nopeRepoImpl) Insert(ctx context.Context, entity *nopeM.Nope) error {
 	query := "INSERT INTO `nope`(user_id, recruit_id) VALUES (?,?)"
 	stmt, err := nopeI.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err := stmt.Exec(UID, entity.RecruitID); err != nil {
+	if _, err := stmt.Exec(entity.UID, entity.RecruitID); err != nil {
 		return err
 	}
 	return nil

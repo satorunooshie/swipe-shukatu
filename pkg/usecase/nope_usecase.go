@@ -39,7 +39,8 @@ func (nopeU *nopeUseCase) Select(ctx context.Context, UID string) ([]*nopeM.Nope
 
 // Insert
 func (nopeU *nopeUseCase) Insert(ctx context.Context, entity *nopeM.Nope, UID string) error {
-	err := nopeU.nopeRepository.Insert(ctx, entity, UID)
+	entity.UID = UID
+	err := nopeU.nopeRepository.Insert(ctx, entity)
 	if err != nil {
 		return err
 	}

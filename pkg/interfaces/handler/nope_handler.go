@@ -44,14 +44,14 @@ func (nopeH *nopeHandler) HandleSelect() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res := make([]*NopeResponse, len(nopes))
+		res := make([]*nopeResponse, len(nopes))
 		for i, l := range nopes {
-			var ls NopeResponse
+			var ls nopeResponse
 			ls.RecruitID = l.RecruitID
 			ls.CreatedAt = l.CreatedAt
 			res[i] = &ls
 		}
-		var respms NopeResponses
+		var respms nopeResponses
 		respms.Nopes = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
@@ -116,16 +116,16 @@ func (nopeH *nopeHandler) HandleDelete() http.HandlerFunc {
 }
 
 // NopeRequest
-type NopeRequest struct { // nolint
+type nopeRequest struct { // nolint
 	// Need to implement field
 }
 
-type NopeResponses struct {
-	Nopes []*NopeResponse `json:"nopes"`
+type nopeResponses struct {
+	Nopes []*nopeResponse `json:"nopes"`
 }
 
 // NopeResponse ...
-type NopeResponse struct {
+type nopeResponse struct {
 	RecruitID int32     `json:"recruit_id"`
 	CreatedAt time.Time `json:"created_at"`
 }
