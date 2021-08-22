@@ -13,10 +13,28 @@ import {
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { ArrowBackIcon, AttachmentIcon } from "@chakra-ui/icons";
 import { FaTelegramPlane } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useHistory,useParams } from "react-router-dom";
+import useSWR from "swr";
+
+const fetcher = (url: string) =>
+  fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then((res) => res.json())
 
 const ChatPage: VFC = () => {
   const history = useHistory();
+  // @ts-ignore
+  const { ltdId } = useParams();
+  const { data: message, error } = useSWR(
+    `https://icanhazdadjoke.com/j/${ltdId}`,
+    fetcher
+  );
+
+  if (error) return <h1>An error has occurred.</h1>;
+  if (!message) return <h1>Loading...</h1>;
   return (
     <Container w="full" minH="full">
       <Flex
@@ -48,9 +66,7 @@ const ChatPage: VFC = () => {
             <Avatar mr="4" />
             <Box bg="gray.200" borderRadius="xl" p="2" shadow="md">
               <Text color="gray.600" fontWeight="bold">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel
-                ipsa commodi illum saepe numquam maxime asperiores voluptate
-                sit, minima perspiciatis.
+                {message.joke}
               </Text>
             </Box>
           </Flex>
@@ -60,8 +76,7 @@ const ChatPage: VFC = () => {
             <Avatar ml="4" />
             <Box bg={`${MAIN_COLOR}.400`} borderRadius="xl" p="2" shadow="md">
               <Text color="white" fontWeight="bold">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel
-                ipsa
+                {message.joke}
               </Text>
             </Box>
           </Flex>
