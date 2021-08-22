@@ -9,7 +9,7 @@ import (
 
 type SuperlikeRepository interface {
 	Select(ctx context.Context, UID string) ([]*superlikeM.Superlike, error)
-	Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error
+	Insert(ctx context.Context, entity *superlikeM.Superlike) error
 	Update(ctx context.Context, entity *superlikeM.Superlike) error
 	Delete(ctx context.Context, entity *superlikeM.Superlike) error
 }

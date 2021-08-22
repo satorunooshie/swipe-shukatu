@@ -35,14 +35,14 @@ func (superlikeI *superlikeRepoImpl) Select(ctx context.Context, UID string) ([]
 }
 
 // Insert
-func (superlikeI *superlikeRepoImpl) Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error {
+func (superlikeI *superlikeRepoImpl) Insert(ctx context.Context, entity *superlikeM.Superlike) error {
 	query := "INSERT INTO `superlike`(user_id, recruit_id) VALUES (?,?)"
 	stmt, err := superlikeI.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err := stmt.Exec(UID, entity.RecruitID); err != nil {
+	if _, err := stmt.Exec(entity.UID, entity.RecruitID); err != nil {
 		return err
 	}
 	return nil
