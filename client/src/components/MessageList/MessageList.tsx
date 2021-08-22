@@ -19,7 +19,7 @@ const MessageList: VFC = () => {
         {["A社", "B社", "C社", "D社", "E社", "F社", "G社"].map((ltd, i) => (
           <NavLink to={`/message/${i}`}>
           <Flex align="center" justify="space-between">
-            <Avatar size="lg" />
+            <Avatar size="md" />
             <Stack ml="4" flex="1">
               <Text
                 fontSize="xl"
