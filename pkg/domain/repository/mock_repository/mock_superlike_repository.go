@@ -64,18 +64,18 @@ func (mr *MockSuperlikeRepositoryMockRecorder) Insert(ctx, entity interface{}) *
 }
 
 // Select mocks base method.
-func (m *MockSuperlikeRepository) Select(ctx context.Context) ([]*model.Superlike, error) {
+func (m *MockSuperlikeRepository) Select(ctx context.Context, UID string) ([]*model.Superlike, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
+	ret := m.ctrl.Call(m, "Select", ctx, UID)
 	ret0, _ := ret[0].([]*model.Superlike)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockSuperlikeRepositoryMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockSuperlikeRepositoryMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockSuperlikeRepository)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockSuperlikeRepository)(nil).Select), ctx, UID)
 }
 
 // Update mocks base method.

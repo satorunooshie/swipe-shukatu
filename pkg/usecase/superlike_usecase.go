@@ -39,7 +39,8 @@ func (superlikeU *superlikeUseCase) Select(ctx context.Context, UID string) ([]*
 
 // Insert
 func (superlikeU *superlikeUseCase) Insert(ctx context.Context, entity *superlikeM.Superlike, UID string) error {
-	err := superlikeU.superlikeRepository.Insert(ctx, entity, UID)
+	entity.UID = UID
+	err := superlikeU.superlikeRepository.Insert(ctx, entity)
 	if err != nil {
 		return err
 	}

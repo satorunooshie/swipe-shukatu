@@ -11,31 +11,31 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockSuperLikeHandler is a mock of SuperLikeHandler interface.
-type MockSuperLikeHandler struct {
+// MockSuperlikeHandler is a mock of SuperlikeHandler interface.
+type MockSuperlikeHandler struct {
 	ctrl     *gomock.Controller
-	recorder *MockSuperLikeHandlerMockRecorder
+	recorder *MockSuperlikeHandlerMockRecorder
 }
 
-// MockSuperLikeHandlerMockRecorder is the mock recorder for MockSuperLikeHandler.
-type MockSuperLikeHandlerMockRecorder struct {
-	mock *MockSuperLikeHandler
+// MockSuperlikeHandlerMockRecorder is the mock recorder for MockSuperlikeHandler.
+type MockSuperlikeHandlerMockRecorder struct {
+	mock *MockSuperlikeHandler
 }
 
-// NewMockSuperLikeHandler creates a new mock instance.
-func NewMockSuperLikeHandler(ctrl *gomock.Controller) *MockSuperLikeHandler {
-	mock := &MockSuperLikeHandler{ctrl: ctrl}
-	mock.recorder = &MockSuperLikeHandlerMockRecorder{mock}
+// NewMockSuperlikeHandler creates a new mock instance.
+func NewMockSuperlikeHandler(ctrl *gomock.Controller) *MockSuperlikeHandler {
+	mock := &MockSuperlikeHandler{ctrl: ctrl}
+	mock.recorder = &MockSuperlikeHandlerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSuperLikeHandler) EXPECT() *MockSuperLikeHandlerMockRecorder {
+func (m *MockSuperlikeHandler) EXPECT() *MockSuperlikeHandlerMockRecorder {
 	return m.recorder
 }
 
 // HandleDelete mocks base method.
-func (m *MockSuperLikeHandler) HandleDelete() http.HandlerFunc {
+func (m *MockSuperlikeHandler) HandleDelete() http.HandlerFunc {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HandleDelete")
 	ret0, _ := ret[0].(http.HandlerFunc)
@@ -43,13 +43,13 @@ func (m *MockSuperLikeHandler) HandleDelete() http.HandlerFunc {
 }
 
 // HandleDelete indicates an expected call of HandleDelete.
-func (mr *MockSuperLikeHandlerMockRecorder) HandleDelete() *gomock.Call {
+func (mr *MockSuperlikeHandlerMockRecorder) HandleDelete() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleDelete", reflect.TypeOf((*MockSuperLikeHandler)(nil).HandleDelete))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleDelete", reflect.TypeOf((*MockSuperlikeHandler)(nil).HandleDelete))
 }
 
 // HandleInsert mocks base method.
-func (m *MockSuperLikeHandler) HandleInsert() http.HandlerFunc {
+func (m *MockSuperlikeHandler) HandleInsert() http.HandlerFunc {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HandleInsert")
 	ret0, _ := ret[0].(http.HandlerFunc)
@@ -57,13 +57,13 @@ func (m *MockSuperLikeHandler) HandleInsert() http.HandlerFunc {
 }
 
 // HandleInsert indicates an expected call of HandleInsert.
-func (mr *MockSuperLikeHandlerMockRecorder) HandleInsert() *gomock.Call {
+func (mr *MockSuperlikeHandlerMockRecorder) HandleInsert() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleInsert", reflect.TypeOf((*MockSuperLikeHandler)(nil).HandleInsert))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleInsert", reflect.TypeOf((*MockSuperlikeHandler)(nil).HandleInsert))
 }
 
 // HandleSelect mocks base method.
-func (m *MockSuperLikeHandler) HandleSelect() http.HandlerFunc {
+func (m *MockSuperlikeHandler) HandleSelect() http.HandlerFunc {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HandleSelect")
 	ret0, _ := ret[0].(http.HandlerFunc)
@@ -71,13 +71,13 @@ func (m *MockSuperLikeHandler) HandleSelect() http.HandlerFunc {
 }
 
 // HandleSelect indicates an expected call of HandleSelect.
-func (mr *MockSuperLikeHandlerMockRecorder) HandleSelect() *gomock.Call {
+func (mr *MockSuperlikeHandlerMockRecorder) HandleSelect() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleSelect", reflect.TypeOf((*MockSuperLikeHandler)(nil).HandleSelect))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleSelect", reflect.TypeOf((*MockSuperlikeHandler)(nil).HandleSelect))
 }
 
 // HandleUpdate mocks base method.
-func (m *MockSuperLikeHandler) HandleUpdate() http.HandlerFunc {
+func (m *MockSuperlikeHandler) HandleUpdate() http.HandlerFunc {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HandleUpdate")
 	ret0, _ := ret[0].(http.HandlerFunc)
@@ -85,7 +85,7 @@ func (m *MockSuperLikeHandler) HandleUpdate() http.HandlerFunc {
 }
 
 // HandleUpdate indicates an expected call of HandleUpdate.
-func (mr *MockSuperLikeHandlerMockRecorder) HandleUpdate() *gomock.Call {
+func (mr *MockSuperlikeHandlerMockRecorder) HandleUpdate() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleUpdate", reflect.TypeOf((*MockSuperLikeHandler)(nil).HandleUpdate))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleUpdate", reflect.TypeOf((*MockSuperlikeHandler)(nil).HandleUpdate))
 }
