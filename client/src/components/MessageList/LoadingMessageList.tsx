@@ -8,8 +8,8 @@ const LoadingMessageList: VFC = () => {
       <Stack spacing="24px">
         {Array(5)
           .fill(0)
-          .map((v) => (
-            <Flex align="center" justify="space-between">
+          .map((_, i) => (
+            <Flex key={i} align="center" justify="space-between">
               <SkeletonCircle size="12" />
               <Stack flex="1" ml="4">
                 <SkeletonText noOfLines={1} w="200px" mb="2" />

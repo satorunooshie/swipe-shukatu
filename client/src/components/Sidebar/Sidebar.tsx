@@ -11,7 +11,6 @@ import { useLogout } from "../../hooks/useLogout";
 
 const Sidebar: VFC = () => {
   let location = useLocation();
-  console.log(location)
   const { onOpen } = useContext(LoginModalContext);
   const { currentUser } = useContext(CurrentUserContext);
   const Logout = useLogout();

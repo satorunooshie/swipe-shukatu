@@ -31,7 +31,6 @@ const NewMatchList: VFC = () => {
         fontFamily={"heading"}
         color={`${MAIN_COLOR}.500`}
         fontWeight="bold"
-        mb="4"
       >
         新しいマッチ
       </Text>

@@ -8,8 +8,8 @@ const LoadingNewMatchList: VFC = () => {
       <Flex wrap="nowrap" overflowX="auto">
         {Array(5)
           .fill(0)
-          .map((v) => (
-            <VStack text="center" display="inline-block" mr="5" minW="100px">
+          .map((_, i) => (
+            <VStack key={i} text="center" display="inline-block" mr="5" minW="100px">
               <Skeleton w="100px" h="150px" />
             </VStack>
           ))}
