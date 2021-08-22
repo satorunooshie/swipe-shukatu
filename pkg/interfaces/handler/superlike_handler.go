@@ -44,14 +44,14 @@ func (superlikeH *superlikeHandler) HandleSelect() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res := make([]*SuperlikeResponse, len(superlikes))
+		res := make([]*superlikeInsertResponse, len(superlikes))
 		for i, l := range superlikes {
-			var ls SuperlikeResponse
+			var ls superlikeInsertResponse
 			ls.RecruitID = l.RecruitID
 			ls.CreatedAt = l.CreatedAt
 			res[i] = &ls
 		}
-		var respms SuperlikeResponses
+		var respms superlikeInsertResponses
 		respms.Superlikes = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
@@ -116,16 +116,16 @@ func (superlikeH *superlikeHandler) HandleDelete() http.HandlerFunc {
 }
 
 // SuperlikeRequest
-type SuperlikeRequest struct { // nolint
+type superlikeRequest struct { // nolint
 	// Need to implement field
 }
 
-type SuperlikeResponses struct {
-	Superlikes []*SuperlikeResponse `json:"superlikes"`
+type superlikeInsertResponses struct {
+	Superlikes []*superlikeInsertResponse `json:"superlikes"`
 }
 
 // SuperlikeResponse ...
-type SuperlikeResponse struct {
+type superlikeInsertResponse struct {
 	RecruitID int32     `json:"recruit_id"`
 	CreatedAt time.Time `json:"created_at"`
 }
