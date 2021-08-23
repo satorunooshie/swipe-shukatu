@@ -2,24 +2,12 @@ import { VFC } from "react";
 import { Flex, Stack, Text, Avatar } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { NavLink } from "react-router-dom";
-import useSWR from "swr";
 import { Ltd } from "../../type/Ltd";
 import LoadingMessageList from "./LoadingMessageList";
-
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((res) => res.results);
+import { useMessageList } from "./useMessageList";
 
 const MessageList: VFC = () => {
-  const { data: ltds, error } = useSWR(
-    "https://icanhazdadjoke.com/search?page=2",
-    fetcher
-  );
+  const { ltds, error } = useMessageList();
 
   if (error) return <h1>An error has occurred.</h1>;
   if (!ltds) return <LoadingMessageList />;

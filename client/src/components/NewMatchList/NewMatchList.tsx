@@ -2,24 +2,12 @@ import { VFC } from "react";
 import { Flex, Stack, Text, Image, VStack } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { NavLink } from "react-router-dom";
-import useSWR from "swr";
 import { Ltd } from "../../type/Ltd";
 import LoadingNewMatchList from "./LoadingNewMatchList";
-
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((res) => res.results);
+import { useNewMatch } from "./useNewMatch";
 
 const NewMatchList: VFC = () => {
-  const { data: ltds, error } = useSWR(
-    "https://icanhazdadjoke.com/search",
-    fetcher
-  );
+  const { ltds, error } = useNewMatch();
 
   if (error) return <h1>An error has occurred.</h1>;
   if (!ltds) return <LoadingNewMatchList />;

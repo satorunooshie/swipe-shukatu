@@ -6,36 +6,19 @@ import {
   Avatar,
   Box,
   Text,
-  IconButton,
-  Input,
-  Button,
   Spinner,
   Center,
   useDisclosure,
 } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
-import { ArrowBackIcon, AttachmentIcon } from "@chakra-ui/icons";
-import { FaTelegramPlane } from "react-icons/fa";
-import { useHistory, useParams } from "react-router-dom";
-import useSWR from "swr";
 import LtdDetailModal from "../../components/LtdDetailModal/LtdDetailModal";
-
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  }).then((res) => res.json());
+import ChatForm from "../../components/ChatForm/ChatForm";
+import GoBackBtn from "../../components/GoBackBtn/GoBackBtn";
+import { useMessages } from "./useMessages";
 
 const ChatPage: VFC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const history = useHistory();
-  // @ts-ignore
-  const { ltdId } = useParams();
-  const { data: message, error } = useSWR(
-    `https://icanhazdadjoke.com/j/${ltdId}`,
-    fetcher
-  );
+  const { message, error } = useMessages();
 
   if (error) return <h1>An error has occurred.</h1>;
   if (!message)
@@ -55,7 +38,7 @@ const ChatPage: VFC = () => {
   return (
     <Container w="full" minH="full">
       <LtdDetailModal
-        ltd={{ id: ltdId, joke: message.joke }}
+        ltd={{ id: message.id, joke: message.joke }}
         isOpen={isOpen}
         onClose={onClose}
       />
@@ -68,12 +51,7 @@ const ChatPage: VFC = () => {
         align={"center"}
         justify="space-between"
       >
-        <IconButton
-          aria-label="back to page"
-          size="lg"
-          icon={<ArrowBackIcon />}
-          onClick={() => history.goBack()}
-        />
+        <GoBackBtn />
       </Flex>
       <Stack
         w="full"
@@ -83,6 +61,7 @@ const ChatPage: VFC = () => {
         align="end"
         justifyContent="flex-end"
       >
+        {/* 企業のメッセージ */}
         <Flex align="center" w="full" mb="2">
           <Flex align="center" w="70%">
             <Avatar mr="4" onClick={() => onOpen()} />
@@ -93,6 +72,7 @@ const ChatPage: VFC = () => {
             </Box>
           </Flex>
         </Flex>
+        {/* 自身のメッセージ */}
         <Flex align="center" w="full" justify="flex-end" mb="2">
           <Flex align="center" w="70%" direction="row-reverse" gap="2">
             <Avatar ml="4" />
@@ -104,40 +84,7 @@ const ChatPage: VFC = () => {
           </Flex>
         </Flex>
       </Stack>
-      <Flex
-        pos="sticky"
-        bottom="0"
-        zIndex="2"
-        w="full"
-        minH={"50px"}
-        align={"center"}
-        justify="space-between"
-        bg="white"
-        py="4"
-        borderTop="1px solid"
-        borderColor="gray.200"
-      >
-        <IconButton
-          variant="ghost"
-          aria-label="attach image"
-          icon={<AttachmentIcon />}
-        />
-        <Input
-          variant="filled"
-          placeholder="テキストを入力してください"
-          aria-label="input message"
-          ml="2"
-        />
-        <Button
-          colorScheme={MAIN_COLOR}
-          loading="false"
-          rightIcon={<FaTelegramPlane />}
-          aria-label="send message"
-          ml="2"
-        >
-          送信
-        </Button>
-      </Flex>
+      <ChatForm />
     </Container>
   );
 };
