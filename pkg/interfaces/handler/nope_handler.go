@@ -86,7 +86,7 @@ func (nopeH *nopeHandler) HandleInsert() http.HandlerFunc {
 		UID := dcontext.GetUIDFromContext(ctx)
 		if UID == "" {
 			log.Printf("[INFO] failed to GetUID: ")
-			http.Error(writer, "Could not get UID", http.StatusInternalServerError)
+			http.Error(writer, "Could not get UID", http.StatusBadRequest)
 			return
 		}
 		nope := new(nopeM.Nope)

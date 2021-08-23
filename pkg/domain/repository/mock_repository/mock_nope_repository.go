@@ -50,17 +50,17 @@ func (mr *MockNopeRepositoryMockRecorder) Delete(ctx, entity interface{}) *gomoc
 }
 
 // Insert mocks base method.
-func (m *MockNopeRepository) Insert(ctx context.Context, entity *model.Nope, UID string) error {
+func (m *MockNopeRepository) Insert(ctx context.Context, entity *model.Nope) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", ctx, entity, UID)
+	ret := m.ctrl.Call(m, "Insert", ctx, entity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockNopeRepositoryMockRecorder) Insert(ctx, entity, UID interface{}) *gomock.Call {
+func (mr *MockNopeRepositoryMockRecorder) Insert(ctx, entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockNopeRepository)(nil).Insert), ctx, entity, UID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockNopeRepository)(nil).Insert), ctx, entity)
 }
 
 // Select mocks base method.
