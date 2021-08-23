@@ -1,5 +1,6 @@
 import useSWR from "swr";
 
+// TODO: API call
 const fetcher = (url: string) =>
   fetch(url, {
     headers: {

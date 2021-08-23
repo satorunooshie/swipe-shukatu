@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
+// TODO: API call
 const fetcher = (url: string) =>
 fetch(url, {
   headers: {
