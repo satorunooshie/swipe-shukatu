@@ -11,12 +11,14 @@ import {
   Button,
   Spinner,
   Center,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
 import { ArrowBackIcon, AttachmentIcon } from "@chakra-ui/icons";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useHistory, useParams } from "react-router-dom";
 import useSWR from "swr";
+import LtdDetailModal from "../../components/LtdDetailModal/LtdDetailModal";
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -26,6 +28,7 @@ const fetcher = (url: string) =>
   }).then((res) => res.json());
 
 const ChatPage: VFC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   // @ts-ignore
   const { ltdId } = useParams();
@@ -51,6 +54,11 @@ const ChatPage: VFC = () => {
     );
   return (
     <Container w="full" minH="full">
+      <LtdDetailModal
+        ltd={{ id: ltdId, joke: message.joke }}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <Flex
         pos="fixed"
         top="5"
@@ -77,7 +85,7 @@ const ChatPage: VFC = () => {
       >
         <Flex align="center" w="full" mb="2">
           <Flex align="center" w="70%">
-            <Avatar mr="4" />
+            <Avatar mr="4" onClick={() => onOpen()} />
             <Box bg="gray.200" borderRadius="xl" p="2" shadow="md">
               <Text color="gray.600" fontWeight="bold">
                 {message.joke}
