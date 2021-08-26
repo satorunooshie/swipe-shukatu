@@ -40,7 +40,7 @@ func (superlikeH *superlikeHandler) HandleSelect() http.HandlerFunc {
 		UID := dcontext.GetUIDFromContext(ctx)
 		superlikes, err := superlikeH.superlikeUseCase.Select(ctx, UID)
 		if err != nil {
-			log.Printf("[ERROR] failed to Select from superlike: %v", err.Error())
+			log.Printf("[ERROR] failed to superlikeUseCase.select: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -91,8 +91,7 @@ func (superlikeH *superlikeHandler) HandleInsert() http.HandlerFunc {
 		}
 		superlike := new(superlikeM.Superlike)
 		superlike.RecruitID = SuperlikeRequest.RecruitID
-		err := superlikeH.superlikeUseCase.Insert(ctx, superlike, UID)
-		if err != nil {
+		if err := superlikeH.superlikeUseCase.Insert(ctx, superlike, UID); err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return

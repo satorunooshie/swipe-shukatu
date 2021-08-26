@@ -26,7 +26,7 @@ func (superlikeI *superlikeRepoImpl) Select(ctx context.Context, UID string) ([]
 	rows, err := superlikeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `superlike` WHERE user_id = ?", UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("[INFO] superlike: ", err)
+			log.Printf("[INFO] superlike: %v", err)
 			return nil, nil
 		}
 		return nil, err
