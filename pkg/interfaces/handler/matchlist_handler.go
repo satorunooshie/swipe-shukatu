@@ -37,6 +37,11 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
+		if UID == "" {
+			log.Printf("[ERROR] failed to GetUID: ")
+			http.Error(writer, "Could not get UID", http.StatusBadRequest)
+			return
+		}
 		matchlists, err := matchlistH.matchlistUseCase.Select(ctx, UID)
 		// TODO: cache
 		if err != nil {

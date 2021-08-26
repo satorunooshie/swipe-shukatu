@@ -27,7 +27,7 @@ func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]
 	jointableRowForMatchListFromLike, err := matchlistI.db.QueryContext(ctx, queryforlike, UID, UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("[INFO] sql err at matchlistRepoImpl.select: failed to get matchlist from like: ", err)
+			log.Printf("[INFO] sql err at matchlistRepoImpl.select: failed to get matchlist from like: %v", err)
 			return nil, nil
 		}
 		return nil, err
@@ -35,7 +35,7 @@ func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]
 	jointableRowForMatchListFromSuperlike, err := matchlistI.db.QueryContext(ctx, queryforsuperlike, UID, UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("[INFO] sql err at matchlistRepoImpl.select: failed to get matchlist from superlike: ", err)
+			log.Printf("[INFO] sql err at matchlistRepoImpl.select: failed to get matchlist from superlike: %v", err)
 			return nil, nil
 		}
 		return nil, err
@@ -93,6 +93,9 @@ func convertToMatchlist(likerows, superlikerows *sql.Rows) ([]*matchlistM.Matchl
 		if err != nil {
 			return nil, err
 		}
+		if matchlist.RecruitID < 0 {
+			log.Println("[ERROR] sql error: Invalid recruitID detected.")
+		}
 		matchlist.Reactiontype = 1
 		matchlists = append(matchlists, &matchlist)
 	}
@@ -106,6 +109,9 @@ func convertToMatchlist(likerows, superlikerows *sql.Rows) ([]*matchlistM.Matchl
 		)
 		if err != nil {
 			return nil, err
+		}
+		if matchlist.RecruitID < 0 {
+			log.Println("[ERROR] sql error: Invalid recruitID detected.")
 		}
 		matchlist.Reactiontype = 2
 		matchlists = append(matchlists, &matchlist)
