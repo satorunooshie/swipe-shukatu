@@ -15,7 +15,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	// DI
 
 	/* middleware */
-	m := middleware.NewAuth(db)
+	_ = middleware.NewAuth(db)
 
 	/* repoimpl */
 	// userRepoimpl := repoimpl.NewUserRepoImpl(db)
