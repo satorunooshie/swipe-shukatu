@@ -26,8 +26,7 @@ func Delete(next http.HandlerFunc) http.HandlerFunc {
 
 func httpMethod(next http.HandlerFunc, method string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const client = "http://localhost:3000"
-		w.Header().Add("Access-Control-Allow-Origin", client)
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept, Origin, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		if r.Method == http.MethodOptions {

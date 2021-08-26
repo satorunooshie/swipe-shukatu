@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"log"
 	"net/http"
@@ -13,10 +14,23 @@ import (
 	firebase "firebase.google.com/go"
 
 	"github.com/satorunooshie/swipe-shukatu/pkg/dcontext"
+	"github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
+	"github.com/satorunooshie/swipe-shukatu/pkg/infrastructure/mysql/repoimpl"
+	"github.com/satorunooshie/swipe-shukatu/pkg/usecase"
 )
 
+type Auth struct {
+	db *sql.DB
+}
+
+func NewAuth(db *sql.DB) *Auth {
+	return &Auth{
+		db: db,
+	}
+}
+
 //nolint
-func Auth(next http.HandlerFunc) http.HandlerFunc {
+func (a *Auth) Auth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
@@ -59,11 +73,31 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			// TODO: Delete debug code instead return json error message
-			_, _ = w.Write([]byte("error verifying ID token\n"))
+			log.Println("error verifying ID token")
 			return
 		}
-		dcontext.SetUID(ctx, token.UID)
+		uri := repoimpl.NewUserRepoImpl(a.db)
+		uc := usecase.NewUserUsecase(uri)
+		user, err := uc.Select(ctx, token.UID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			// TODO: Delete debug code instead return json error message
+			log.Printf("error select user: %v\n", err)
+		}
+		if user == nil {
+			ent := &model.User{
+				UUID:             token.UID,
+				RegisterMethodID: 1, // Google
+			}
+			if err := uc.Insert(ctx, ent); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				// TODO: Delete debug code instead return json error message
+				log.Printf("error insert user: %v\n", err)
+				return
+			}
+		}
 		log.Printf("[INFO] Verified ID token: %v\n", token)
+		dcontext.SetUID(ctx, token.UID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }

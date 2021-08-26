@@ -64,18 +64,18 @@ func (mr *MockNopeRepositoryMockRecorder) Insert(ctx, entity interface{}) *gomoc
 }
 
 // Select mocks base method.
-func (m *MockNopeRepository) Select(ctx context.Context) ([]*model.Nope, error) {
+func (m *MockNopeRepository) Select(ctx context.Context, UID string) ([]*model.Nope, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
+	ret := m.ctrl.Call(m, "Select", ctx, UID)
 	ret0, _ := ret[0].([]*model.Nope)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockNopeRepositoryMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockNopeRepositoryMockRecorder) Select(ctx, UID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockNopeRepository)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockNopeRepository)(nil).Select), ctx, UID)
 }
 
 // Update mocks base method.
