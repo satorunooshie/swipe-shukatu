@@ -64,18 +64,18 @@ func (mr *MockUserUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomock.C
 }
 
 // Select mocks base method.
-func (m *MockUserUseCase) Select(ctx context.Context) ([]*model.User, error) {
+func (m *MockUserUseCase) Select(ctx context.Context, uuid string) (*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Select", ctx)
-	ret0, _ := ret[0].([]*model.User)
+	ret := m.ctrl.Call(m, "Select", ctx, uuid)
+	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Select indicates an expected call of Select.
-func (mr *MockUserUseCaseMockRecorder) Select(ctx interface{}) *gomock.Call {
+func (mr *MockUserUseCaseMockRecorder) Select(ctx, uuid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockUserUseCase)(nil).Select), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockUserUseCase)(nil).Select), ctx, uuid)
 }
 
 // Update mocks base method.
