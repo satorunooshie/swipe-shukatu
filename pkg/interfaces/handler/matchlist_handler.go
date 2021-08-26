@@ -38,7 +38,7 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
 		matchlists, err := matchlistH.matchlistUseCase.Select(ctx, UID)
-		//TODO: cache
+		// TODO: cache
 		if err != nil {
 			log.Printf("[ERROR] at matchlistUseCase.Select: failed to get matchlist: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
