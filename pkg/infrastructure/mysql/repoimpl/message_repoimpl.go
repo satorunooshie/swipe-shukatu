@@ -34,12 +34,50 @@ func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) ([]*mess
 }
 
 // Insert
-func (messageI *messageRepoImpl) Insert(ctx context.Context, entity *messageM.Message) error {
-	stmt, err := messageI.db.Prepare("INSERT INTO message () VALUES ()")
+func (messageI *messageRepoImpl) InsertMessage(ctx context.Context, entity *messageM.Message) error {
+	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(); err != nil {
+	defer stmt.Close()
+	if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (messageI *messageRepoImpl) InsertIMG(ctx context.Context, entity *messageM.Message) error {
+	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,image_path) VALUES (?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.ImagePath); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messageM.Message) error {
+	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	ret, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content)
+	if err != nil {
+		return err
+	}
+	messageID, err := ret.LastInsertId()
+	if err != nil {
+		return err
+	}
+	stmt2, err := messageI.db.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id) VALUES (?)")
+	if err != nil {
+		return err
+	}
+	defer stmt2.Close()
+	if _, err := stmt2.Exec(messageID); err != nil {
 		return err
 	}
 	return nil

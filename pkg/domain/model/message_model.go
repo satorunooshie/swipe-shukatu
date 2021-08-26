@@ -12,11 +12,12 @@ const (
 
 type Message struct {
 	ID        int32
-	UserID    int32
+	UserID    string
 	RecruitID int32
 	Type      MType
 	Content   string
 	ImagePath string
 	CreatedAt time.Time
 	DeletedAt time.Time
+	ExecuteAt time.Time
 }
