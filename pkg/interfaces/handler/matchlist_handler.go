@@ -39,7 +39,7 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 		UID := dcontext.GetUIDFromContext(ctx)
 		matchlists, err := matchlistH.matchlistUseCase.Select(ctx, UID)
 		if err != nil {
-			log.Printf("[ERROR] failed to get matchlist: %v", err.Error())
+			log.Printf("[ERROR] at matchlistUseCase.Select: failed to get matchlist: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -58,7 +58,7 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 		respms.Matchlists = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
-			log.Printf("[ERROR] failed to marshal matchlists: %v", err.Error())
+			log.Printf("[ERROR] at matchlist_handler.HandleSelect: failed to marshal matchlists: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
