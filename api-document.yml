@@ -306,8 +306,6 @@ components:
           type: number
         name:
           type: string
-        job_type:
-          type: string
         image:
           type: string
         reaction_type:
