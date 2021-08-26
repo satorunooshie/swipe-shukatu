@@ -40,7 +40,7 @@ func (nopeH *nopeHandler) HandleSelect() http.HandlerFunc {
 		UID := dcontext.GetUIDFromContext(ctx)
 		nopes, err := nopeH.nopeUseCase.Select(ctx, UID)
 		if err != nil {
-			log.Printf("[ERROR] failed to Select from nope: %v", err.Error())
+			log.Printf("[ERROR] failed to nopeUseCase.Select: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -85,14 +85,13 @@ func (nopeH *nopeHandler) HandleInsert() http.HandlerFunc {
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
 		if UID == "" {
-			log.Printf("[INFO] failed to GetUID: ")
+			log.Printf("[INFO] failed to GetUID")
 			http.Error(writer, "Could not get UID", http.StatusBadRequest)
 			return
 		}
 		nope := new(nopeM.Nope)
 		nope.RecruitID = nopeRequest.RecruitID
-		err := nopeH.nopeUseCase.Insert(ctx, nope, UID)
-		if err != nil {
+		if err := nopeH.nopeUseCase.Insert(ctx, nope, UID); err != nil {
 			log.Printf("[ERROR] failed to Insert: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return

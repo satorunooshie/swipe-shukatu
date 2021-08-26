@@ -26,7 +26,7 @@ func (nopeI *nopeRepoImpl) Select(ctx context.Context, UID string) ([]*nopeM.Nop
 	rows, err := nopeI.db.QueryContext(ctx, "SELECT user_id, recruit_id, created_at, updated_at FROM `nope` WHERE user_id = ?", UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("[INFO] nope: ", err)
+			log.Printf("[INFO] nope: %v", err)
 			return nil, nil
 		}
 		return nil, err
