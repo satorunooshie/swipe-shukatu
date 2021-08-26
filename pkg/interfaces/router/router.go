@@ -42,8 +42,8 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	nopeHandler := handler.NewNopeHandler(nopeUsecase)
 
 	// register the handler
-	h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
-	//h.Handle("/message", middleware.Get(messageHandler.HandleSelect()))
+	// h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
+	h.Handle("/message", middleware.Get(messageHandler.HandleSelect()))
 	h.Handle("/like", middleware.Post(likeHandler.HandleInsert()))
 	h.Handle("/superlike", middleware.Post(superlikeHandler.HandleInsert()))
 	h.Handle("/nope", middleware.Post(nopeHandler.HandleInsert()))
