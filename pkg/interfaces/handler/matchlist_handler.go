@@ -38,6 +38,7 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 		defer cancel()
 		UID := dcontext.GetUIDFromContext(ctx)
 		matchlists, err := matchlistH.matchlistUseCase.Select(ctx, UID)
+		//TODO: cache
 		if err != nil {
 			log.Printf("[ERROR] at matchlistUseCase.Select: failed to get matchlist: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -49,7 +50,6 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 			ml.LtdID = l.LtdID
 			ml.RecruitID = l.RecruitID
 			ml.Name = l.Name
-			ml.JobType = l.JobType
 			ml.Image = l.Image
 			ml.Reactiontype = l.Reactiontype
 			res[i] = &ml
@@ -98,7 +98,6 @@ type matchlistResponse struct {
 	LtdID        int32  `json:"ltd_id"`
 	RecruitID    int32  `json:"recruit_id"`
 	Name         string `json:"name"`
-	JobType      string `json:"job_type"`
 	Image        string `json:"image"`
 	Reactiontype int8   `json:"reactiontype"`
 }
