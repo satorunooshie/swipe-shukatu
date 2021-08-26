@@ -22,8 +22,42 @@ func NewMatchlistRepoImpl(db *sql.DB) matchlistR.MatchlistRepository {
 
 // Select
 func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]*matchlistM.Matchlist, error) {
-	queryforlike := "SELECT recruit.ltd_id, recruit_id, m_ltd.name as name, m_job_type.name as job_type, ltd_image.image_path as image FROM `recruit`,`like`,`m_ltd`,`m_job_type`,`ltd_image` where like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.job_type_id=m_job_type.id AND recruit.ltd_id=ltd_image.ltd_id AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)"
-	queryforsuperlike := "SELECT recruit.ltd_id, recruit_id, m_ltd.name as name, m_job_type.name as job_type, ltd_image.image_path as image FROM `recruit`,`like`,`m_ltd`,`m_job_type`,`ltd_image` where like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.job_type_id=m_job_type.id AND recruit.ltd_id=ltd_image.ltd_id AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)"
+	queryforlike := "SELECT " +
+		"recruit.ltd_id, " +
+		"recruit_id, " +
+		"m_ltd.name as name, " +
+		"m_job_type.name as job_type, " +
+		"ltd_image.image_path as image " +
+		"FROM" +
+		"`recruit`," +
+		"`like`," +
+		"`m_ltd`," +
+		"`m_job_type`," +
+		"`ltd_image` " +
+		"where " +
+		"like.user_id=? " +
+		"AND like.recruit_id=recruit.id" +
+		"AND recruit.ltd_id=m_ltd.id " +
+		"AND recruit.job_type_id=m_job_type.id " +
+		"AND recruit.ltd_id=ltd_image.ltd_id " +
+		"AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)`"
+	queryforsuperlike := "SELECT " +
+		"recruit.ltd_id, " +
+		"recruit_id, m_ltd.name as name, " +
+		"m_job_type.name as job_type, " +
+		"ltd_image.image_path as image " +
+		"FROM " +
+		"`recruit`," +
+		"`like`,`m_ltd`," +
+		"`m_job_type`," +
+		"`ltd_image`" +
+		"where " +
+		"like.user_id=? " +
+		"AND like.recruit_id=recruit.id " +
+		"AND recruit.ltd_id=m_ltd.id " +
+		"AND recruit.job_type_id=m_job_type.id " +
+		"AND recruit.ltd_id=ltd_image.ltd_id " +
+		"AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)"
 	jointableRowForMatchListFromLike, err := matchlistI.db.QueryContext(ctx, queryforlike, UID, UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
