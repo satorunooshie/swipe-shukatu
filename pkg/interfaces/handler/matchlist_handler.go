@@ -49,9 +49,9 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res := make([]*matchlistResponse, len(matchlists))
+		res := make([]*match, len(matchlists))
 		for i, l := range matchlists {
-			var ml matchlistResponse
+			var ml match
 			ml.LtdID = l.LtdID
 			ml.RecruitID = l.RecruitID
 			ml.Name = l.Name
@@ -59,8 +59,8 @@ func (matchlistH *matchlistHandler) HandleSelect() http.HandlerFunc {
 			ml.Reactiontype = l.Reactiontype
 			res[i] = &ml
 		}
-		var respms matchlistResponses
-		respms.Matchlists = res
+		var respms matchlistResponse
+		respms.MatchList = res
 		jsonresponse, err := json.Marshal(respms)
 		if err != nil {
 			log.Printf("[ERROR] at matchlist_handler.HandleSelect: failed to marshal matchlists: %v", err.Error())
@@ -94,15 +94,15 @@ func (matchlistH *matchlistHandler) HandleDelete() http.HandlerFunc {
 	}
 }
 
-type matchlistResponses struct {
-	Matchlists []*matchlistResponse `json:"matchlists"`
+type matchlistResponse struct {
+	MatchList []*match `json:"match_list"`
 }
 
 // MatchlistResponse
-type matchlistResponse struct {
+type match struct {
 	LtdID        int32  `json:"ltd_id"`
 	RecruitID    int32  `json:"recruit_id"`
 	Name         string `json:"name"`
 	Image        string `json:"image"`
-	Reactiontype int32  `json:"reactiontype"`
+	Reactiontype int32  `json:"reaction＿type"`
 }

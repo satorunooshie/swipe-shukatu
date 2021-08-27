@@ -20,9 +20,9 @@ func NewMatchlistRepoImpl(db *sql.DB) matchlistR.MatchlistRepository {
 }
 
 // Select
-func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]*matchlistR.Matchlist, error) {
-	queryforlike := "SELECT /*出力するカラム*/ recruit.ltd_id, recruit_id, m_ltd.name as name, ltd_image.image_path as image FROM /*使用するテーブル*/ `recruit`,`like`,`m_ltd`,`ltd_image` where /*条件*/like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.ltd_id=ltd_image.ltd_id /*messageテーブルのuseridが存在するrecruitIDをselectしてきてNOT INで該当recruitIDを弾く*/ AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)"
-	queryforsuperlike := "SELECT /*出力するカラム*/ recruit.ltd_id, recruit_id, m_ltd.name as name, ltd_image.image_path as image FROM /*使用するテーブル*/` `recruit`,`like`,`m_ltd`,`ltd_image` where /*条件*/ like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.ltd_id=ltd_image.ltd_id /*messageテーブルのuseridが存在するrecruitIDをselectしてきてNOT INで該当recruitIDを弾く*/ AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?)"
+func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]*matchlistR.Match, error) {
+	queryforlike := "SELECT /*出力するカラム*/ recruit.ltd_id, recruit_id, m_ltd.name as name, ltd_image.image_path as image FROM /*使用するテーブル*/ `recruit`,`like`,`m_ltd`,`ltd_image` where /*条件*/like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.ltd_id=ltd_image.ltd_id /*messageテーブルのuseridが存在するrecruitIDをselectしてきてNOT INで該当recruitIDを弾く*/ AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?) ORDER BY like.updated_at DESC"
+	queryforsuperlike := "SELECT /*出力するカラム*/ recruit.ltd_id, recruit_id, m_ltd.name as name, ltd_image.image_path as image FROM /*使用するテーブル*/` `recruit`,`like`,`m_ltd`,`ltd_image` where /*条件*/ like.user_id=? AND like.recruit_id=recruit.id AND recruit.ltd_id=m_ltd.id AND recruit.ltd_id=ltd_image.ltd_id /*messageテーブルのuseridが存在するrecruitIDをselectしてきてNOT INで該当recruitIDを弾く*/ AND recruit_id NOT IN (select recruit_id FROM `message` where user_id = ?) ORDER BY like.updated_at DESC"
 	jointableRowForMatchListFromLike, err := matchlistI.db.QueryContext(ctx, queryforlike, UID, UID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -43,7 +43,7 @@ func (matchlistI *matchlistRepoImpl) Select(ctx context.Context, UID string) ([]
 }
 
 // Insert
-func (matchlistI *matchlistRepoImpl) Insert(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistI *matchlistRepoImpl) Insert(ctx context.Context, entity *matchlistR.Match) error {
 	stmt, err := matchlistI.db.Prepare("INSERT INTO matchlist () VALUES ()")
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func (matchlistI *matchlistRepoImpl) Insert(ctx context.Context, entity *matchli
 }
 
 // Update
-func (matchlistI *matchlistRepoImpl) Update(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistI *matchlistRepoImpl) Update(ctx context.Context, entity *matchlistR.Match) error {
 	stmt, err := matchlistI.db.Prepare("UPDATE matchlist SET WHERE ")
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (matchlistI *matchlistRepoImpl) Update(ctx context.Context, entity *matchli
 }
 
 // Delete
-func (matchlistI *matchlistRepoImpl) Delete(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistI *matchlistRepoImpl) Delete(ctx context.Context, entity *matchlistR.Match) error {
 	stmt, err := matchlistI.db.Prepare("DELETE FROM matchlist WHERE ")
 	if err != nil {
 		return err
@@ -79,10 +79,10 @@ func (matchlistI *matchlistRepoImpl) Delete(ctx context.Context, entity *matchli
 }
 
 // convertToMatchlist
-func convertToMatchlist(likerows, superlikerows *sql.Rows) ([]*matchlistR.Matchlist, error) {
-	var matchlists []*matchlistR.Matchlist
+func convertToMatchlist(likerows, superlikerows *sql.Rows) ([]*matchlistR.Match, error) {
+	var matchlists []*matchlistR.Match
 	for likerows.Next() {
-		var matchlist matchlistR.Matchlist
+		var matchlist matchlistR.Match
 		err := likerows.Scan(
 			&matchlist.LtdID,
 			&matchlist.RecruitID,
@@ -99,7 +99,7 @@ func convertToMatchlist(likerows, superlikerows *sql.Rows) ([]*matchlistR.Matchl
 		matchlists = append(matchlists, &matchlist)
 	}
 	for superlikerows.Next() {
-		var matchlist matchlistR.Matchlist
+		var matchlist matchlistR.Match
 		err := superlikerows.Scan(
 			&matchlist.LtdID,
 			&matchlist.RecruitID,

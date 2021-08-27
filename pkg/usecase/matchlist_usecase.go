@@ -8,10 +8,10 @@ import (
 )
 
 type MatchlistUseCase interface {
-	Select(ctx context.Context, UID string) ([]*matchlistR.Matchlist, error)
-	Insert(ctx context.Context, entity *matchlistR.Matchlist) error
-	Update(ctx context.Context, entity *matchlistR.Matchlist) error
-	Delete(ctx context.Context, entity *matchlistR.Matchlist) error
+	Select(ctx context.Context, UID string) ([]*matchlistR.Match, error)
+	Insert(ctx context.Context, entity *matchlistR.Match) error
+	Update(ctx context.Context, entity *matchlistR.Match) error
+	Delete(ctx context.Context, entity *matchlistR.Match) error
 }
 
 type matchlistUseCase struct {
@@ -26,8 +26,8 @@ func NewMatchlistUsecase(matchlistR matchlistR.MatchlistRepository) MatchlistUse
 }
 
 // Select
-func (matchlistU *matchlistUseCase) Select(ctx context.Context, UID string) ([]*matchlistR.Matchlist, error) {
-	var matchlists []*matchlistR.Matchlist
+func (matchlistU *matchlistUseCase) Select(ctx context.Context, UID string) ([]*matchlistR.Match, error) {
+	var matchlists []*matchlistR.Match
 	matchlists, err := matchlistU.matchlistRepository.Select(ctx, UID)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (matchlistU *matchlistUseCase) Select(ctx context.Context, UID string) ([]*
 }
 
 // Insert
-func (matchlistU *matchlistUseCase) Insert(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistU *matchlistUseCase) Insert(ctx context.Context, entity *matchlistR.Match) error {
 	err := matchlistU.matchlistRepository.Insert(ctx, entity)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (matchlistU *matchlistUseCase) Insert(ctx context.Context, entity *matchlis
 }
 
 // Update
-func (matchlistU *matchlistUseCase) Update(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistU *matchlistUseCase) Update(ctx context.Context, entity *matchlistR.Match) error {
 	err := matchlistU.matchlistRepository.Update(ctx, entity)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func (matchlistU *matchlistUseCase) Update(ctx context.Context, entity *matchlis
 }
 
 // Delete
-func (matchlistU *matchlistUseCase) Delete(ctx context.Context, entity *matchlistR.Matchlist) error {
+func (matchlistU *matchlistUseCase) Delete(ctx context.Context, entity *matchlistR.Match) error {
 	err := matchlistU.matchlistRepository.Delete(ctx, entity)
 	if err != nil {
 		return err
