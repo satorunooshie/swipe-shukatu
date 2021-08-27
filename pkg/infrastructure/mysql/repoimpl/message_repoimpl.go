@@ -70,10 +70,9 @@ func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messa
 	}
 	defer stmt.Close()
 	ret, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content)
-	//err = errors.New("error")
 	if err != nil {
 		log.Printf("[ERROR] at message_repoimpl.InsertRemind : failed to Exec: %v", err)
-		if err := tx.Rollback(); err != nil {
+		if err = tx.Rollback(); err != nil {
 			log.Printf("[ERROR] failed to insertmessage: %v", err)
 		}
 		return err
@@ -87,8 +86,8 @@ func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messa
 		return err
 	}
 	defer stmt2.Close()
-	if _, err := stmt2.Exec(messageID, ExecuteAt); err != nil {
-		if err := tx.Rollback(); err != nil {
+	if _, err = stmt2.Exec(messageID, ExecuteAt); err != nil {
+		if err = tx.Rollback(); err != nil {
 			log.Printf("[ERROR] failed to insertmessage: %v", err)
 		}
 		return err
