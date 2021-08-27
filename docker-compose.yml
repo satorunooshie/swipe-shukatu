@@ -40,40 +40,40 @@ services:
     networks:
       - swipe-shukatu
 
-  swagger-ui:
-    image: swaggerapi/swagger-ui:latest
-    environment:
-      SWAGGER_JSON: /api/api-document.yml
-    volumes:
-      - ./api-document.yml:/api/api-document.yml:ro
-    ports:
-      - 3300:8080
+  # swagger-ui:
+  #   image: swaggerapi/swagger-ui:latest
+  #   environment:
+  #     SWAGGER_JSON: /api/api-document.yml
+  #   volumes:
+  #     - ./api-document.yml:/api/api-document.yml:ro
+  #   ports:
+  #     - 3300:8080
 
-  swagger-api:
-    image: stoplight/prism:3
-    ports:
-      - "10080:4010"
-    command: mock -h 0.0.0.0 /api/api-document.yml
-    volumes:
-      - ./api-document.yml:/api/api-document.yml
+  # swagger-api:
+  #   image: stoplight/prism:3
+  #   ports:
+  #     - "10080:4010"
+  #   command: mock -h 0.0.0.0 /api/api-document.yml
+  #   volumes:
+  #     - ./api-document.yml:/api/api-document.yml
 
-  proxy:
-    image: nginx:alpine
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./docker/proxy/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/proxy/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - api
-    networks:
-      - swipe-shukatu
+  # proxy:
+  #   image: nginx:alpine
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./docker/proxy/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./docker/proxy/default.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - api
+  #   networks:
+  #     - swipe-shukatu
 
-  client:
-    build:
-      context: client
-    volumes:
-      - ./client:/usr/src/app
-    ports:
-      - '3000:3000'
+  # client:
+  #   build:
+  #     context: client
+  #   volumes:
+  #     - ./client:/usr/src/app
+  #   ports:
+  #     - '3000:3000'

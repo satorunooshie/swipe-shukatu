@@ -1,6 +1,6 @@
 import "../../App.css";
-import { VFC, useCallback, useContext, useEffect } from "react";
-import { Wrap, Box, Center, Flex, IconButton, Button } from "@chakra-ui/react";
+import { VFC, useCallback, useContext} from "react";
+import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
 import Loading from "../../components/Loading/Loading";
@@ -11,31 +11,23 @@ import { Ltd } from "../../type/Ltd";
 import { useSWRInfinite } from "swr";
 import { LoginModalContext } from "../../context/LoginModalContext";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
-import { MAIN_COLOR } from "../../constants/MainColor";
+import axios from "../../lib/axios";
+import { useShowToast } from "../../hooks/useShowToast";
 
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((res) => res.results);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const PAGE_SIZE = 20;
 
 const HomePage: VFC = () => {
   const { onOpen } = useContext(LoginModalContext);
   const { currentUser } = useContext(CurrentUserContext);
+  const showToast = useShowToast();
+  // TODO: check
   const { data, error, mutate, size, setSize, isValidating } = useSWRInfinite(
-    (index) => `https://icanhazdadjoke.com/search?page=${index + 1}`,
+    (index) => `/ltds?page=${index + 1}`,
     fetcher
   );
   const alreadyRemoved = new Set<string>();
-
-  useEffect(() => {
-    if (currentUser === null) onOpen();
-  }, [currentUser]);
 
   const updateData = useCallback(async (ltdID: string) => {
     alreadyRemoved.add(ltdID);
@@ -47,19 +39,55 @@ const HomePage: VFC = () => {
   }, []);
 
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
+    // ユーザーがログインの処理中
+    if (currentUser === undefined) return;
+    // ユーザーはログインしていない
+    if (currentUser === null) {
+      onOpen();
+      showToast(`ログインしてください`);
+      return;
+    }
     if (dir === "right") {
-      console.log("like", ltd.joke);
+      like(ltd.id, currentUser.uid);
     } else if (dir === "left") {
-      console.log("nope", ltd.joke);
+      unlike(ltd.id, currentUser.uid);
     } else if (dir === "up") {
-      console.log("slike", ltd.joke);
+      superLike(ltd.id, currentUser.uid);
     }
 
     updateData(ltd.id);
   };
+  // TODO: check
+  const like = async (ltdId: string, currentUserId: string) => {
+    axios
+      .post("/like", {
+        ltd_id: ltdId,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+  const unlike = async (ltdId: string, currentUserId: string) => {
+    axios
+      .post("/unlike", {
+        ltd_id: ltdId,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+  const superLike = async (ltdId: string, currentUserId: string) => {
+    axios
+      .post("/superLike", {
+        ltd_id: ltdId,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
 
   if (error) return <h1>error occured</h1>;
-  if (!data || currentUser === undefined)
+  if (!data)
     return (
       <Center h="full" w="full">
         <Wrap h="90vh" w="full">
@@ -67,33 +95,6 @@ const HomePage: VFC = () => {
           <Box w="full" h="80vh">
             <Center m="auto" w="90vh" maxW="300px" h="400px">
               <Loading />
-            </Center>
-          </Box>
-        </Wrap>
-      </Center>
-    );
-
-  if (currentUser === null)
-    return (
-      <Center h="full" w="full">
-        <Wrap h="90vh" w="full">
-          <Header />
-          <Box w="full" h="80vh">
-            <Center m="auto" w="90vh" maxW="300px" h="400px">
-              <Button
-                fontSize={"lg"}
-                size="lg"
-                fontWeight={600}
-                color={"white"}
-                bg={`${MAIN_COLOR}.400`}
-                w="100%"
-                _hover={{
-                  bg: `${MAIN_COLOR}.300`,
-                }}
-                onClick={() => onOpen()}
-              >
-                Log In
-              </Button>
             </Center>
           </Box>
         </Wrap>
