@@ -84,7 +84,7 @@ const ChatForm: VFC = () => {
     if (myFiles[0]) {
       const data = new FormData();
       data.append("image", myFiles[0])
-      data.append("type", 3)
+      data.append("type", "3")
       const headers = {"content-type": "multipart/form-data"}
       // const res = await axios.post(url, data, { headers })
     } else if (isReminded) {
