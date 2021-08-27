@@ -15,4 +15,6 @@ COPY . .
 
 RUN make deps
 
+EXPOSE 8888
+
 CMD ["air", "-c", ".air.toml"]
