@@ -104,5 +104,5 @@ type match struct {
 	RecruitID    int32  `json:"recruit_id"`
 	Name         string `json:"name"`
 	Image        string `json:"image"`
-	Reactiontype int32  `json:"reaction＿type"`
+	Reactiontype int32  `json:"reaction_type"`
 }
