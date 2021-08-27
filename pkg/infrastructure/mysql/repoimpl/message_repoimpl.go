@@ -36,25 +36,25 @@ func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) ([]*mess
 
 // Insert
 func (messageI *messageRepoImpl) InsertMessage(ctx context.Context, entity *messageM.Message) error {
-	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (messageI *messageRepoImpl) InsertIMG(ctx context.Context, entity *messageM.Message) error {
-	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,image_path) VALUES (?,?,?,?)")
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.ImagePath); err != nil {
-		return err
+	switch entity.Type {
+	case 1:
+		stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content); err != nil {
+			return err
+		}
+	case 2:
+		stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,image_path) VALUES (?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.ImagePath); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -94,6 +94,7 @@ func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messa
 	}
 	if err := tx.Commit(); err != nil {
 		log.Printf("[ERROR] failed to commit sql: %v", err)
+		return err
 	}
 	return nil
 }

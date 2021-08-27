@@ -124,7 +124,7 @@ func (messageH *messageHandler) HandleInsert() http.HandlerFunc {
 			}
 		case 2:
 			message.ImagePath = messageRequest.Image
-			if err := messageH.messageUseCase.InsertIMG(ctx, message); err != nil {
+			if err := messageH.messageUseCase.InsertMessage(ctx, message); err != nil {
 				log.Printf("[ERROR] failed to InsertImagePath: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
