@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useContext, useEffect } from "react";
 import {
   Container,
   Stack,
@@ -16,10 +16,20 @@ import ChatForm from "../../components/ChatForm/ChatForm";
 import GoBackBtn from "../../components/GoBackBtn/GoBackBtn";
 import { useMessages } from "./useMessages";
 import { Message } from "../../type/Message";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useHistory } from "react-router-dom";
 
 const ChatPage: VFC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { messages, ltd, error } = useMessages();
+  const { currentUser } = useContext(CurrentUserContext);
+  const history = useHistory();
+
+  // ログインしていなければ/にリダイレクト
+  useEffect(() => {
+    if (currentUser) return;
+    history.push("/");
+  }, [currentUser]);
 
   if (error) return <h1>An error has occurred.</h1>;
   if (!messages)
@@ -83,7 +93,8 @@ const ChatPage: VFC = () => {
           </Flex>
         ))}
       </Stack>
-      <ChatForm />
+      {/* @ts-ignore */}
+      <ChatForm currentUserUid={currentUser.uid} ltdId={ltd.id} />
     </Container>
   );
 };
