@@ -118,14 +118,14 @@ func (messageH *messageHandler) HandleInsert() http.HandlerFunc {
 		case 1:
 			message.Content = messageRequest.Content
 			if err := messageH.messageUseCase.InsertMessage(ctx, message); err != nil {
-				log.Printf("[ERROR] failed to Insert: %v", err.Error())
+				log.Printf("[ERROR] failed to InsertMessage: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
 		case 2:
 			message.ImagePath = messageRequest.Image
 			if err := messageH.messageUseCase.InsertIMG(ctx, message); err != nil {
-				log.Printf("[ERROR] failed to Insert: %v", err.Error())
+				log.Printf("[ERROR] failed to InsertImagePath: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -135,7 +135,7 @@ func (messageH *messageHandler) HandleInsert() http.HandlerFunc {
 			t, _ := time.Parse(form, str)
 			message.ExecuteAt = t
 			if err := messageH.messageUseCase.InsertRemind(ctx, message); err != nil {
-				log.Printf("[ERROR] failed to Insert: %v", err.Error())
+				log.Printf("[ERROR] failed to InsertRemind: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
