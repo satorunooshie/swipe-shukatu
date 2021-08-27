@@ -9,7 +9,7 @@ import (
 )
 
 type UserUseCase interface {
-	Select(ctx context.Context) ([]*userM.User, error)
+	Select(ctx context.Context, uuid string) (*userM.User, error)
 	Insert(ctx context.Context, entity *userM.User) error
 	Update(ctx context.Context, entity *userM.User) error
 	Delete(ctx context.Context, entity *userM.User) error
@@ -27,12 +27,8 @@ func NewUserUsecase(userR userR.UserRepository) UserUseCase {
 }
 
 // Select ...
-func (userU *userUseCase) Select(ctx context.Context) ([]*userM.User, error) {
-	users, err := userU.userRepository.Select(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return users, nil
+func (userU *userUseCase) Select(ctx context.Context, uuid string) (*userM.User, error) {
+	return userU.userRepository.Select(ctx, uuid)
 }
 
 // Insert ...

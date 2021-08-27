@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`ltd_location` (
 -- like
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`like` (
-  `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
+  `user_id` varchar(255) NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`like` (
 -- nope
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`nope` (
-  `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
+  `user_id` varchar(255) NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`nope` (
 -- superlike
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`superlike` (
-  `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
+  `user_id` varchar(255) NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`message` (
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `type` tinyint(3) unsigned NOT NULL COMMENT 'メッセージタイプ(1->text, 2->remind, 3->image)',
   `content` text NULL COMMENT 'メッセージ内容',
-  `image_path` varchar(255) NOT NULL COMMENT '画像保存先',
+  `image_path` varchar(255) NULL COMMENT '画像保存先',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日時',
   `deleted_at` DATETIME NULL COMMENT '削除日時',
   PRIMARY KEY (`id`),
