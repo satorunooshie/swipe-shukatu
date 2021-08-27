@@ -85,7 +85,6 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    // TODO: API call
     if (myFiles[0]) {
       const data = new FormData();
       data.append("image", myFiles[0]);
@@ -94,10 +93,12 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
         "content-type": "multipart/form-data",
         Authorization: `Bearer ${currentUserId}`,
       };
+      // TODO: Check
       const res = await axios.post("/message/" + ltdId, data, { headers });
       console.log(res)
     } else if (isReminded) {
       if (data.message.length === 0) return;
+      // TODO: Check
       axios
         .post("/message/" + ltdId, {
           type: 1,
@@ -109,6 +110,7 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
         .catch((e) => console.log(e));
     } else {
       if (data.message.length === 0) return;
+      // TODO: Check
       axios
         .post("/message/" + ltdId, {
           type: 2,
