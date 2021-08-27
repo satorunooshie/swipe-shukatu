@@ -1,5 +1,5 @@
 import "../../App.css";
-import { VFC, useCallback, useContext} from "react";
+import { VFC, useCallback, useContext } from "react";
 import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
@@ -14,7 +14,15 @@ import { CurrentUserContext } from "../../context/CurrentUserContext";
 import axios from "../../lib/axios";
 import { useShowToast } from "../../hooks/useShowToast";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// TODO: check
+const fetcher = (url: string) =>
+  axios
+    .get(url, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.data.results);
 
 const PAGE_SIZE = 20;
 
@@ -39,12 +47,11 @@ const HomePage: VFC = () => {
   }, []);
 
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
-    // ユーザーがログインの処理中
-    if (currentUser === undefined) return;
+    console.log(currentUser)
     // ユーザーはログインしていない
-    if (currentUser === null) {
+    if (currentUser === null || currentUser === undefined) {
       onOpen();
-      showToast(`ログインしてください`);
+      showToast("ログインしてください", "error");
       return;
     }
     if (dir === "right") {

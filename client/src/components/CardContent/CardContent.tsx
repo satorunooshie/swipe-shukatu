@@ -44,7 +44,7 @@ const CardContent: VFC<Props> = ({ ltd }) => {
               color="white"
               textShadow="1px 0px 5px #000"
             >
-              {ltd.joke.slice(0, 15)}...
+              {ltd.name}
             </Heading>
             <Wrap w="full">
               <Tag colorScheme={MAIN_COLOR}>Tag</Tag>
