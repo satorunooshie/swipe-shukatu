@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	// mysqldriver is a MySQL driver for Go.
 	_ "github.com/go-sql-driver/mysql"
@@ -17,7 +18,7 @@ type DB struct {
 func Conn() (*DB, error) {
 	db, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true",
-		"user", "Password!", "mysql", "3306", "swipe_shukatu"))
+		os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_PASSWORD"), os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_PORT"), os.Getenv("DATABASE_NAME")))
 	if err != nil {
 		return nil, err
 	}
