@@ -13,7 +13,8 @@ import (
 
 type MessageUseCase interface {
 	Select(ctx context.Context, rID int32) ([]*MessageResponse, error)
-	Insert(ctx context.Context, entity *model.Message) error
+	InsertMessage(ctx context.Context, entity *model.Message) error
+	InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error
 	Update(ctx context.Context, entity *model.Message) error
 	Delete(ctx context.Context, entity *model.Message) error
 }
@@ -115,8 +116,16 @@ func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*Messa
 }
 
 // Insert
-func (messageU *messageUseCase) Insert(ctx context.Context, entity *model.Message) error {
-	err := messageU.messageRepository.Insert(ctx, entity)
+func (messageU *messageUseCase) InsertMessage(ctx context.Context, entity *model.Message) error {
+	err := messageU.messageRepository.InsertMessage(ctx, entity)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (messageU *messageUseCase) InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error {
+	err := messageU.messageRepository.InsertRemind(ctx, entity, ExecuteAt)
 	if err != nil {
 		return err
 	}

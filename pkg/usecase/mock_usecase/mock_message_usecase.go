@@ -7,6 +7,7 @@ package mock_usecase
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
@@ -50,18 +51,46 @@ func (mr *MockMessageUseCaseMockRecorder) Delete(ctx, entity interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockMessageUseCase)(nil).Delete), ctx, entity)
 }
 
-// Insert mocks base method.
-func (m *MockMessageUseCase) Insert(ctx context.Context, entity *model.Message) error {
+// InsertIMG mocks base method.
+func (m *MockMessageUseCase) InsertIMG(ctx context.Context, entity *model.Message) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", ctx, entity)
+	ret := m.ctrl.Call(m, "InsertIMG", ctx, entity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Insert indicates an expected call of Insert.
-func (mr *MockMessageUseCaseMockRecorder) Insert(ctx, entity interface{}) *gomock.Call {
+// InsertIMG indicates an expected call of InsertIMG.
+func (mr *MockMessageUseCaseMockRecorder) InsertIMG(ctx, entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockMessageUseCase)(nil).Insert), ctx, entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertIMG", reflect.TypeOf((*MockMessageUseCase)(nil).InsertIMG), ctx, entity)
+}
+
+// InsertMessage mocks base method.
+func (m *MockMessageUseCase) InsertMessage(ctx context.Context, entity *model.Message) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InsertMessage", ctx, entity)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InsertMessage indicates an expected call of InsertMessage.
+func (mr *MockMessageUseCaseMockRecorder) InsertMessage(ctx, entity interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertMessage", reflect.TypeOf((*MockMessageUseCase)(nil).InsertMessage), ctx, entity)
+}
+
+// InsertRemind mocks base method.
+func (m *MockMessageUseCase) InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InsertRemind", ctx, entity, ExecuteAt)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InsertRemind indicates an expected call of InsertRemind.
+func (mr *MockMessageUseCaseMockRecorder) InsertRemind(ctx, entity, ExecuteAt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertRemind", reflect.TypeOf((*MockMessageUseCase)(nil).InsertRemind), ctx, entity, ExecuteAt)
 }
 
 // Select mocks base method.
