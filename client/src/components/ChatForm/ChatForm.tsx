@@ -103,7 +103,7 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
         .post("/message/" + ltdId, {
           type: 1,
           content: data.message,
-          datetime: datetime,
+          execute_at: datetime,
           headers: { Authorization: `Bearer ${currentUserId}` },
         })
         .then((res) => console.log(res))

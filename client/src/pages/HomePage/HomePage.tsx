@@ -93,7 +93,19 @@ const HomePage: VFC = () => {
       .catch((e) => console.log(e));
   };
 
-  if (error) return <h1>error occured</h1>;
+  if (error)
+    return (
+      <Center h="full" w="full">
+        <Wrap h="90vh" w="full">
+          <Header />
+          <Box w="full" h="80vh">
+            <Center m="auto" w="90vh" maxW="300px" h="400px">
+              Error
+            </Center>
+          </Box>
+        </Wrap>
+      </Center>
+    );
   if (!data)
     return (
       <Center h="full" w="full">
