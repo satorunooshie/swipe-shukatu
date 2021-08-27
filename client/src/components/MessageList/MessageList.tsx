@@ -37,9 +37,9 @@ const MessageList: VFC = () => {
                   color={"gray.600"}
                   fontWeight="bold"
                 >
-                  {ltd.joke.slice(0, 10)}社
+                  {ltd.name}社
                 </Text>
-                <Text color={"gray.500"}>{ltd.joke}</Text>
+                <Text color={"gray.500"}>{ltd.name}</Text>
               </Stack>
               <Flex align="center" color={"gray.500"} ml="2">
                 <Text>8月19日</Text>

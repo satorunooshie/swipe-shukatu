@@ -38,7 +38,7 @@ const ChatPage: VFC = () => {
   return (
     <Container w="full" minH="full">
       <LtdDetailModal
-        ltd={{ id: message.id, joke: message.joke }}
+        // ltd={{ id: message.id, joke: message.joke }}
         isOpen={isOpen}
         onClose={onClose}
       />
@@ -67,7 +67,7 @@ const ChatPage: VFC = () => {
             <Avatar mr="4" onClick={() => onOpen()} />
             <Box bg="gray.200" borderRadius="xl" p="2" shadow="md">
               <Text color="gray.600" fontWeight="bold">
-                {message.joke}
+                {message.name}
               </Text>
             </Box>
           </Flex>
@@ -78,7 +78,7 @@ const ChatPage: VFC = () => {
             <Avatar ml="4" />
             <Box bg={`${MAIN_COLOR}.400`} borderRadius="xl" p="2" shadow="md">
               <Text color="white" fontWeight="bold">
-                {message.joke}
+                {message.name}
               </Text>
             </Box>
           </Flex>

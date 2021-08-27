@@ -1,26 +1,26 @@
 import { VFC } from "react";
 import { Text, Image, VStack, Flex } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
-import { Ltd } from "../../type/Ltd";
+import { Match } from "../../type/Match";
 
 type Props = {
-  readonly ltds: Ltd[];
+  readonly matches: Match[];
 };
 
-const MatchListWrap: VFC<Props> = ({ ltds }) => {
+const MatchListWrap: VFC<Props> = ({ matches }) => {
   return (
     <Flex wrap="nowrap" overflowX="auto">
-      {ltds.map((ltd: Ltd) => (
-        <NavLink to={`/message/${ltd.id}`} key={ltd.id}>
+      {matches.map((match: Match) => (
+        <NavLink to={`/message/${match.ltd_id}`} key={match.ltd_id}>
           <VStack text="center" display="inline-block" mr="5" minW="100px">
             <Image
               w="100px"
               h="150px"
               borderRadius="lg"
-              src={`https://icanhazdadjoke.com/j/${ltd.id}.png`}
+              src={match.image}
               fit="cover"
             />
-            <Text align="center">{ltd.joke.slice(0, 10)}</Text>
+            <Text align="center">{match.name}</Text>
           </VStack>
         </NavLink>
       ))}
