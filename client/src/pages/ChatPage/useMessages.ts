@@ -13,7 +13,7 @@ const fetcher = (url: string, uid: string) =>
         Authorization: `Bearer ${uid}`,
       },
     })
-    .then((res) => res.data.results);
+    .then((res) => res.data);
 
 // LtdIdからMessageを取得
 // type Res = {

@@ -22,7 +22,7 @@ const fetcher = (url: string) =>
         Accept: "application/json",
       },
     })
-    .then((res) => res.data.results);
+    .then((res) => res.data);
 
 const PAGE_SIZE = 20;
 

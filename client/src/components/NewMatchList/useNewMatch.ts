@@ -12,7 +12,7 @@ const fetcher = (url: string, uid: string) =>
         Authorization: `Bearer ${uid}`
       },
     })
-    .then((res) => res.data.results);
+    .then((res) => res.data);
 
 export const useNewMatch = () => {
   const { currentUser } = useContext(CurrentUserContext);
