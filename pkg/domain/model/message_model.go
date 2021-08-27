@@ -19,5 +19,4 @@ type Message struct {
 	ImagePath string
 	CreatedAt time.Time
 	DeletedAt time.Time
-	ExecuteAt time.Time
 }

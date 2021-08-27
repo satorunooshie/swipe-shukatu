@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -131,10 +132,11 @@ func (messageH *messageHandler) HandleInsert() http.HandlerFunc {
 			}
 		case 3:
 			str := messageRequest.ExecuteAt
-			form := "2006-01-02T15:04:05Z07:00"
+			fmt.Println(str)
+			form := "2006-01-02T15:04:05+09:00"
 			t, _ := time.Parse(form, str)
-			message.ExecuteAt = t
-			if err := messageH.messageUseCase.InsertRemind(ctx, message); err != nil {
+			fmt.Println(t)
+			if err := messageH.messageUseCase.InsertRemind(ctx, message, t); err != nil {
 				log.Printf("[ERROR] failed to InsertRemind: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return

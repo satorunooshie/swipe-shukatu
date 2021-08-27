@@ -15,7 +15,7 @@ type MessageUseCase interface {
 	Select(ctx context.Context, rID int32) ([]*MessageResponse, error)
 	InsertMessage(ctx context.Context, entity *model.Message) error
 	InsertIMG(ctx context.Context, entity *model.Message) error
-	InsertRemind(ctx context.Context, entity *model.Message) error
+	InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error
 	Update(ctx context.Context, entity *model.Message) error
 	Delete(ctx context.Context, entity *model.Message) error
 }
@@ -133,8 +133,8 @@ func (messageU *messageUseCase) InsertIMG(ctx context.Context, entity *model.Mes
 	return nil
 }
 
-func (messageU *messageUseCase) InsertRemind(ctx context.Context, entity *model.Message) error {
-	err := messageU.messageRepository.InsertRemind(ctx, entity)
+func (messageU *messageUseCase) InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error {
+	err := messageU.messageRepository.InsertRemind(ctx, entity, ExecuteAt)
 	if err != nil {
 		return err
 	}

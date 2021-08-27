@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"time"
 
 	messageM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	messageR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -58,7 +59,7 @@ func (messageI *messageRepoImpl) InsertIMG(ctx context.Context, entity *messageM
 	return nil
 }
 
-func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messageM.Message) error {
+func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messageM.Message, ExecuteAt time.Time) error {
 	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
 	if err != nil {
 		return err
@@ -72,12 +73,12 @@ func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messa
 	if err != nil {
 		return err
 	}
-	stmt2, err := messageI.db.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id) VALUES (?)")
+	stmt2, err := messageI.db.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id,execute_at) VALUES (?,?)")
 	if err != nil {
 		return err
 	}
 	defer stmt2.Close()
-	if _, err := stmt2.Exec(messageID); err != nil {
+	if _, err := stmt2.Exec(messageID, ExecuteAt); err != nil {
 		return err
 	}
 	return nil
