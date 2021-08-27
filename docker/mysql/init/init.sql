@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`superlike` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `swipe_shukatu`.`message` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL COMMENT 'ユーザID',
+  `user_id` varchar(255) NOT NULL COMMENT 'ユーザID',
   `recruit_id` bigint(20) unsigned NOT NULL COMMENT '求人ID', 
   `type` tinyint(3) unsigned NOT NULL COMMENT 'メッセージタイプ(1->text, 2->remind, 3->image)',
   `content` text NULL COMMENT 'メッセージ内容',
