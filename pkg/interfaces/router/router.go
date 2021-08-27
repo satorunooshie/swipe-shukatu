@@ -15,7 +15,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	// DI
 
 	/* middleware */
-	_ = middleware.NewAuth(db)
+	m := middleware.NewAuth(db)
 
 	/* repoimpl */
 	// userRepoimpl := repoimpl.NewUserRepoImpl(db)
@@ -45,13 +45,12 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	nopeHandler := handler.NewNopeHandler(nopeUsecase)
 
 	// register the handler
-	// h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
-	h.Handle("/message", middleware.Get(messageHandler.HandleSelect()))
-	h.Handle("/message/", middleware.Post(messageHandler.HandleInsert()))
-	h.Handle("/like", middleware.Post(likeHandler.HandleInsert()))
-	h.Handle("/match/list", middleware.Get(matchlisthandler.HandleSelect()))
-	h.Handle("/superlike", middleware.Post(superlikeHandler.HandleInsert()))
-	h.Handle("/nope", middleware.Post(nopeHandler.HandleInsert()))
+	h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
+	h.Handle("/message", m.Auth(middleware.Post(messageHandler.HandleInsert())))
+	h.Handle("/like", m.Auth(middleware.Post(likeHandler.HandleInsert())))
+	h.Handle("/match/list", m.Auth(middleware.Get(matchlisthandler.HandleSelect())))
+	h.Handle("/superlike", m.Auth(middleware.Post(superlikeHandler.HandleInsert())))
+	h.Handle("/nope", m.Auth(middleware.Post(nopeHandler.HandleInsert())))
 
 	// this endpoint is for health check
 	h.HandleFunc("/health", middleware.Get(func(w http.ResponseWriter, r *http.Request) {
