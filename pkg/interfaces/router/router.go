@@ -24,6 +24,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
 	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
 	likeRepoimpl := repoimpl.NewLikeRepoImpl(db)
+	matchlistRepoimpl := repoimpl.NewMatchlistRepoImpl(db)
 	superlikeRepoimpl := repoimpl.NewSuperlikeRepoImpl(db)
 	nopeRepoimpl := repoimpl.NewNopeRepoImpl(db)
 
@@ -31,6 +32,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
 	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, ltdRepoimpl, messageRepoimpl, recruitRepoimpl)
 	likeusecase := usecase.NewLikeUsecase(likeRepoimpl)
+	mathclistusecase := usecase.NewMatchlistUsecase(matchlistRepoimpl)
 	superlikeUsecase := usecase.NewSuperlikeUsecase(superlikeRepoimpl)
 	nopeUsecase := usecase.NewNopeUsecase(nopeRepoimpl)
 
@@ -38,6 +40,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	// userHandler := handler.NewUserHandler(userUseCase)
 	messageHandler := handler.NewMessageHandler(messageUseCase)
 	likeHandler := handler.NewLikeHandler(likeusecase)
+	matchlisthandler := handler.NewMatchlistHandler(mathclistusecase)
 	superlikeHandler := handler.NewSuperlikeHandler(superlikeUsecase)
 	nopeHandler := handler.NewNopeHandler(nopeUsecase)
 
@@ -45,6 +48,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	// h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
 	h.Handle("/message", middleware.Get(messageHandler.HandleSelect()))
 	h.Handle("/like", middleware.Post(likeHandler.HandleInsert()))
+	h.Handle("/match/list", middleware.Get(matchlisthandler.HandleSelect()))
 	h.Handle("/superlike", middleware.Post(superlikeHandler.HandleInsert()))
 	h.Handle("/nope", middleware.Post(nopeHandler.HandleInsert()))
 
