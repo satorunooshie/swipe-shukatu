@@ -37,34 +37,33 @@ func (recruitH *recruitHandler) HandleSelect() http.HandlerFunc {
 		ctx := request.Context()
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
-		parameters := new(recruitR.Parameters)
 		location, _ := strconv.Atoi(request.FormValue("location"))
-		parameters.Location = location
 		job_type, _ := strconv.Atoi(request.FormValue("job_type"))
-		parameters.JobType = job_type
 		education_history, _ := strconv.Atoi(request.FormValue("education_history"))
+		benefits, _ := strconv.Atoi(request.FormValue("benefits"))
+		min_salary, _ := strconv.Atoi(request.FormValue("min_salary"))
+		max_salary, _ := strconv.Atoi(request.FormValue("max_salary"))
+		starting_salary, _ := strconv.Atoi(request.FormValue("starting_salary"))
+		parameters := new(recruitR.Parameters)
+		parameters.Location = location
+		parameters.JobType = job_type
 		parameters.EducationHistory = education_history
-		benefits
-		ms, err := messageH.messageUseCase.Select(ctx, int32(rID))
+		parameters.Benefits = benefits
+		parameters.MinSalary = min_salary
+		parameters.MaxSalary = max_salary
+		parameters.StartingSalary = starting_salary
+		rs, err := recruitH.recruitUseCase.SelectRecruits(ctx, parameters)
 		if err != nil {
-			log.Printf("[ERROR] failed to fetch messages by recruit ID: %v", err.Error())
+			log.Printf("[ERROR] failed to fetch recruit: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		mrs := make([]*MessageResponse, len(ms))
-		for i, m := range ms {
-			var mr MessageResponse
-			mr.LtdID = m.LtdID
-			mr.RecruitID = m.RecruitID
-			mr.Name = m.Name
-			mr.JobType = m.JobType
-			mr.Content = m.Content
-			mr.Image = m.Image
-			mr.CreatedAt = m.CreatedAt
-			mrs[i] = &mr
+		recs := make([]*recruitR.Recruits, len(rs))
+		for i, r := range rs {
+			recs[i] = r
 		}
-		var respms MessageResponses
-		respms.Messages = mrs
+		var respms RecruitResponse
+		respms.Recruits = recs
 		jrespms, err := json.Marshal(respms)
 		if err != nil {
 			log.Printf("[ERROR] failed to marshal messages: %v", err.Error())
@@ -105,5 +104,5 @@ type RecruitRequest struct { // nolint
 
 // RecruitResponse
 type RecruitResponse struct { // nolint
-	// Need to implement field
+	Recruits []*recruitR.Recruits `json:"recruits"`
 }

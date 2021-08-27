@@ -8,8 +8,7 @@ import (
 )
 
 type RecruitRepository interface {
-	Select(ctx context.Context) ([]*recruitM.Recruit, error)
-	SelectRecruits(ctx context.Context, Param *Parameters) (*Recruits, error)
+	SelectRecruits(ctx context.Context, Param *Parameters) ([]*Recruits, error)
 	SelectRecruitForMessage(ctx context.Context, rID int32) (*recruitM.Recruit, error)
 	Insert(ctx context.Context, entity *recruitM.Recruit) error
 	Update(ctx context.Context, entity *recruitM.Recruit) error

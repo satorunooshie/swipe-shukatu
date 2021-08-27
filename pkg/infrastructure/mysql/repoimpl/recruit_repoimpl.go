@@ -20,10 +20,15 @@ func NewRecruitRepoImpl(db *sql.DB) recruitR.RecruitRepository {
 	}
 }
 
-// Select
-func (recruitI *recruitRepoImpl) Select(ctx context.Context) ([]*recruitM.Recruit, error) {
-	rows, err := recruitI.db.Query("SELECT * FROM recruit")
+//select all recruit
+func (recruitI *recruitRepoImpl) SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruits, error) {
+	query := "SELECT"
+	rows, err := recruitI.db.QueryContext(ctx, query)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("[INFO] get all recruit: ", err)
+			return nil, nil
+		}
 		return nil, err
 	}
 	return convertToRecruits(rows)
@@ -85,10 +90,10 @@ func (recruitI *recruitRepoImpl) Delete(ctx context.Context, entity *recruitM.Re
 }
 
 // convertToRecruits
-func convertToRecruits(rows *sql.Rows) ([]*recruitM.Recruit, error) {
-	var recruits []*recruitM.Recruit
+func convertToRecruits(rows *sql.Rows) ([]*recruitR.Recruits, error) {
+	var recruits []*recruitR.Recruits
 	for rows.Next() {
-		var recruit *recruitM.Recruit
+		var recruit *recruitR.Recruits
 		err := rows.Scan(
 		// Need to scan field
 		)
