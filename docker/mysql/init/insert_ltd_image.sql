@@ -1,3 +1,7 @@
+use `swipe_shukatu`;
+
+SET NAMES utf8mb4;
+
 INSERT INTO ltd_image(id, sort_id, image_path, ltd_id) SELECT 1,1,'https://job.mynavi.jp/common/img23/crp_thumb/87178-thumb5.jpg', id FROM m_ltd WHERE EXISTS(SELECT id FROM m_ltd WHERE name LIKE '%(株)イトマンスイミングスクールPICK UP
 %');
 INSERT INTO ltd_image(id, sort_id, image_path, ltd_id) SELECT 2,2,'https://job.mynavi.jp/common/img23/crp_thumb/211325-thumb9_0001.jpg', id FROM m_ltd WHERE EXISTS(SELECT id FROM m_ltd WHERE name LIKE '%オープンハウスグループPICK UP
