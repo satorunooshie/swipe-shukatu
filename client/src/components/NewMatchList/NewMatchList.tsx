@@ -3,8 +3,6 @@ import {
   Flex,
   Stack,
   Text,
-  Image,
-  VStack,
   Menu,
   MenuButton,
   MenuList,
@@ -12,7 +10,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
-import { NavLink } from "react-router-dom";
 import { Ltd } from "../../type/Ltd";
 import LoadingNewMatchList from "./LoadingNewMatchList";
 import MatchListWrap from "../MatchListWrap/MatchListWrap";
