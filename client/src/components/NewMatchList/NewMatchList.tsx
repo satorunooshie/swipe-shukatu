@@ -10,7 +10,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { MAIN_COLOR } from "../../constants/MainColor";
-import { Ltd } from "../../type/Ltd";
 import LoadingNewMatchList from "./LoadingNewMatchList";
 import MatchListWrap from "../MatchListWrap/MatchListWrap";
 import { useNewMatch } from "./useNewMatch";
