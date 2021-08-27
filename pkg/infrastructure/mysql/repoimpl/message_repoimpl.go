@@ -60,26 +60,41 @@ func (messageI *messageRepoImpl) InsertIMG(ctx context.Context, entity *messageM
 }
 
 func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messageM.Message, ExecuteAt time.Time) error {
-	stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
+	tx, err := messageI.db.Begin()
+	if err != nil {
+		return err
+	}
+	stmt, err := tx.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 	ret, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content)
+	//err = errors.New("error")
 	if err != nil {
+		log.Printf("[ERROR] at message_repoimpl.InsertRemind : failed to Exec: %v", err)
+		if err := tx.Rollback(); err != nil {
+			log.Printf("[ERROR] failed to insertmessage: %v", err)
+		}
 		return err
 	}
 	messageID, err := ret.LastInsertId()
 	if err != nil {
 		return err
 	}
-	stmt2, err := messageI.db.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id,execute_at) VALUES (?,?)")
+	stmt2, err := tx.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id,execute_at) VALUES (?,?)")
 	if err != nil {
 		return err
 	}
 	defer stmt2.Close()
 	if _, err := stmt2.Exec(messageID, ExecuteAt); err != nil {
+		if err := tx.Rollback(); err != nil {
+			log.Printf("[ERROR] failed to insertmessage: %v", err)
+		}
 		return err
+	}
+	if err := tx.Commit(); err != nil {
+		log.Printf("[ERROR] failed to commit sql: %v", err)
 	}
 	return nil
 }
