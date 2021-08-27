@@ -20,12 +20,9 @@ func NewUserRepoImpl(db *sql.DB) userR.UserRepository {
 }
 
 // Select
-func (userI *userRepoImpl) Select(ctx context.Context) ([]*userM.User, error) {
-	rows, err := userI.db.Query("SELECT * FROM user")
-	if err != nil {
-		return nil, err
-	}
-	return convertToUser(rows)
+func (userI *userRepoImpl) Select(ctx context.Context, uuid string) (*userM.User, error) {
+	row := userI.db.QueryRowContext(ctx, "SELECT * FROM user WHERE uuid = ?", uuid)
+	return convertToUser(row)
 }
 
 // Insert
@@ -64,8 +61,9 @@ func (userI *userRepoImpl) Delete(ctx context.Context, entity *userM.User) error
 	return nil
 }
 
-// convertToUser
-func convertToUser(rows *sql.Rows) ([]*userM.User, error) {
+// convertToUsers
+// nolint
+func convertToUsers(rows *sql.Rows) ([]*userM.User, error) {
 	var users []*userM.User
 	for rows.Next() {
 		var user *userM.User
@@ -78,4 +76,12 @@ func convertToUser(rows *sql.Rows) ([]*userM.User, error) {
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+func convertToUser(row *sql.Row) (*userM.User, error) {
+	user := userM.User{}
+	if err := row.Scan(&user.UUID, &user.RegisterMethodID, &user.Gender, &user.GraduateYear, &user.CreatedAt, &user.DeletedAt); err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

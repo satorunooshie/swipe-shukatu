@@ -73,3 +73,7 @@ INSERT INTO `m_industry` (`id`, `sort_id`, `name`, `created_at`, `updated_at`) V
 (11, 11, 'メーカー', NOW(), NOW()),
 (12, 12, 'ソフトウェア・通信', NOW(), NOW()),
 (13, 13, 'サービス・インフラ', NOW(), NOW());
+INSERT INTO `m_job_type` (`id`, `sort_id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 1, '総合職', NOW(), NOW()),
+(2, 2, '事務職', NOW(), NOW()),
+(3, 3, '技術職', NOW(), NOW());

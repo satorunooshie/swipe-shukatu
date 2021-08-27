@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	UUID             int32
+	UUID             string
 	RegisterMethodID int32
 	Gender           int32
 	GraduateYear     int32
