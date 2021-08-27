@@ -5,5 +5,5 @@ type Matchlist struct {
 	RecruitID    int32  `json:"recruit_id"`
 	Name         string `json:"name"`
 	Image        string `json:"image"`
-	Reactiontype int8   `json:"reactiontype"`
+	Reactiontype int32  `json:"reactiontype"`
 }
