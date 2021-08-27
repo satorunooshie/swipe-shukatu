@@ -9,7 +9,7 @@ import (
 )
 
 type RecruitUseCase interface {
-	SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruits, error)
+	SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruit, error)
 	Insert(ctx context.Context, entity *recruitM.Recruit) error
 	Update(ctx context.Context, entity *recruitM.Recruit) error
 	Delete(ctx context.Context, entity *recruitM.Recruit) error
@@ -27,7 +27,7 @@ func NewRecruitUsecase(recruitR recruitR.RecruitRepository) RecruitUseCase {
 }
 
 // Select
-func (recruitU *recruitUseCase) SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruits, error) {
+func (recruitU *recruitUseCase) SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruit, error) {
 	recruits, err := recruitU.recruitRepository.SelectRecruits(ctx, Param)
 	if err != nil {
 		return nil, err

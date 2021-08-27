@@ -8,14 +8,14 @@ import (
 )
 
 type RecruitRepository interface {
-	SelectRecruits(ctx context.Context, Param *Parameters) ([]*Recruits, error)
+	SelectRecruits(ctx context.Context, Param *Parameters) ([]*Recruit, error)
 	SelectRecruitForMessage(ctx context.Context, rID int32) (*recruitM.Recruit, error)
 	Insert(ctx context.Context, entity *recruitM.Recruit) error
 	Update(ctx context.Context, entity *recruitM.Recruit) error
 	Delete(ctx context.Context, entity *recruitM.Recruit) error
 }
 
-type Recruits struct {
+type Recruit struct {
 	LtdID                 int32  `json:"ltd_id"`
 	RecruitID             int32  `json:"recruit_id"`
 	Name                  string `json:"name"`
@@ -30,11 +30,11 @@ type Recruits struct {
 }
 
 type Parameters struct {
-	Location         int
-	JobType          int
-	EducationHistory int
-	Benefits         int
-	MinSalary        int
-	MaxSalary        int
-	StartingSalary   int
+	Location         int32
+	JobType          int32
+	EducationHistory int32
+	Benefits         int32
+	MinSalary        int32
+	MaxSalary        int32
+	StartingSalary   int32
 }

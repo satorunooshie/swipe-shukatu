@@ -38,30 +38,28 @@ func (recruitH *recruitHandler) HandleSelect() http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 		location, _ := strconv.Atoi(request.FormValue("location"))
-		job_type, _ := strconv.Atoi(request.FormValue("job_type"))
-		education_history, _ := strconv.Atoi(request.FormValue("education_history"))
+		jobType, _ := strconv.Atoi(request.FormValue("job_type"))
+		educationHistory, _ := strconv.Atoi(request.FormValue("education_history"))
 		benefits, _ := strconv.Atoi(request.FormValue("benefits"))
-		min_salary, _ := strconv.Atoi(request.FormValue("min_salary"))
-		max_salary, _ := strconv.Atoi(request.FormValue("max_salary"))
-		starting_salary, _ := strconv.Atoi(request.FormValue("starting_salary"))
+		minSalary, _ := strconv.Atoi(request.FormValue("min_salary"))
+		maxSalary, _ := strconv.Atoi(request.FormValue("max_salary"))
+		startingSalary, _ := strconv.Atoi(request.FormValue("starting_salary"))
 		parameters := new(recruitR.Parameters)
-		parameters.Location = location
-		parameters.JobType = job_type
-		parameters.EducationHistory = education_history
-		parameters.Benefits = benefits
-		parameters.MinSalary = min_salary
-		parameters.MaxSalary = max_salary
-		parameters.StartingSalary = starting_salary
+		parameters.Location = int32(location)
+		parameters.JobType = int32(jobType)
+		parameters.EducationHistory = int32(educationHistory)
+		parameters.Benefits = int32(benefits)
+		parameters.MinSalary = int32(minSalary)
+		parameters.MaxSalary = int32(maxSalary)
+		parameters.StartingSalary = int32(startingSalary)
 		rs, err := recruitH.recruitUseCase.SelectRecruits(ctx, parameters)
 		if err != nil {
 			log.Printf("[ERROR] failed to fetch recruit: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		recs := make([]*recruitR.Recruits, len(rs))
-		for i, r := range rs {
-			recs[i] = r
-		}
+		recs := make([]*recruitR.Recruit, len(rs))
+		copy(recs, rs)
 		var respms RecruitResponse
 		respms.Recruits = recs
 		jrespms, err := json.Marshal(respms)
@@ -104,5 +102,5 @@ type RecruitRequest struct { // nolint
 
 // RecruitResponse
 type RecruitResponse struct { // nolint
-	Recruits []*recruitR.Recruits `json:"recruits"`
+	Recruits []*recruitR.Recruit `json:"recruits"`
 }

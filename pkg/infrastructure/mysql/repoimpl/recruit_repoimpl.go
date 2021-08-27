@@ -20,9 +20,9 @@ func NewRecruitRepoImpl(db *sql.DB) recruitR.RecruitRepository {
 	}
 }
 
-//select all recruit
-func (recruitI *recruitRepoImpl) SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruits, error) {
-	query := "SELECT"
+// Select all recruit.
+func (recruitI *recruitRepoImpl) SelectRecruits(ctx context.Context, Param *recruitR.Parameters) ([]*recruitR.Recruit, error) {
+	query := "SELECT recruit.ltd_id AS ltd_id, recruit.id AS recruit_id, m_ltd.name AS name, m_ltd.name AS name, m_ltd.employee_number AS employee_number, m_ltd.average_age AS average_age, m_job_type.name AS job_type, m_educational_background.name AS educational_background, recruit.average_salary AS average_salary, recruit.starting_salary AS starting_salary, ltd_image.image_path AS image FROM `recruit`,`ltd_image`,`m_ltd`,`m_job_type`,`m_educational_background` WHERE recruit.job_type_id = m_job_type.id AND recruit.ltd_id = m_ltd.id AND recruit.educational_background_id = m_educational_background.id AND recruit.ltd_id = ltd_image.ltd_id limit 100"
 	rows, err := recruitI.db.QueryContext(ctx, query)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -90,10 +90,10 @@ func (recruitI *recruitRepoImpl) Delete(ctx context.Context, entity *recruitM.Re
 }
 
 // convertToRecruits
-func convertToRecruits(rows *sql.Rows) ([]*recruitR.Recruits, error) {
-	var recruits []*recruitR.Recruits
+func convertToRecruits(rows *sql.Rows) ([]*recruitR.Recruit, error) {
+	var recruits []*recruitR.Recruit
 	for rows.Next() {
-		var recruit *recruitR.Recruits
+		var recruit *recruitR.Recruit
 		err := rows.Scan(
 		// Need to scan field
 		)
