@@ -46,7 +46,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 
 	// register the handler
 	h.Handle("/message", m.Auth(middleware.Get(messageHandler.HandleSelect())))
-	h.Handle("/message", m.Auth(middleware.Post(messageHandler.HandleInsert())))
+	h.Handle("/message/", m.Auth(middleware.Post(messageHandler.HandleInsert())))
 	h.Handle("/like", m.Auth(middleware.Post(likeHandler.HandleInsert())))
 	h.Handle("/match/list", m.Auth(middleware.Get(matchlisthandler.HandleSelect())))
 	h.Handle("/superlike", m.Auth(middleware.Post(superlikeHandler.HandleInsert())))
