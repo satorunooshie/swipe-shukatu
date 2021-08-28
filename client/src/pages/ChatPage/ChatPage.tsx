@@ -32,7 +32,7 @@ const ChatPage: VFC = () => {
   }, [currentUser]);
 
   if (error) return <h1>An error has occurred.</h1>;
-  if (!messages)
+  if (!messages || !ltd)
     return (
       <Container w="full" minH="full">
         <Center w="full" h="full">

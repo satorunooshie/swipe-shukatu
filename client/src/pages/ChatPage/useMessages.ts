@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import useSWR from "swr";
-import LtdDetailModal from "../../components/LtdDetailModal/LtdDetailModal";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import axios from "../../lib/axios";
+import { useParams } from "react-router-dom"
 
 // TODO: Check
 const fetcher = (url: string, uid: string) =>
