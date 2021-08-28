@@ -1,12 +1,6 @@
 import "../../App.css";
-import { VFC, useCallback } from "react";
-import {
-  Wrap,
-  Box,
-  Center,
-  Flex,
-  IconButton,
-} from "@chakra-ui/react";
+import { VFC, useCallback, useContext } from "react";
+import { Wrap, Box, Center, Flex, IconButton } from "@chakra-ui/react";
 import Header from "../../components/Header/Header";
 import CardContent from "../../components/CardContent/CardContent";
 import Loading from "../../components/Loading/Loading";
@@ -15,27 +9,36 @@ import { StarIcon, CloseIcon } from "@chakra-ui/icons";
 import { FaHeart } from "react-icons/fa";
 import { Ltd } from "../../type/Ltd";
 import { useSWRInfinite } from "swr";
+import { LoginModalContext } from "../../context/LoginModalContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import axios from "../../lib/axios";
+import { useShowToast } from "../../hooks/useShowToast";
 
+// TODO: check
 const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((res) => res.results);
+  axios
+    .get(url, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.data);
 
 const PAGE_SIZE = 20;
 
 const HomePage: VFC = () => {
+  const { onOpen } = useContext(LoginModalContext);
+  const { currentUser } = useContext(CurrentUserContext);
+  const showToast = useShowToast();
+  // TODO: check
   const { data, error, mutate, size, setSize, isValidating } = useSWRInfinite(
-    (index) => `https://icanhazdadjoke.com/search?page=${index + 1}`,
+    (index) => `/ltds?page=${index + 1}`,
     fetcher
   );
-  const alreadyRemoved = new Set<string>();
+  const alreadyRemoved = new Set<number>();
 
-  const updateData = useCallback(async (ltdID: string) => {
-    alreadyRemoved.add(ltdID);
+  const updateData = useCallback(async (recruit_id: number) => {
+    alreadyRemoved.add(recruit_id);
 
     // 残りが5件以下になったらデータフェッチする
     if (PAGE_SIZE - alreadyRemoved.size > 5) return;
@@ -44,18 +47,65 @@ const HomePage: VFC = () => {
   }, []);
 
   const swiped = (dir: "right" | "left" | "up" | "down", ltd: Ltd) => {
+    console.log(currentUser)
+    // ユーザーはログインしていない
+    if (currentUser === null || currentUser === undefined) {
+      onOpen();
+      showToast("ログインしてください", "error");
+      return;
+    }
     if (dir === "right") {
-      console.log("like", ltd.joke);
+      like(ltd.recruit_id, currentUser.uid);
     } else if (dir === "left") {
-      console.log("nope", ltd.joke);
+      unlike(ltd.recruit_id, currentUser.uid);
     } else if (dir === "up") {
-      console.log("slike", ltd.joke);
+      superLike(ltd.recruit_id, currentUser.uid);
     }
 
-    updateData(ltd.id);
+    updateData(ltd.recruit_id);
+  };
+  // TODO: check
+  const like = async (recruit_id: number, currentUserId: string) => {
+    axios
+      .post("/like", {
+        recruit_id: recruit_id,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+  const unlike = async (recruit_id: number, currentUserId: string) => {
+    axios
+      .post("/unlike", {
+        recruit_id: recruit_id,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+  const superLike = async (recruit_id: number, currentUserId: string) => {
+    axios
+      .post("/superLike", {
+        recruit_id: recruit_id,
+        headers: { Authorization: `Bearer ${currentUserId}` },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
   };
 
-  if (error) return <h1>error occured</h1>;
+  if (error)
+    return (
+      <Center h="full" w="full">
+        <Wrap h="90vh" w="full">
+          <Header />
+          <Box w="full" h="80vh">
+            <Center m="auto" w="90vh" maxW="300px" h="400px">
+              Error
+            </Center>
+          </Box>
+        </Wrap>
+      </Center>
+    );
   if (!data)
     return (
       <Center h="full" w="full">
@@ -94,7 +144,11 @@ const HomePage: VFC = () => {
           </Wrap>
         </Box>
         <Wrap w="full" pos="sticky" bottom="85px" justify="center">
-          <Flex w={["45%", "45%", "35%"]} justify="space-between" align="center">
+          <Flex
+            w={["45%", "45%", "35%"]}
+            justify="space-between"
+            align="center"
+          >
             <IconButton
               size="lg"
               variant="outline"

@@ -34,7 +34,12 @@ type FormData = {
   message: string;
 };
 
-const ChatForm: VFC = () => {
+type Props = {
+  recruit_id: number;
+  currentUserId: string;
+};
+
+const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
   const [isReminded, setIsReminded] = useState(false);
   const [src, setSrc] = useState("");
   const [myFiles, setMyFiles] = useState<File[]>([]);
@@ -80,30 +85,40 @@ const ChatForm: VFC = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    // TODO: API call
     if (myFiles[0]) {
       const data = new FormData();
-      data.append("image", myFiles[0])
-      data.append("type", "3")
-      const headers = {"content-type": "multipart/form-data"}
-      // const res = await axios.post(url, data, { headers })
+      data.append("image", myFiles[0]);
+      data.append("type", "3");
+      const headers = {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${currentUserId}`,
+      };
+      // TODO: Check
+      const res = await axios.post("/message/" + recruit_id, data, { headers });
+      console.log(res)
     } else if (isReminded) {
       if (data.message.length === 0) return;
-      alert(
-        JSON.stringify({
+      // TODO: Check
+      axios
+        .post("/message/" + recruit_id, {
           type: 1,
           content: data.message,
-          datetime: datetime,
+          execute_at: datetime,
+          headers: { Authorization: `Bearer ${currentUserId}` },
         })
-      );
+        .then((res) => console.log(res))
+        .catch((e) => console.log(e));
     } else {
       if (data.message.length === 0) return;
-      alert(
-        JSON.stringify({
+      // TODO: Check
+      axios
+        .post("/message/" + recruit_id, {
           type: 2,
           content: data.message,
+          headers: { Authorization: `Bearer ${currentUserId}` },
         })
-      );
+        .then((res) => console.log(res))
+        .catch((e) => console.log(e));
     }
     // もろもろリセットする
     onClose();

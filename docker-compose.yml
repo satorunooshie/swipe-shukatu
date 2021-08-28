@@ -70,10 +70,10 @@ services:
     networks:
       - swipe-shukatu
 
-  client:
-    build:
-      context: client
-    volumes:
-      - ./client:/usr/src/app
-    ports:
-      - '3000:3000'
+  # client:
+  #   build:
+  #     context: client
+  #   volumes:
+  #     - ./client:/usr/src/app
+  #   ports:
+  #     - '3000:3000'

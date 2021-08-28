@@ -32,9 +32,9 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
       <ModalContent top={["0.7em"]} left={[0, 0, "8rem"]} w={["90vh","90vh","420px"]} minH={["550px", "550px" ,"510px"]} borderRadius="15px" boxShadow="2xl">
         <ModalHeader>
           <Flex alignItems="center" justify="space-between">
-            <Heading color="gray.700">{ltd.joke.slice(0, 10)}...</Heading>
+            <Heading color="gray.700">{ltd.name}</Heading>
             <Text color="gray.600" fontSize="3xl" mr="6">
-              IT業界
+              {ltd.job_type}
             </Text>
           </Flex>
         </ModalHeader>
@@ -49,7 +49,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
               </Text>
             </Flex>
             <Wrap my="5">
-              <Text color="gray.500">{ltd.joke}</Text>
+              <Text color="gray.500">{ltd.profile}</Text>
             </Wrap>
             <Wrap my="5">
               <Flex alignItems="center">
@@ -59,6 +59,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
                 </Text>
               </Flex>
               <Wrap w="full">
+                {/* TODO */}
                 <Tag>家賃補助</Tag>
                 <Tag>技術書購入手当</Tag>
                 <Tag>海外カンファレンス補助</Tag>
@@ -73,7 +74,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
               <Center w="full" py="3" onClick={() => alert("report")}>
                 <Icon as={FcAdvertising} />
                 <Text color="gray.600" ml="2">
-                  {ltd.joke.slice(0, 10)}...を報告する
+                  {ltd.name}を報告する
                 </Text>
               </Center>
             </Wrap>

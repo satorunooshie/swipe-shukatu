@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useContext, useEffect } from "react";
 import {
   Container,
   Stack,
@@ -15,13 +15,24 @@ import LtdDetailModal from "../../components/LtdDetailModal/LtdDetailModal";
 import ChatForm from "../../components/ChatForm/ChatForm";
 import GoBackBtn from "../../components/GoBackBtn/GoBackBtn";
 import { useMessages } from "./useMessages";
+import { Message } from "../../type/Message";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { useHistory } from "react-router-dom";
 
 const ChatPage: VFC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { message, error } = useMessages();
+  const { messages, ltd, error } = useMessages();
+  const { currentUser } = useContext(CurrentUserContext);
+  const history = useHistory();
+
+  // ログインしていなければ/にリダイレクト
+  useEffect(() => {
+    if (currentUser) return;
+    history.push("/");
+  }, [currentUser]);
 
   if (error) return <h1>An error has occurred.</h1>;
-  if (!message)
+  if (!messages || !ltd)
     return (
       <Container w="full" minH="full">
         <Center w="full" h="full">
@@ -37,11 +48,7 @@ const ChatPage: VFC = () => {
     );
   return (
     <Container w="full" minH="full">
-      <LtdDetailModal
-        ltd={{ id: message.id, joke: message.joke }}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <LtdDetailModal ltd={ltd} isOpen={isOpen} onClose={onClose} />
       <Flex
         pos="fixed"
         top="5"
@@ -62,29 +69,32 @@ const ChatPage: VFC = () => {
         justifyContent="flex-end"
       >
         {/* 企業のメッセージ */}
-        <Flex align="center" w="full" mb="2">
+        {/* <Flex align="center" w="full" mb="2">
           <Flex align="center" w="70%">
             <Avatar mr="4" onClick={() => onOpen()} />
             <Box bg="gray.200" borderRadius="xl" p="2" shadow="md">
               <Text color="gray.600" fontWeight="bold">
-                {message.joke}
+                {message.name}
               </Text>
             </Box>
           </Flex>
-        </Flex>
+        </Flex> */}
         {/* 自身のメッセージ */}
-        <Flex align="center" w="full" justify="flex-end" mb="2">
-          <Flex align="center" w="70%" direction="row-reverse" gap="2">
-            <Avatar ml="4" />
-            <Box bg={`${MAIN_COLOR}.400`} borderRadius="xl" p="2" shadow="md">
-              <Text color="white" fontWeight="bold">
-                {message.joke}
-              </Text>
-            </Box>
+        {messages.map((message: Message) => (
+          <Flex align="center" w="full" justify="flex-end" mb="2">
+            <Flex align="center" w="70%" direction="row-reverse" gap="2">
+              <Avatar ml="4" />
+              <Box bg={`${MAIN_COLOR}.400`} borderRadius="xl" p="2" shadow="md">
+                <Text color="white" fontWeight="bold">
+                  {message.content}
+                </Text>
+              </Box>
+            </Flex>
           </Flex>
-        </Flex>
+        ))}
       </Stack>
-      <ChatForm />
+      {/* @ts-ignore */}
+      <ChatForm currentUserUid={currentUser.uid} recruit_id={ltd.recruit_id} />
     </Container>
   );
 };

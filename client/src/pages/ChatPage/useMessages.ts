@@ -1,22 +1,50 @@
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
 import useSWR from "swr";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import axios from "../../lib/axios";
+import { useParams } from "react-router-dom"
 
-// TODO: API call
-const fetcher = (url: string) =>
-fetch(url, {
-  headers: {
-    Accept: "application/json",
-  },
-}).then((res) => res.json());
+// TODO: Check
+const fetcher = (url: string, uid: string) =>
+  axios
+    .get(url, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${uid}`,
+      },
+    })
+    .then((res) => res.data);
 
 // LtdIdからMessageを取得
+// type Res = {
+//   ltd: {
+//     id: string;
+//     name: string;
+//     profile: string;
+//     employee_number: number;
+//     average_number: number;
+//     industry_id: number;
+//     created_at: string;
+//     updated_at?: string;
+//     deleted_at?: string;
+//   },
+//   messages: [
+//     {
+//       ltd_id: number;
+//       content: string;
+//       photo: string;
+//       created_at: string;
+//     }
+//   ];
+// };
 export const useMessages = () => {
   // @ts-ignore
-  const { ltdId } = useParams();
-  const { data: message, error } = useSWR(
-    `https://icanhazdadjoke.com/j/${ltdId}`,
+  const { recruit_id } = useParams();
+  const { currentUser } = useContext(CurrentUserContext);
+  const { data: res, error } = useSWR(
+    [`/message/${recruit_id}`, currentUser?.uid],
     fetcher
   );
 
-  return {message, error}
+  return { messages: res.messages, ltd: res.ltd, error };
 };

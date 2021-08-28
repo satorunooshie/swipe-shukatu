@@ -23,15 +23,19 @@ const CurrentUserProvider: FC = ({ children }) => {
   const showToast = useShowToast();
 
   useEffect(() => {
+    const uid = localStorage.getItem('uid')
+    if(uid){
+      setCurrentUser({ uid: uid });
+      return
+    }
+
     // マウント時にログインをチェック
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        showToast(`uid: ${user.uid} ログインしました`);
-
-        // TODO： API叩く処理
+        showToast(`ログインしました`);
         setCurrentUser({ uid: user.uid });
+        localStorage.setItem("uid", user.uid)
       } else {
-        console.log("ログインしてない");
         setCurrentUser(null);
       }
     });
