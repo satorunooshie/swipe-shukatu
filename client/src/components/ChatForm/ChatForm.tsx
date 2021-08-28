@@ -29,6 +29,7 @@ import moment from "moment";
 import "moment/locale/ja";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import { User } from "../../type/User";
 
 type FormData = {
   message: string;
@@ -36,10 +37,10 @@ type FormData = {
 
 type Props = {
   recruit_id: number;
-  currentUserId: string;
+  currentUser: User;
 };
 
-const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
+const ChatForm: VFC<Props> = ({ recruit_id, currentUser }) => {
   const [isReminded, setIsReminded] = useState(false);
   const [src, setSrc] = useState("");
   const [myFiles, setMyFiles] = useState<File[]>([]);
@@ -91,11 +92,11 @@ const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
       data.append("type", "3");
       const headers = {
         "content-type": "multipart/form-data",
-        Authorization: `Bearer ${currentUserId}`,
+        Authorization: `Bearer ${currentUser.token}`,
       };
       // TODO: Check
       const res = await axios.post("/message/" + recruit_id, data, { headers });
-      console.log(res)
+      console.log(res);
     } else if (isReminded) {
       if (data.message.length === 0) return;
       // TODO: Check
@@ -104,7 +105,7 @@ const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
           type: 1,
           content: data.message,
           execute_at: datetime,
-          headers: { Authorization: `Bearer ${currentUserId}` },
+          headers: { Authorization: `Bearer ${currentUser.token}` },
         })
         .then((res) => console.log(res))
         .catch((e) => console.log(e));
@@ -115,7 +116,7 @@ const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
         .post("/message/" + recruit_id, {
           type: 2,
           content: data.message,
-          headers: { Authorization: `Bearer ${currentUserId}` },
+          headers: { Authorization: `Bearer ${currentUser.token}` },
         })
         .then((res) => console.log(res))
         .catch((e) => console.log(e));

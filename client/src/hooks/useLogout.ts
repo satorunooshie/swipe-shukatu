@@ -12,7 +12,7 @@ export const useLogout = () => {
       .signOut()
       .then(() => {
         setCurrentUser(null);
-        localStorage.removeItem('uid')
+        localStorage.removeItem('user')
         showToast("ログアウトしました");
       });
   };

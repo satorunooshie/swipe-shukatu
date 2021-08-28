@@ -55,39 +55,39 @@ const HomePage: VFC = () => {
       return;
     }
     if (dir === "right") {
-      like(ltd.recruit_id, currentUser.uid);
+      like(ltd.recruit_id, currentUser.token);
     } else if (dir === "left") {
-      unlike(ltd.recruit_id, currentUser.uid);
+      unlike(ltd.recruit_id, currentUser.token);
     } else if (dir === "up") {
-      superLike(ltd.recruit_id, currentUser.uid);
+      superLike(ltd.recruit_id, currentUser.token);
     }
 
     updateData(ltd.recruit_id);
   };
   // TODO: check
-  const like = async (recruit_id: number, currentUserId: string) => {
+  const like = async (recruit_id: number, token: string) => {
     axios
       .post("/like", {
         recruit_id: recruit_id,
-        headers: { Authorization: `Bearer ${currentUserId}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
-  const unlike = async (recruit_id: number, currentUserId: string) => {
+  const unlike = async (recruit_id: number, token: string) => {
     axios
       .post("/unlike", {
         recruit_id: recruit_id,
-        headers: { Authorization: `Bearer ${currentUserId}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
-  const superLike = async (recruit_id: number, currentUserId: string) => {
+  const superLike = async (recruit_id: number, token: string) => {
     axios
       .post("/superLike", {
         recruit_id: recruit_id,
-        headers: { Authorization: `Bearer ${currentUserId}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));

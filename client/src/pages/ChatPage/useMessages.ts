@@ -5,12 +5,12 @@ import axios from "../../lib/axios";
 import { useParams } from "react-router-dom"
 
 // TODO: Check
-const fetcher = (url: string, uid: string) =>
+const fetcher = (url: string, token: string) =>
   axios
     .get(url, {
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${uid}`,
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) => res.data);
@@ -42,7 +42,7 @@ export const useMessages = () => {
   const { recruit_id } = useParams();
   const { currentUser } = useContext(CurrentUserContext);
   const { data: res, error } = useSWR(
-    [`/message/${recruit_id}`, currentUser?.uid],
+    [`/message/${recruit_id}`, currentUser?.token],
     fetcher
   );
 
