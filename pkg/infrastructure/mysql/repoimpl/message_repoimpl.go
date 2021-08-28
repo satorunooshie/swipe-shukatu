@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"time"
 
 	messageM "github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	messageR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
@@ -34,12 +35,65 @@ func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) ([]*mess
 }
 
 // Insert
-func (messageI *messageRepoImpl) Insert(ctx context.Context, entity *messageM.Message) error {
-	stmt, err := messageI.db.Prepare("INSERT INTO message () VALUES ()")
+func (messageI *messageRepoImpl) InsertMessage(ctx context.Context, entity *messageM.Message) error {
+	switch entity.Type {
+	case 1:
+		stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content); err != nil {
+			return err
+		}
+	case 2:
+		stmt, err := messageI.db.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,image_path) VALUES (?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		if _, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.ImagePath); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (messageI *messageRepoImpl) InsertRemind(ctx context.Context, entity *messageM.Message, ExecuteAt time.Time) error {
+	tx, err := messageI.db.Begin()
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(); err != nil {
+	stmt, err := tx.PrepareContext(ctx, "INSERT INTO `message` (user_id,recruit_id,type,content) VALUES (?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	ret, err := stmt.Exec(entity.UserID, entity.RecruitID, entity.Type, entity.Content)
+	if err != nil {
+		log.Printf("[ERROR] at message_repoimpl.InsertRemind : failed to Exec: %v", err)
+		if err = tx.Rollback(); err != nil {
+			log.Printf("[ERROR] failed to insertmessage: %v", err)
+		}
+		return err
+	}
+	messageID, err := ret.LastInsertId()
+	if err != nil {
+		return err
+	}
+	stmt2, err := tx.PrepareContext(ctx, "INSERT INTO `remind_message` (message_id,execute_at) VALUES (?,?)")
+	if err != nil {
+		return err
+	}
+	defer stmt2.Close()
+	if _, err = stmt2.Exec(messageID, ExecuteAt); err != nil {
+		if err = tx.Rollback(); err != nil {
+			log.Printf("[ERROR] failed to insertmessage: %v", err)
+		}
+		return err
+	}
+	if err := tx.Commit(); err != nil {
+		log.Printf("[ERROR] failed to commit sql: %v", err)
 		return err
 	}
 	return nil
