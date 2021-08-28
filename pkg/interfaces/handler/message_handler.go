@@ -45,29 +45,38 @@ func (messageH *messageHandler) HandleSelect() http.HandlerFunc {
 			http.Error(writer, "recruitID is invalid", http.StatusBadRequest)
 			return
 		}
-		ms, err := messageH.messageUseCase.Select(ctx, int32(rID))
+
+		ld, messages, err := messageH.messageUseCase.Select(ctx, int32(rID))
 		if err != nil {
 			log.Printf("[ERROR] failed to fetch messages by recruit ID: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		mrs := make([]*MessageResponse, len(ms))
-		for i, m := range ms {
-			var mr MessageResponse
-			mr.LtdID = m.LtdID
-			mr.RecruitID = m.RecruitID
-			mr.Name = m.Name
-			mr.JobType = m.JobType
-			mr.Content = m.Content
-			mr.Image = m.Image
-			mr.CreatedAt = m.CreatedAt
-			mrs[i] = &mr
+		messagesForJSON := make([]*message, len(messages))
+		for i, m := range messages {
+			var ms message
+			ms.RecruitID = m.RecruitID
+			ms.Content = m.Content
+			ms.Image = m.ImagePath
+			ms.CreatedAt = m.CreatedAt
+			messagesForJSON[i] = &ms
 		}
-		var respms MessageResponses
-		respms.Messages = mrs
+		var ltdForJSON ltd
+		ltdForJSON.ID = ld.ID
+		ltdForJSON.Name = ld.Name
+		ltdForJSON.Profile = ld.Profile
+		ltdForJSON.EmployeeNumber = ld.EmployeeNumber
+		ltdForJSON.AverageNumber = ld.AverageNumber
+		ltdForJSON.Industry = ld.Industry
+		ltdForJSON.CreatedAt = ld.CreatedAt
+		ltdForJSON.UpdatedAt = ld.UpdatedAt
+		ltdForJSON.DeletedAt = ld.DeletedAt
+		var respms ｍessageResponse
+		respms.Ltd = &ltdForJSON
+		respms.Messages = messagesForJSON
 		jrespms, err := json.Marshal(respms)
 		if err != nil {
-			log.Printf("[ERROR] failed to marshal messages: %v", err.Error())
+			log.Printf("[ERROR] failed to marshal messagesResponse: %v", err.Error())
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -115,21 +124,21 @@ func (messageH *messageHandler) HandleInsert() http.HandlerFunc {
 		message.RecruitID = int32(rID)
 		message.Type = messageM.MType(messageRequest.MessageType)
 		switch message.Type {
-		case 1:
+		case messageM.Txt:
 			message.Content = messageRequest.Content
 			if err := messageH.messageUseCase.InsertMessage(ctx, message); err != nil {
 				log.Printf("[ERROR] failed to InsertMessage: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
-		case 2:
+		case messageM.Image:
 			message.ImagePath = messageRequest.Image
 			if err := messageH.messageUseCase.InsertMessage(ctx, message); err != nil {
 				log.Printf("[ERROR] failed to InsertImagePath: %v", err.Error())
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
-		case 3:
+		case messageM.Remind:
 			message.Content = messageRequest.Content
 			str := messageRequest.ExecuteAt
 			form := "2006-01-02T15:04:05+09:00"
@@ -169,17 +178,26 @@ type MessageRequest struct { // nolint
 }
 
 // MessageResponse ...
-type MessageResponses struct {
-	Messages []*MessageResponse `json:"messages"`
+type ｍessageResponse struct {
+	Ltd      *ltd       `json:"ltd"`
+	Messages []*message `json:"messages"`
 }
 
-// MessageResponse ...
-type MessageResponse struct {
-	LtdID     int32     `json:"ltd_id"`
+type ltd struct {
+	ID             int32  `json:"id"`
+	Name           string `json:"name"`
+	Profile        string `json:"profile"`
+	EmployeeNumber int32  `json:"employee_number"`
+	AverageNumber  int32  `json:"average_number"`
+	Industry       string `json:"industry"`
+	CreatedAt      string `json:"created_at"`
+	UpdatedAt      string `json:"updated_at"`
+	DeletedAt      string `json:"deleted_at"`
+}
+
+type message struct {
 	RecruitID int32     `json:"recruit_id"`
-	Name      string    `json:"name"`
-	JobType   string    `json:"job_type"`
 	Content   string    `json:"content"`
-	Image     string    `json:"image"`
-	CreatedAt time.Time `json:"created_at"`
+	Image     string    `json:"photo"`
+	CreatedAt time.Time `json:"create_at"`
 }

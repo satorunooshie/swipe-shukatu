@@ -22,16 +22,26 @@ func NewMessageRepoImpl(db *sql.DB) messageR.MessageRepository {
 }
 
 // Select return a slice of Message by recruit ID
-func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) ([]*messageM.Message, error) {
-	rows, err := messageI.db.QueryContext(ctx, "SELECT content, image_path, created_at FROM message WHERE recruit_id = ?", rID)
+func (messageI *messageRepoImpl) Select(ctx context.Context, rID int32) (*messageR.Ltd, []*messageR.Message, error) {
+	ltdQuery := "SELECT m_ltd.id AS id, m_ltd.name AS name, m_ltd.profile AS profile, m_ltd.employee_number AS employee_number, m_ltd.average_age AS average_age, m_industry.name AS industry , m_ltd.created_at AS created_at, m_ltd.updated_at AS updated_at, m_ltd.deleted_at AS deleted_at FROM `m_ltd`, `recruit`, `m_industry` WHERE  m_ltd.id = recruit.ltd_id AND recruit.id = ? AND m_ltd.industry_id = m_industry.id "
+	rows, err := messageI.db.QueryContext(ctx, ltdQuery, rID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("[INFO] message: ", err)
-			return nil, nil
+			log.Println("[INFO] ltd: ", err)
+			return nil, nil, nil
 		}
-		return nil, err
+		return nil, nil, err
 	}
-	return convertToMessages(rows)
+	messageQuery := "SELECT recruit_id, content, image_path as photo, created_at FROM `message` WHERE recruit_id = ? ORDER BY created_at ASC"
+	rows2, err := messageI.db.QueryContext(ctx, messageQuery, rID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("[INFO] ltd: ", err)
+			return nil, nil, nil
+		}
+		return nil, nil, err
+	}
+	return convertToLtdAndMessages(rows, rows2)
 }
 
 // Insert
@@ -124,19 +134,37 @@ func (messageI *messageRepoImpl) Delete(ctx context.Context, entity *messageM.Me
 }
 
 // convertToMessages
-func convertToMessages(rows *sql.Rows) ([]*messageM.Message, error) {
-	var messages []*messageM.Message
-	for rows.Next() {
-		var message messageM.Message
+func convertToLtdAndMessages(rows, rows2 *sql.Rows) (*messageR.Ltd, []*messageR.Message, error) {
+	var ltd messageR.Ltd
+	defer rows.Close()
+	err := rows.Scan(
+		&ltd.ID,
+		&ltd.Name,
+		&ltd.Profile,
+		&ltd.EmployeeNumber,
+		&ltd.AverageNumber,
+		&ltd.Industry,
+		&ltd.CreatedAt,
+		&ltd.UpdatedAt,
+		&ltd.DeletedAt,
+	)
+	if err != nil {
+		return nil, nil, err
+	}
+	var messages []*messageR.Message
+	defer rows2.Close()
+	for rows2.Next() {
+		var message messageR.Message
 		err := rows.Scan(
+			&message.RecruitID,
 			&message.Content,
 			&message.ImagePath,
 			&message.CreatedAt,
 		)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		messages = append(messages, &message)
 	}
-	return messages, nil
+	return &ltd, messages, nil
 }

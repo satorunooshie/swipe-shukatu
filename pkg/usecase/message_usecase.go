@@ -3,16 +3,15 @@ package usecase
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/satorunooshie/swipe-shukatu/pkg/domain/model"
 	"github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
-	"golang.org/x/sync/errgroup"
+	messageR "github.com/satorunooshie/swipe-shukatu/pkg/domain/repository"
 )
 
 type MessageUseCase interface {
-	Select(ctx context.Context, rID int32) ([]*MessageResponse, error)
+	Select(ctx context.Context, rID int32) (*messageR.Ltd, []*messageR.Message, error)
 	InsertMessage(ctx context.Context, entity *model.Message) error
 	InsertRemind(ctx context.Context, entity *model.Message, ExecuteAt time.Time) error
 	Update(ctx context.Context, entity *model.Message) error
@@ -42,77 +41,12 @@ func NewMessageUsecase(
 }
 
 // Select
-func (messageU *messageUseCase) Select(ctx context.Context, rID int32) ([]*MessageResponse, error) {
-	var (
-		messages []*model.Message
-		rec      *model.Recruit
-		err      error
-	)
-
-	js, err := messageU.jobRepository.Select(ctx)
+func (messageU *messageUseCase) Select(ctx context.Context, rID int32) (*messageR.Ltd, []*messageR.Message, error) {
+	ltd, messages, err := messageU.messageRepository.Select(ctx, rID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	jm := make(map[int32]string)
-
-	for _, j := range js {
-		jm[j.ID] = j.Name
-	}
-
-	eg, ctx := errgroup.WithContext(ctx)
-	// TODO::認証middlewareが入った段階でここでuser idでの絞り込みも追加する
-	eg.Go(func() error {
-		select {
-		case <-ctx.Done():
-			log.Println("[WARN]fetch message's goroutine is canceld")
-			return ctx.Err()
-		default:
-			messages, err = messageU.messageRepository.Select(ctx, rID) // content, image_path, created_at
-			if err != nil {
-				return err
-			}
-			return nil
-		}
-	})
-
-	eg.Go(func() error {
-		select {
-		case <-ctx.Done():
-			log.Println("[WARN] fetch recruit's goroutine is canceld")
-			return ctx.Err()
-		default:
-			rec, err = messageU.recruitRepository.SelectRecruitForMessage(ctx, rID) // id, ltd_id, job_type_id
-			if err != nil {
-				return err
-			}
-			return nil
-		}
-	})
-
-	if err = eg.Wait(); err != nil {
-		return nil, err
-	}
-
-	ltdName, err := messageU.ltdRepository.SelectLtdNameByID(ctx, rec.LtdID)
-	if err != nil {
-		return nil, err
-	}
-
-	ms := make([]*MessageResponse, len(messages))
-	for i, m := range messages {
-		var mr MessageResponse
-		job := jm[rec.JobTypeID]
-		mr.LtdID = rec.LtdID
-		mr.RecruitID = rID
-		mr.Name = ltdName
-		mr.JobType = job
-		mr.Content = m.Content
-		mr.Image = m.ImagePath
-		mr.CreatedAt = m.CreatedAt
-		ms[i] = &mr
-	}
-	return ms, nil
+	return ltd, messages, nil
 }
 
 // Insert
@@ -148,14 +82,4 @@ func (messageU *messageUseCase) Delete(ctx context.Context, entity *model.Messag
 		return err
 	}
 	return nil
-}
-
-type MessageResponse struct {
-	LtdID     int32
-	RecruitID int32
-	Name      string
-	JobType   string
-	Content   string
-	Image     string
-	CreatedAt time.Time
 }
