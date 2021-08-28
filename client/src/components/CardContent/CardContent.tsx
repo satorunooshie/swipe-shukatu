@@ -35,7 +35,7 @@ const CardContent: VFC<Props> = ({ ltd }) => {
         borderRadius="10"
       >
         <Flex flexDirection="column" w="full" h="full">
-          <Image src={`https://icanhazdadjoke.com/j/${ltd.id}.png`} alt="image" fit="cover"/>
+          <Image src={ltd.image} alt="image" fit="cover"/>
           <Spacer />
           <Wrap w="full" h={32} p={3} onClick={() => onOpen()}>
             <Heading

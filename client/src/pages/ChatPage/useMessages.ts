@@ -39,10 +39,10 @@ const fetcher = (url: string, uid: string) =>
 // };
 export const useMessages = () => {
   // @ts-ignore
-  const { ltdId } = useParams();
+  const { recruit_id } = useParams();
   const { currentUser } = useContext(CurrentUserContext);
   const { data: res, error } = useSWR(
-    [`/message/${ltdId}`, currentUser?.uid],
+    [`/message/${recruit_id}`, currentUser?.uid],
     fetcher
   );
 

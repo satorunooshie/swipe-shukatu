@@ -34,7 +34,7 @@ const LtdDetailModal: VFC<Props> = ({ ltd, isOpen, onClose }) => {
           <Flex alignItems="center" justify="space-between">
             <Heading color="gray.700">{ltd.name}</Heading>
             <Text color="gray.600" fontSize="3xl" mr="6">
-              {ltd.industry_id}
+              {ltd.job_type}
             </Text>
           </Flex>
         </ModalHeader>

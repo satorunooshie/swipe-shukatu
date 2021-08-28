@@ -35,11 +35,11 @@ type FormData = {
 };
 
 type Props = {
-  ltdId: number;
+  recruit_id: number;
   currentUserId: string;
 };
 
-const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
+const ChatForm: VFC<Props> = ({ recruit_id, currentUserId }) => {
   const [isReminded, setIsReminded] = useState(false);
   const [src, setSrc] = useState("");
   const [myFiles, setMyFiles] = useState<File[]>([]);
@@ -94,13 +94,13 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
         Authorization: `Bearer ${currentUserId}`,
       };
       // TODO: Check
-      const res = await axios.post("/message/" + ltdId, data, { headers });
+      const res = await axios.post("/message/" + recruit_id, data, { headers });
       console.log(res)
     } else if (isReminded) {
       if (data.message.length === 0) return;
       // TODO: Check
       axios
-        .post("/message/" + ltdId, {
+        .post("/message/" + recruit_id, {
           type: 1,
           content: data.message,
           execute_at: datetime,
@@ -112,7 +112,7 @@ const ChatForm: VFC<Props> = ({ ltdId, currentUserId }) => {
       if (data.message.length === 0) return;
       // TODO: Check
       axios
-        .post("/message/" + ltdId, {
+        .post("/message/" + recruit_id, {
           type: 2,
           content: data.message,
           headers: { Authorization: `Bearer ${currentUserId}` },

@@ -27,7 +27,7 @@ function App() {
                   <Route path="/recommend">
                     <RecommendPage />
                   </Route>
-                  <Route path="/message/:ltdId">
+                  <Route path="/message/:recruit_id">
                     <ChatPage />
                   </Route>
                   <Route path="/message">

@@ -1,12 +1,14 @@
 // TODO: check
 export type Ltd = {
-  readonly id: string;
+  readonly ltd_id: number;
+  readonly recruit_id: number;
   readonly name: string;
   readonly profile: string;
   readonly employee_number: number;
-  readonly average_number: number;
-  readonly industry_id: number;
-  readonly created_at: string;
-  readonly updated_at?: string;
-  readonly deleted_at?: string;
+  readonly average_age: number;
+  readonly job_type: string;
+  readonly educational_backgraound: string;
+  readonly average_salary: string;
+  readonly starting_saraly: number;
+  readonly image: string;
 };

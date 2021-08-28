@@ -11,7 +11,7 @@ const MatchListWrap: VFC<Props> = ({ matches }) => {
   return (
     <Flex wrap="nowrap" overflowX="auto">
       {matches.map((match: Match) => (
-        <NavLink to={`/message/${match.ltd_id}`} key={match.ltd_id}>
+        <NavLink to={`/message/${match.recruit_id}`} key={match.recruit_id}>
           <VStack text="center" display="inline-block" mr="5" minW="100px">
             <Image
               w="100px"

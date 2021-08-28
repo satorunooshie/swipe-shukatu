@@ -35,10 +35,10 @@ const HomePage: VFC = () => {
     (index) => `/ltds?page=${index + 1}`,
     fetcher
   );
-  const alreadyRemoved = new Set<string>();
+  const alreadyRemoved = new Set<number>();
 
-  const updateData = useCallback(async (ltdID: string) => {
-    alreadyRemoved.add(ltdID);
+  const updateData = useCallback(async (recruit_id: number) => {
+    alreadyRemoved.add(recruit_id);
 
     // 残りが5件以下になったらデータフェッチする
     if (PAGE_SIZE - alreadyRemoved.size > 5) return;
@@ -55,38 +55,38 @@ const HomePage: VFC = () => {
       return;
     }
     if (dir === "right") {
-      like(ltd.id, currentUser.uid);
+      like(ltd.recruit_id, currentUser.uid);
     } else if (dir === "left") {
-      unlike(ltd.id, currentUser.uid);
+      unlike(ltd.recruit_id, currentUser.uid);
     } else if (dir === "up") {
-      superLike(ltd.id, currentUser.uid);
+      superLike(ltd.recruit_id, currentUser.uid);
     }
 
-    updateData(ltd.id);
+    updateData(ltd.recruit_id);
   };
   // TODO: check
-  const like = async (ltdId: string, currentUserId: string) => {
+  const like = async (recruit_id: number, currentUserId: string) => {
     axios
       .post("/like", {
-        ltd_id: ltdId,
+        recruit_id: recruit_id,
         headers: { Authorization: `Bearer ${currentUserId}` },
       })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
-  const unlike = async (ltdId: string, currentUserId: string) => {
+  const unlike = async (recruit_id: number, currentUserId: string) => {
     axios
       .post("/unlike", {
-        ltd_id: ltdId,
+        recruit_id: recruit_id,
         headers: { Authorization: `Bearer ${currentUserId}` },
       })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
   };
-  const superLike = async (ltdId: string, currentUserId: string) => {
+  const superLike = async (recruit_id: number, currentUserId: string) => {
     axios
       .post("/superLike", {
-        ltd_id: ltdId,
+        recruit_id: recruit_id,
         headers: { Authorization: `Bearer ${currentUserId}` },
       })
       .then((res) => console.log(res))

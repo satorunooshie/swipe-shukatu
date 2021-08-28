@@ -33,7 +33,7 @@ const MessageList: VFC = () => {
       </Text>
       <Stack spacing="24px">
         {messages.map((message: MessageRes, i: number) => (
-          <NavLink to={`/message/${message.ltd_id}`} key={i}>
+          <NavLink to={`/message/${message.recruit_id}`} key={i}>
             <Flex align="center" justify="space-between">
               <Avatar size="md" src={message.image} />
               <Stack ml="4" flex="1">
