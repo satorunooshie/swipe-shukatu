@@ -94,7 +94,7 @@ const ChatPage: VFC = () => {
         ))}
       </Stack>
       {/* @ts-ignore */}
-      <ChatForm currentUserUid={currentUser.uid} recruit_id={ltd.recruit_id} />
+      <ChatForm currentUser={currentUser} recruit_id={ltd.recruit_id} />
     </Container>
   );
 };

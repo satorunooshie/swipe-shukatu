@@ -1,11 +1,7 @@
 import firebase from "firebase";
 import { FC, createContext, useEffect, useState } from "react";
 import { useShowToast } from "../hooks/useShowToast";
-
-// 仮
-type User = {
-  readonly uid: string;
-};
+import { User } from "../type/User";
 
 const CurrentUserContext = createContext(
   {} as {
@@ -23,18 +19,23 @@ const CurrentUserProvider: FC = ({ children }) => {
   const showToast = useShowToast();
 
   useEffect(() => {
-    const uid = localStorage.getItem('uid')
-    if(uid){
-      setCurrentUser({ uid: uid });
+    const temp = localStorage.getItem('user')
+    if(temp){
+      const user = JSON.parse(temp)
+      setCurrentUser(user);
       return
     }
 
     // マウント時にログインをチェック
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
+        //@ts-ignore
+        // console.log(user.Aa)
         showToast(`ログインしました`);
-        setCurrentUser({ uid: user.uid });
-        localStorage.setItem("uid", user.uid)
+        //@ts-ignore
+        setCurrentUser({ uid: user.uid, token: user.Aa });
+        //@ts-ignore
+        localStorage.setItem("user", JSON.stringify({ uid: user.uid, token: user.Aa }));
       } else {
         setCurrentUser(null);
       }

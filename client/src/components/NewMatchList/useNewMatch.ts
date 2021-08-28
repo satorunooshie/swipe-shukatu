@@ -4,12 +4,12 @@ import { CurrentUserContext } from "../../context/CurrentUserContext";
 import axios from "../../lib/axios"
 
 // TODO: Check
-const fetcher = (url: string, uid: string) =>
+const fetcher = (url: string, token: string) =>
   axios
     .get(url, {
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${uid}`
+        Authorization: `Bearer ${token}`
       },
     })
     .then((res) => res.data);
@@ -17,7 +17,7 @@ const fetcher = (url: string, uid: string) =>
 export const useNewMatch = () => {
   const { currentUser } = useContext(CurrentUserContext);
   const { data: matches, error } = useSWR(
-    ["/match/list", currentUser?.uid],
+    ["/match/list", currentUser?.token],
     fetcher
   );
 
