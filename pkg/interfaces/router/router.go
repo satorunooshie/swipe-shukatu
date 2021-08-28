@@ -19,10 +19,10 @@ func Route(h *http.ServeMux, db *sql.DB) {
 
 	/* repoimpl */
 	// userRepoimpl := repoimpl.NewUserRepoImpl(db)
+	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
 	jobRepoimpl := repoimpl.NewJobRepoImpl(db)
 	ltdRepoimpl := repoimpl.NewLtdRepoImpl(db)
 	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
-	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
 	likeRepoimpl := repoimpl.NewLikeRepoImpl(db)
 	matchlistRepoimpl := repoimpl.NewMatchlistRepoImpl(db)
 	superlikeRepoimpl := repoimpl.NewSuperlikeRepoImpl(db)
@@ -30,6 +30,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 
 	/* usecase */
 	// userUseCase := usecase.NewUserUsecase(userRepoimpl)
+	recruitUseCase := usecase.NewRecruitUsecase(recruitRepoimpl)
 	messageUseCase := usecase.NewMessageUsecase(jobRepoimpl, ltdRepoimpl, messageRepoimpl, recruitRepoimpl)
 	likeusecase := usecase.NewLikeUsecase(likeRepoimpl)
 	mathclistusecase := usecase.NewMatchlistUsecase(matchlistRepoimpl)
@@ -38,6 +39,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 
 	/* handler */
 	// userHandler := handler.NewUserHandler(userUseCase)
+	recruitHandler := handler.NewRecruitHandler(recruitUseCase)
 	messageHandler := handler.NewMessageHandler(messageUseCase)
 	likeHandler := handler.NewLikeHandler(likeusecase)
 	matchlisthandler := handler.NewMatchlistHandler(mathclistusecase)
@@ -45,6 +47,7 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	nopeHandler := handler.NewNopeHandler(nopeUsecase)
 
 	// register the handler
+	h.Handle("/recruits", middleware.Get(recruitHandler.HandleSelect()))
 	h.Handle("/message", middleware.Get(m.Auth(messageHandler.HandleSelect())))
 	h.Handle("/message/", middleware.Post(m.Auth(messageHandler.HandleInsert())))
 	h.Handle("/like", middleware.Post(m.Auth(likeHandler.HandleInsert())))
