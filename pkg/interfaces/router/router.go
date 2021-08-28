@@ -23,7 +23,6 @@ func Route(h *http.ServeMux, db *sql.DB) {
 	jobRepoimpl := repoimpl.NewJobRepoImpl(db)
 	ltdRepoimpl := repoimpl.NewLtdRepoImpl(db)
 	messageRepoimpl := repoimpl.NewMessageRepoImpl(db)
-	recruitRepoimpl := repoimpl.NewRecruitRepoImpl(db)
 	likeRepoimpl := repoimpl.NewLikeRepoImpl(db)
 	matchlistRepoimpl := repoimpl.NewMatchlistRepoImpl(db)
 	superlikeRepoimpl := repoimpl.NewSuperlikeRepoImpl(db)
